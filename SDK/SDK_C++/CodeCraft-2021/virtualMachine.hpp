@@ -27,7 +27,7 @@ public:
     int m_id;// 虚拟机的型号
     int m_CPU_num;// CPU 总数
     int m_RAM;// 内存大小 
-    int m_is_double_node;// 
+    int m_is_double_node;// 是否是双节点
     int m_type;// 实际上的类型
 };
 

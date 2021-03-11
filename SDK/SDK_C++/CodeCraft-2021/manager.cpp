@@ -8,31 +8,31 @@ manager::manager() : m_cost(0)
 // 买一个id对应的服务器
 // 设置服务器 id
 // 服务器类型
-bool manager::purchase_server(int id, int type)
+bool manager::purchase_server(int id, int server_typeId)
 {
-    if (type > m_servers.size()-1)
+    if (server_typeId > m_servers.size()-1)
     {
         std::cerr << "can not find the server!!!" << std::endl;
         return false;
     }
-    m_purchase_servers.insert(std::pair<int, server>(id, server(id, m_servers.at(type))));
+    m_purchase_servers.insert(std::pair<int, server>(id, server(id, m_servers.at(server_typeId))));
     m_serverss_ids.emplace_back(id);
-    m_cost += m_servers.at(type).m_price;
+    m_cost += m_servers.at(server_typeId).m_price;
     // 记录操作
-    m_operators.purchase_server(m_servers.at(type).m_name);
+    m_operators.purchase_server(m_servers.at(server_typeId).m_name);
     return true;
 }
 // 往servver_id 对应的服务器上部署vm_id对应的一个虚拟机
 // type选择 A B 或者 AB
-bool manager::deploy_VM(int vm_id, int vm_type, int server_id, int type, bool is_log)
+bool manager::deploy_VM(int vm_id, int vm_typeId, int server_id, int type, bool is_log)
 {
     // 构造一个虚拟机
-    if (vm_type > m_VMs.size())
+    if (vm_typeId > m_VMs.size()-1)
     {
         std::cerr << "can not find the virtual machine !!!" << std::endl;
         return false;
     }
-    virtual_machine VM(vm_id, m_VMs.at(vm_type));
+    virtual_machine VM(vm_id, m_VMs.at(vm_typeId));
     // 插入到服务器
     // 查找指定的服务器
     auto iter = m_purchase_servers.find(server_id);
@@ -41,7 +41,7 @@ bool manager::deploy_VM(int vm_id, int vm_type, int server_id, int type, bool is
         std::cerr << "can not find the server !!!" << std::endl;
         return false;
     }
-    if (!iter->second.add_virtual_machine(vm_id, m_VMs.at(vm_type), type))
+    if (!iter->second.add_virtual_machine(vm_id, m_VMs.at(vm_typeId), type))
     {
         return false;
     }
@@ -82,9 +82,8 @@ bool manager::de_deploy_VM(int vm_id)
 * 输入参数：
 * vm_id : 迁移虚拟机id
 * server_to : 迁移到这个id的服务器上
-* type : 在这个服务器上部署类型为
+* type : 在这个服务器上部署节点的类型
 */
-
 bool manager::migrate_VM(int vm_id, int server_to, int type)
 {
     auto iter_vm = m_deploy_VMs.find(vm_id);

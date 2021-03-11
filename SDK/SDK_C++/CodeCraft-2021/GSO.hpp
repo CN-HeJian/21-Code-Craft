@@ -15,11 +15,12 @@ using namespace std;
 class GSO
 {
 private:
-    /* data */
+    manager mgt;// 程序管理对象
+    
 public:
-    GSO(/* args */);
+    GSO(const string& inputFile);
     // 对参数进行初始化，并完成第一天的工作
-    //void initGSO(std::vector<task>& m_task, );
+    void initGSO();
     // 输入：服务器列表、当前需处理虚拟机
     // 输出：vm的分配情况
     void GSOVMP(vector<int>& serverList, int vm);
@@ -27,15 +28,8 @@ public:
     ~GSO();
 };
 
-GSO::GSO(/* args */)
-{
-
-
-}
-
 GSO::~GSO()
 {
-
 }
 
 #endif // __GSO_H

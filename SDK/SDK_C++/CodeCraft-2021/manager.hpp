@@ -23,17 +23,23 @@ struct task
     std::vector<std::pair<std::string,std::pair<int,int>>> cmd;
 };
 
+class GSO;
+
 class manager
 {
 public:
     manager();
     // 获取数据函数
+    // 获取任务相关信息
     task get_tasks(int day){return m_tasks.at(day);}
     int get_days(){return m_tasks.size();}
+
+    int get_severNums(){return m_serverss_ids.size();}
     server get_server(int id){return m_purchase_servers[id];}
+
     // 一些操作
 
-    bool purchase_server(int id,int type);// 买一个id对应的服务器
+    bool purchase_server(int id,int server_typeId);// 买一个id对应的服务器
     // 往server_id 对应的服务器上部署vm_id对应的一个虚拟机
     // type选择 A B 或者 AB
     bool deploy_VM(int vm_id,int vm_type,int server_id,int type,bool is_log=true);
@@ -68,6 +74,7 @@ private:
     std::unordered_map<std::string,int> m_server_map;
     std::unordered_map<std::string,int> m_VM_map;
     
+    friend class GSO;
 };
 
 #endif // __MANAGER_H
