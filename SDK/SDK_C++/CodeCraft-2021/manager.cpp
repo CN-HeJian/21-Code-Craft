@@ -17,11 +17,13 @@ bool manager::purchase_server(int id,int type)
     m_purchase_servers.insert(std::pair<int,server>(id,server(id,m_servers.at(type))));
     m_serverss_ids.emplace_back(id);
     m_cost += m_servers.at(type).m_price;
+    // 记录操作
+    m_operators.purchase_server(m_servers.at(type).m_name);
     return true;
 }
 // 往servver_id 对应的服务器上部署vm_id对应的一个虚拟机
 // type选择 A B 或者 AB
-bool manager::deploy_VM(int vm_id, int vm_type,int server_id, int type)
+bool manager::deploy_VM(int vm_id, int vm_type,int server_id, int type,bool is_log)
 {
     // 构造一个虚拟机 
     if(vm_type>m_VMs.size()){
@@ -43,6 +45,9 @@ bool manager::deploy_VM(int vm_id, int vm_type,int server_id, int type)
         return false;
     }
     m_deploy_VMs.insert(std::pair<int,virtual_machine>(vm_id,VM)); 
+    // 记录操作
+    if(is_log)
+        m_operators.deploy_VM(server_id,(type==AB),type==A?"A":"B");
     return true; 
 }
 // 注销掉虚拟机
@@ -80,9 +85,11 @@ bool manager::migrate_VM(int vm_id, int server_to, int type)
     if(!de_deploy_VM(vm_id)){
         return false;
     }
-    if(!deploy_VM(vm_id,vm_type,server_to,type)){
+    if(!deploy_VM(vm_id,vm_type,server_to,type,false)){
         return false;
     }
+    // 记录操作
+    m_operators.migrate_VM(vm_id,server_to,(type==AB),type==A?"A":"B");
     return true;
 }
 
@@ -94,6 +101,56 @@ float manager::cal_cost()
         }
     }
     return m_cost;
+}
+
+void manager::finish_oneday()
+{
+    m_operators.finish_oneday();
+}
+void manager::re_begin()
+{
+    m_operators.re_begin();
+}
+
+void manager::cout_result()
+{
+    for(int i=0;i<m_operators.days();i++)
+    {// 遍历所有天
+        auto op = m_operators.get_operator(i);
+        // 当前购买服务器
+        std::cout<<"(purchase, "<<op.m_purchases.size()<< ")"<<std::endl;
+        auto iter = op.m_purchases.begin();
+        for(int j=0;j<op.m_purchases.size();j++)
+        {
+            std::cout<<"("<<iter->first<<", "<<iter->second<<")"<<std::endl;
+            iter ++;
+        }
+        // 当前迁移服务器
+        std::cout<<"(migration, "<<op.m_migrates.size()<<")"<<std::endl;
+        for(auto m:op.m_migrates)
+        {
+            if(m.is_double)
+            {// 双节点
+                std::cout<<"("<<m.server_from_id<<", "<<m.server_to_id<<")"<<std::endl;
+            }
+            else 
+            {// 单节点 
+                std::cout<<"("<<m.server_from_id<<", "<<m.server_to_id<<", "<<m.node<<")"<<std::endl;
+            }
+        }
+        // 当前部署
+        for(auto d:op.m_deploys)
+        {
+            if(d.is_double)
+            {// 双节点
+                std::cout<<"("<<d.server_id<<")"<<std::endl;
+            }
+            else 
+            {
+                std::cout<<"("<<d.server_id<<", "<<d.node<<")"<<std::endl;
+            }
+        }
+    }
 }
 
  void manager::readTxt(const string &inputFile)
@@ -188,7 +245,7 @@ float manager::cal_cost()
                         }
                         t.push_back(temp[n]);
                     }
-                    m_servers.emplace_back(server_data(id,coreNum,memory,firstCost,onCost));
+                    m_servers.emplace_back(server_data(id,coreNum,memory,firstCost,onCost,type));
                     m_server_map.insert(make_pair(type,id));
                     id ++;
                 }
@@ -263,6 +320,7 @@ float manager::cal_cost()
                 int count = 0; //操作数的索引下标
                 //开始输入接下来的days天的操作
                 m_tasks.reserve(days);
+                m_operators.set_days(days);
                 for (int day = 0; day < days; day++)
                 {
                     task T;

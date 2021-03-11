@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include "virtualMachine.hpp"
 #include <vector>
+#include <string>
 
 // 服务器数据结构体
 class server_data
@@ -14,12 +15,13 @@ public:
     int m_RAM;// 内存大小 
     int m_price;// 购买的价格
     int m_daily_cost;// 每天的成本价格
+    std::string m_name;
     // 构造函数 
     server_data(){}
-    server_data(int id,int cpu,int ram,int price,int daily_cost):
+    server_data(int id,int cpu,int ram,int price,int daily_cost,std::string name):
     m_id(id),m_CPU_num(cpu),
     m_RAM(ram),m_price(price),
-    m_daily_cost(daily_cost){}
+    m_daily_cost(daily_cost),m_name(name){}
     // 复制构造函数
     server_data(const server_data & d){
         m_CPU_num = d.m_CPU_num;
@@ -27,6 +29,7 @@ public:
         m_id = d.m_id;
         m_price = d.m_price;
         m_RAM = d.m_RAM;
+        m_name = d.m_name;
     }
 };
 

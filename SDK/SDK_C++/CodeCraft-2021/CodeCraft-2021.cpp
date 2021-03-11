@@ -41,10 +41,10 @@ int main()
 		}
 		// 计算当天的电费
 		m.cal_cost();
+		m.finish_oneday();// 一天结束的标志
 	}
-	// 输出结果
-
 	// TODO:write standard output
+	m.cout_result();
 	// TODO:fflush(stdout);
 	return 0;
 }

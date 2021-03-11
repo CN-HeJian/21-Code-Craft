@@ -5,6 +5,7 @@
 
 #include "server.hpp"
 #include "virtualMachine.hpp"
+#include "operation.hpp"
 #include "iostream"
 #include <string>
 #include <stdio.h>
@@ -33,7 +34,7 @@ public:
     bool purchase_server(int id,int type);// 买一个id对应的服务器
     // 往servver_id 对应的服务器上部署vm_id对应的一个虚拟机
     // type选择 A B 或者 AB
-    bool deploy_VM(int vm_id,int vm_type,int server_id,int type);
+    bool deploy_VM(int vm_id,int vm_type,int server_id,int type,bool is_log=true);
     // 注销掉虚拟机 
     bool de_deploy_VM(int id);
     // 迁移虚拟机
@@ -42,6 +43,10 @@ public:
     // 读取数据 
     void readTxt(const std::string &inputFile);
     void output();
+    // cout 
+    void finish_oneday();
+    void re_begin();
+    void cout_result();
 private:
     // 当前的成本
     float m_cost;
@@ -50,7 +55,8 @@ private:
     std::vector<int> m_serverss_ids;
     // 实际上部署的虚拟机
     std::unordered_map<int,virtual_machine> m_deploy_VMs;
-    
+    // 所有天的操作数据 
+    operations m_operators;
     // 保存所有虚拟机和服务器的实例
     std::vector<server_data> m_servers;
     std::vector<virtual_machine_data> m_VMs;
