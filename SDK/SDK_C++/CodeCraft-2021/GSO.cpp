@@ -1,6 +1,5 @@
 #include "GSO.hpp"
 
-
 void GSO::GSOVMP(vector<int>& serverList, int vm){
     /*
     g = newGlowworm(serverlist, vm);//
