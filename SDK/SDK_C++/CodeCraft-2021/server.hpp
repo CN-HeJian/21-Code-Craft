@@ -3,6 +3,7 @@
 #include <map>  
 #include <unordered_map>
 #include "virtualMachine.hpp"
+#include "tools.hpp"
 #include <vector>
 #include <string>
 
@@ -10,7 +11,7 @@
 class server_data
 {
 public:    
-    int m_id;// 服务器的型号
+    int m_type;// 服务器的型号
     int m_CPU_num;// CPU 总数
     int m_RAM;// 内存大小 
     int m_price;// 购买的价格
@@ -19,14 +20,14 @@ public:
     // 构造函数 
     server_data(){}
     server_data(int id,int cpu,int ram,int price,int daily_cost,std::string name):
-    m_id(id),m_CPU_num(cpu),
+    m_type(id),m_CPU_num(cpu),
     m_RAM(ram),m_price(price),
     m_daily_cost(daily_cost),m_name(name){}
     // 复制构造函数
     server_data(const server_data & d){
         m_CPU_num = d.m_CPU_num;
         m_daily_cost = d.m_daily_cost;
-        m_id = d.m_id;
+        m_type = d.m_type;
         m_price = d.m_price;
         m_RAM = d.m_RAM;
         m_name = d.m_name;
@@ -59,6 +60,7 @@ public:
     int get_RAM(){return m_data.m_RAM;}
     int get_daily_cost(){return m_data.m_daily_cost;}
     int get_price(){return m_data.m_price;}
+    int get_type(){return m_data.m_type;}
     int get_CPU_left_A(){return m_CPU_left_A;}
     int get_RAM_left_A(){return m_RAM_left_A;}
     int get_CPU_left_B(){return m_CPU_left_B;}

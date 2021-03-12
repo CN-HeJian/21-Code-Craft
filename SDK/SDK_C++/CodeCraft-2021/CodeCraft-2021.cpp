@@ -1,17 +1,42 @@
 #include "iostream"
 #include "manager.hpp"
-#include "toos.hpp"
+#include "tools.hpp"
+
+using namespace std;
+
+#define test
 
 // 最终的金额计算为 537898
 int main()
 {
+	// TODO:read standard input
+	string inputTxtName = "/home/lyc/21-Code-Craft/training-data/training-1.txt";
+
+
+	//readTxt(inputTxtName);
+	// TODO:process
+	// TODO:write standard output
+	// TODO:fflush(stdout);
+
 	clock_start();
 	// TODO:read standard input
 	manager m;
-	m.readTxt("/home/lyc/21-Code-Craft/training-data/test.txt");
+	#ifdef test
+		m.readTxt(inputTxtName);
+	#else
+		m.readTxtbyStream(inputTxtName);
+	#endif
+
 	//m.output();
 	std::cerr<<"cost time in ms:"<<clock_end()<<std::endl;
 	// TODO:process
+	auto init = m.coarse_init();
+	std::cout<<"init:";
+	for(auto i:init)
+	{
+		std::cout<<" "<<i;
+	}
+	std::cout<<std::endl;
 	int server_id = -1;
 	for(int d=0;d<m.get_days();d++)
 	{
@@ -46,5 +71,6 @@ int main()
 	// TODO:write standard output
 	m.cout_result();
 	// TODO:fflush(stdout);
+
 	return 0;
 }

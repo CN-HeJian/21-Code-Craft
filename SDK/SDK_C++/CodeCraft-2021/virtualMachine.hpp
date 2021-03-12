@@ -1,12 +1,7 @@
 #ifndef __VIRTUAL_MACHINE_H
 #define __VIRTUAL_MACHINE_H
 #include <iostream>
-
-enum TYPE{
-    A = 0,
-    B = 1,
-    AB = 2
-};
+#include "tools.hpp"
 
 class virtual_machine_data
 {
@@ -32,7 +27,7 @@ public:
     int m_id;// 虚拟机的型号
     int m_CPU_num;// CPU 总数
     int m_RAM;// 内存大小 
-    int m_is_double_node;// 
+    int m_is_double_node;// 是否是双节点
     int m_type;// 实际上的类型
 };
 
@@ -67,6 +62,7 @@ public:
     // 将虚拟机从id服务器上删除
     bool de_deploy(){
         server_id = -1;
+        return true;
     }
 private:
     int m_index;// 创建id
