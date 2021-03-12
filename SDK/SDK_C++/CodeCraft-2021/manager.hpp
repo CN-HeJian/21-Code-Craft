@@ -18,11 +18,6 @@
 #include <sys/mman.h>
 #include "Integer_program.hpp"
 
-struct task
-{
-    // ("add/del" ,(vm_id,vm_type))
-    std::vector<std::pair<std::string,std::pair<int,int>>> cmd;
-};
 
 class manager
 {

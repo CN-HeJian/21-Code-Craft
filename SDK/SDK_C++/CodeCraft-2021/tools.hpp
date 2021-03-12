@@ -8,6 +8,11 @@ enum TYPE{
     AB = 2
 };
 
+struct task
+{
+    // ("add/del" ,(vm_id,vm_type))
+    std::vector<std::pair<std::string,std::pair<int,int>>> cmd;
+};
 
 bool clock_start();
 float clock_end();

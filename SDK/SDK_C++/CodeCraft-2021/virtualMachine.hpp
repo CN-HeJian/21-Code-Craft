@@ -2,6 +2,8 @@
 #define __VIRTUAL_MACHINE_H
 #include <iostream>
 #include "tools.hpp"
+#include <vector>
+
 
 class virtual_machine_data
 {
