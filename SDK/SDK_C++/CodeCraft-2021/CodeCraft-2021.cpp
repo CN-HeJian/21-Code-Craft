@@ -8,8 +8,10 @@ int main()
 	clock_start();
 	// TODO:read standard input
 	manager m;
-	m.readTxt("/home/lyc/21-Code-Craft/training-data/test.txt");
+	
+	m.readTxt("/home/jian/Downloads/demo/21-Code-Craft/training-data/test.txt");
 	//m.output();
+
 	std::cerr<<"cost time in ms:"<<clock_end()<<std::endl;
 	// TODO:process
 	int server_id = -1;
@@ -28,7 +30,7 @@ int main()
 			}
 		}
 		auto t = m.get_tasks(d);
-		// 两条部署上去 
+		// 两条部署上去
 		for(int i=0;i<t.cmd.size();i++)
 		{
 			auto c = t.cmd.at(i);// 第i条指令
