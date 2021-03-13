@@ -1,6 +1,8 @@
 #ifndef __TOOLS_H
 #define __TOOLS_H
 #include <chrono>
+#include <string>
+#include <vector>
 
 enum TYPE{
     A = 0,
@@ -14,7 +16,7 @@ struct task
     std::vector<std::pair<std::string,std::pair<int,int>>> cmd;
 };
 
-bool clock_start();
+void clock_start();
 float clock_end();
 
 #endif //__TOOLS_H

@@ -2,7 +2,7 @@
 
 std::chrono::time_point<std::chrono::system_clock> start;
 
-bool clock_start()
+void clock_start()
 {
     start = std::chrono::system_clock::now();
 }

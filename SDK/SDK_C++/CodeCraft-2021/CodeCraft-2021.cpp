@@ -10,8 +10,9 @@ using namespace std;
 int main()
 {
 	// TODO:read standard input
-	string inputTxtName = "/home/lyc/21-Code-Craft/training-data/training-1.txt";
 
+	//string inputTxtName = "/home/lyc/21-Code-Craft/training-data/training-1.txt";
+    string inputTxtName = "/home/jian/Downloads/demo/21-Code-Craft/training-data/test.txt";
 
 	//readTxt(inputTxtName);
 	// TODO:process
