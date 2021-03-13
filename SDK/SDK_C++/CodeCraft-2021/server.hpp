@@ -36,7 +36,6 @@ public:
         m_RAM = d.m_RAM;
         m_name = d.m_name;
     }
-
 };
 
 

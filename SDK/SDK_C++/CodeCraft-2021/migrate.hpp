@@ -8,6 +8,8 @@
 
 using namespace std;
 
+
+
 // 结构体，保存一次迁移的结果
 struct migrate_operation
 {
@@ -28,10 +30,24 @@ public:
     // 操作接口，尝试对虚拟机进行迁移 
     std::vector<migrate_operation> try_migrate(
         std::vector<std::pair<int,server_data>> &servers,
-        std::vector<std::vector<std::pair<int,virtual_machine_data>>> &VMs);
+        std::vector<std::vector<std::pair<int,virtual_machine_data>>> &VMs,
+        vector<int> &remain_CPU_A,
+        vector<int> &remain_RAM_A,
+        vector<int> &remain_CPU_B,
+        vector<int> &remain_RAM_B);
 private:
     vector<bool> servers_isOld;
     vector<vector<bool>> vm_isOld;
+    vector<bool> servers_isEmpty;
+    int VmNums;
+    int max_migrateCnt;
+    constexpr const static  float Defined_highUsed  = 0.75;
+    vector<float> A_CPU_used_rate;
+    vector<float> A_RAM_used_rate;
+    vector<float> B_CPU_used_rate;
+    vector<float> B_RAM_used_rate;
+    vector<bool> is_highUsed;
+
 };
 
 

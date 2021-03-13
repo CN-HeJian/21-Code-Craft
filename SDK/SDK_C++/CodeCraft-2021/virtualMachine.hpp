@@ -32,6 +32,7 @@ public:
     bool m_is_double_node;// 是否是双节点
     int m_type;// 实际上的类型，虚拟机string映射后的id
     bool is_old; //第n天提供的服务器是否是新买的
+    //int node_type;
 };
 
 // 虚拟机类 
