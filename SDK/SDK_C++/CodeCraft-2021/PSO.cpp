@@ -58,7 +58,7 @@ void PSO::search_best()
 // 计算在当前配置下需要消耗的
  float PSO::cal_cost(std::vector<int> pos)
  {
-    // std::vector<int> cost_CPU;// 消耗的CPU数目
+    // std::vector<int>m_deploy_VMs cost_CPU;// 消耗的CPU数目
     // std::vector<int> cost_RAM;// 消耗的RAM数目
     // cost_CPU.resize(m_dimension);
     // cost_RAM.resize(m_dimension);

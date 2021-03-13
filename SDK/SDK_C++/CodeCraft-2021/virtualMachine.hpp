@@ -26,11 +26,12 @@ public:
         m_CPU_num = d.m_CPU_num;
         m_id = d.m_id;
     }
-    int m_id;// 虚拟机的型号
+    int m_id;// 虚拟机的型号，用户设置的id
     int m_CPU_num;// CPU 总数
     int m_RAM;// 内存大小 
-    int m_is_double_node;// 是否是双节点
-    int m_type;// 实际上的类型
+    bool m_is_double_node;// 是否是双节点
+    int m_type;// 实际上的类型，虚拟机string映射后的id
+    bool is_old; //第n天提供的服务器是否是新买的
 };
 
 // 虚拟机类 
@@ -46,11 +47,11 @@ public:
     int get_CPU(){return m_data.m_CPU_num;}
     int get_RAM(){return m_data.m_RAM;}
     int get_node_num(){return m_data.m_is_double_node;}
-    int get_server_id(){return server_id;}
-    int get_type(){return m_data.m_type;}
-    int get_VM_id(){return m_data.m_id;}
+    int get_server_id(){return server_id;} //返回服务器id
+    int get_type(){return m_data.m_type;} //获取虚拟机类型，string映射后的id
+    int get_VM_id(){return m_data.m_id;}  //获取虚拟机id,用户设置的id
     // 提供一些基础操作
-    bool is_deploy(){return(server_id>0);}//是否实例化到服务器上
+    bool is_deploy(){return(server_id>0);}//是否已经实例化到服务器上
     // 将虚拟机添加到id服务器上
     bool deploy(int id){
         if(server_id<0){
@@ -67,7 +68,7 @@ public:
         return true;
     }
 private:
-    int m_index;// 创建id
+    int m_index;// 创建id m_index == m_data.m_type
     virtual_machine_data m_data;
     int server_id;
 };

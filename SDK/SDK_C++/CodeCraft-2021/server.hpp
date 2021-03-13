@@ -19,6 +19,7 @@ public:
     int m_RAM;// 内存大小 
     int m_price;// 购买的价格
     int m_daily_cost;// 每天的成本价格
+    bool is_old;
     std::string m_name;
     // 构造函数 
     server_data(){}
@@ -35,6 +36,7 @@ public:
         m_RAM = d.m_RAM;
         m_name = d.m_name;
     }
+
 };
 
 
@@ -77,15 +79,16 @@ public:
     bool remove_virtual_machine(int id);// 删除一个虚拟机 
 private:
     /* data */   
-    int m_index;// 购买id 
+    int m_index;// 购买id
     server_data m_data;// 服务器的型号数据
     int m_CPU_left_A;// A节点当前服务器剩余的CPU数目
     int m_RAM_left_A;// A节点当前服务器剩余的RAM数目
     int m_CPU_left_B;// B节点当前服务器剩余的CPU数目
     int m_RAM_left_B;// B节点当前服务器剩余的RAM数目
     // 含有的虚拟机 
-    std::vector<int> m_VM_ids;// 包含虚拟机的id
+    std::vector<int> m_VM_ids;//依次记录配置的每一个虚拟机的id，m_VM_ids_size即这个服务器上包含的虚拟机的总数
     std::unordered_map<int,virtual_machine_data> m_VM;// 包含的虚拟机数据，通过id范围
+
 };
 
 #endif //__SERVER_H
