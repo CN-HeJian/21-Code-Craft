@@ -23,6 +23,16 @@ struct  distribution_operation
     // erase 将 server_id 对应的服务器删除 
     // add 则是再添加一个server_type类型的服务器，其id为 server_id 
     int distribution_type;
+    distribution_operation()
+    {
+    }
+    distribution_operation(const distribution_operation & op)
+    {
+        server_id = op.server_id;
+        server_type = op.node_type;
+        node_type = op.node_type;
+        distribution_type = op.distribution_type;
+    }
 };
 
 
@@ -35,7 +45,11 @@ public:
     std::vector<distribution_operation> try_distribution(
         std::vector<int> servers_type_id,
         std::vector<std::vector<int>> VMs_type_id,
-        std::vector<task> tasks
+        task tasks,
+        std::vector<int> left_CPU_A,
+        std::vector<int> left_CPU_B,
+        std::vector<int> left_RAM_A,
+        std::vector<int> letf_RAM_B
     );
 private:
     /* data */    

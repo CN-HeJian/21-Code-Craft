@@ -23,6 +23,7 @@ std::vector<migrate_operation> migrate::try_migrate(
     std::vector<std::pair<int,server_data>> servers,
     std::vector<std::vector<std::pair<int,virtual_machine_data>>> VMs)
 {
+    return std::vector<migrate_operation>();
 }
 
 

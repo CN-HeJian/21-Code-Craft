@@ -8,23 +8,34 @@ manager::manager() : m_cost(0)
 // 买一个id对应的服务器
 // 设置服务器 id
 // 服务器类型
-bool manager::purchase_server(int id, int server_typeId)
+bool manager::try_purchase_server(int id, int server_typeId, bool is_try)
 {
     if (server_typeId > m_servers.size() - 1)
     {
         std::cerr << "can not find the server!!!" << std::endl;
         return false;
     }
-    m_purchase_servers.insert(std::pair<int, server>(id, server(id, m_servers.at(server_typeId))));
-    m_serverss_ids.emplace_back(id);
-    m_cost += m_servers.at(server_typeId).m_price;
-    // 记录操作
-    m_operators.purchase_server(m_servers.at(server_typeId).m_name);
+    if (is_try)
+    { // 只是在当前天的条件下进行的尝试
+        m_try_purchase_servers.insert(std::pair<int, server>(id, server(id, m_servers.at(server_typeId))));
+        m_try_serverss_ids.emplace_back(id);
+        m_try_cost += m_servers.at(server_typeId).m_price;
+    }
+    else
+    { // 实际上确定要执行的操作
+        auto data = m_servers.at(server_typeId);
+        data.is_old = true;
+        m_purchase_servers.insert(std::pair<int, server>(id, server(id, data)));
+        m_serverss_ids.emplace_back(id);
+        m_cost += data.m_price;
+        // 记录操作
+        m_operators.purchase_server(data.m_name);
+    }
     return true;
 }
 // 往servver_id 对应的服务器上部署vm_id对应的一个虚拟机
 // type选择 A B 或者 AB
-bool manager::deploy_VM(int vm_id, int vm_typeId, int server_id, int type, bool is_log)
+bool manager::try_deploy_VM(int vm_id, int vm_typeId, int server_id, int type, bool is_log, bool is_try)
 {
     // 构造一个虚拟机
     if (vm_typeId > m_VMs.size() - 1)
@@ -33,48 +44,99 @@ bool manager::deploy_VM(int vm_id, int vm_typeId, int server_id, int type, bool 
         return false;
     }
     virtual_machine VM(vm_id, m_VMs.at(vm_typeId));
-    // 插入到服务器
-    // 查找指定的服务器
-    auto iter = m_purchase_servers.find(server_id);
-    if (iter == m_purchase_servers.end())
-    {
-        std::cerr << "can not find the server !!!" << std::endl;
-        return false;
+    VM.set_server_type(type);
+    if (is_try)
+    { // 尝试部署虚拟机
+        auto iter = m_try_purchase_servers.find(server_id);
+        if (iter == m_purchase_servers.end())
+        {
+            std::cerr << "can not find the server !!!" << std::endl;
+            return false;
+        }
+        //
+        if (!VM.deploy(server_id,type))
+        {
+            return false;
+        }
+        if (!iter->second.add_virtual_machine(vm_id, VM.get_data(), type))
+        {
+            return false;
+        }
+        m_try_deploy_VMs.insert(std::pair<int, virtual_machine>(vm_id, VM));
     }
-    if (!iter->second.add_virtual_machine(vm_id, m_VMs.at(vm_typeId), type))
+    else
     {
-        return false;
+        // 插入到服务器
+        // 查找指定的服务器
+        VM.set_old();
+        auto iter = m_purchase_servers.find(server_id);
+        if (iter == m_purchase_servers.end())
+        {
+            std::cerr << "can not find the server !!!" << std::endl;
+            return false;
+        }
+        if (!VM.deploy(server_id,type))
+        {
+            return false;
+        }
+        if (!m_purchase_servers[server_id].add_virtual_machine(vm_id,VM.get_data(), type))
+        {
+            return false;
+        }
+        m_purchase_servers[server_id].set_old();
+
+        m_deploy_VMs.insert(std::pair<int, virtual_machine>(vm_id, VM));
+        m_VMs_id.emplace_back(vm_id);
+        // 记录操作
+        if (is_log)
+            m_operators.deploy_VM(server_id, (type == AB), type == A ? "A" : "B");
     }
-    if (!VM.deploy(server_id))
-    {
-        return false;
-    }
-    m_deploy_VMs.insert(std::pair<int, virtual_machine>(vm_id, VM));
-    // 记录操作
-    if (is_log)
-        m_operators.deploy_VM(server_id, (type == AB), type == A ? "A" : "B");
     return true;
 }
 // 注销掉虚拟机
-bool manager::de_deploy_VM(int vm_id)
+bool manager::try_de_deploy_VM(int vm_id, bool is_try)
 {
-    auto iter_vm = m_deploy_VMs.find(vm_id);
-    if (iter_vm == m_deploy_VMs.end())
+    if (is_try)
     {
-        std::cerr << "can not delet unexit VM" << std::endl;
-        return false;
+        auto iter_vm = m_try_deploy_VMs.find(vm_id);
+        if (iter_vm == m_try_deploy_VMs.end())
+        { // 没有找到
+            std::cerr << "can not delet unexit VM" << std::endl;
+            return false;
+        }
+        auto server_id = iter_vm->second.get_server_id();
+        iter_vm->second.de_deploy();
+        auto iter_server = m_try_purchase_servers.find(server_id);
+        if (iter_server == m_purchase_servers.end())
+        {
+            std::cerr << "can not find corresponde server " << std::endl;
+            return false;
+        }
+        if (!iter_server->second.remove_virtual_machine(vm_id))
+        {
+            return false;
+        }
     }
-    auto server_id = iter_vm->second.get_server_id();
-    iter_vm->second.de_deploy();
-    auto iter_server = m_purchase_servers.find(server_id);
-    if (iter_server == m_purchase_servers.end())
+    else
     {
-        std::cerr << "can not find corresponde server " << std::endl;
-        return false;
-    }
-    if (!iter_server->second.remove_virtual_machine(vm_id))
-    {
-        return false;
+        auto iter_vm = m_deploy_VMs.find(vm_id);
+        if (iter_vm == m_deploy_VMs.end())
+        {
+            std::cerr << "can not delet unexit VM" << std::endl;
+            return false;
+        }
+        auto server_id = iter_vm->second.get_server_id();
+        iter_vm->second.de_deploy();
+        auto iter_server = m_purchase_servers.find(server_id);
+        if (iter_server == m_purchase_servers.end())
+        {
+            std::cerr << "can not find corresponde server " << std::endl;
+            return false;
+        }
+        if (!iter_server->second.remove_virtual_machine(vm_id))
+        {
+            return false;
+        }
     }
     return true;
 }
@@ -84,35 +146,67 @@ bool manager::de_deploy_VM(int vm_id)
 * server_to : 迁移到这个id的服务器上
 * type : 在这个服务器上部署节点的类型
 */
-bool manager::migrate_VM(int vm_id, int server_to, int type)
+bool manager::try_migrate_VM(int vm_id, int server_to, int type, bool is_try)
 {
-    auto iter_vm = m_deploy_VMs.find(vm_id);
-    if (iter_vm == m_deploy_VMs.end())
+    //
+    if (is_try)
     {
-        std::cerr << "can not migrate not exit VM!!!" << std::endl;
-        return false;
+        auto iter_vm = m_try_deploy_VMs.find(vm_id);
+        if(iter_vm == m_try_deploy_VMs.end())
+        {
+            std::cerr << "can not migrate not exit VM!!!" << std::endl;
+            return false;            
+        }
+        int vm_type = iter_vm->second.get_VM_id();
+        if (!try_de_deploy_VM(vm_id,true))
+        {
+            return false;
+        }
+        if (!try_deploy_VM(vm_id, vm_type, server_to, type, false,true))
+        {
+            return false;
+        }
     }
-    int vm_type = iter_vm->second.get_VM_id();
-    if (!de_deploy_VM(vm_id))
+    else
     {
-        return false;
+        auto iter_vm = m_deploy_VMs.find(vm_id);
+        if (iter_vm == m_deploy_VMs.end())
+        {
+            std::cerr << "can not migrate not exit VM!!!" << std::endl;
+            return false;
+        }
+        int vm_type = iter_vm->second.get_VM_id();
+        if (!try_de_deploy_VM(vm_id))
+        {
+            return false;
+        }
+        if (!try_deploy_VM(vm_id, vm_type, server_to, type, false))
+        {
+            return false;
+        }
+        // 记录操作
+        m_operators.migrate_VM(vm_id, server_to, (type == AB), type == A ? "A" : "B");
     }
-    if (!deploy_VM(vm_id, vm_type, server_to, type, false))
-    {
-        return false;
-    }
-    // 记录操作
-    m_operators.migrate_VM(vm_id, server_to, (type == AB), type == A ? "A" : "B");
     return true;
 }
 
-float manager::cal_cost()
+float manager::try_cal_cost(bool is_try)
 {
-    for (auto id : m_serverss_ids)
+    if (is_try)
     {
-        if (m_purchase_servers[id].is_power_on())
+        for (auto id : m_try_serverss_ids)
         {
-            m_cost += m_purchase_servers[id].get_daily_cost();
+            m_cost += m_try_purchase_servers[id].get_daily_cost();
+        }
+    }
+    else
+    {
+        for (auto id : m_serverss_ids)
+        {
+            if (m_purchase_servers[id].is_power_on())
+            {
+                m_cost += m_purchase_servers[id].get_daily_cost();
+            }
         }
     }
     return m_cost;
@@ -131,20 +225,288 @@ void manager::re_begin()
 
 std::vector<int> manager::coarse_init()
 {
-    m_coarse_init = new Integer_program(m_serverss_ids.size());
     auto task = m_tasks.at(m_current_day).cmd;
-    int sum_cpu = 0,sum_ram = 0;
-    for(auto t:task)
-    {// 遍历当前所有任务
-        if(t.first == "add")
+    int sum_cpu = 0, sum_ram = 0;
+    for (auto t : task)
+    { // 遍历当前所有任务
+        if (t.first == "add")
         {
             int vm_type_id = t.second.second;
             sum_cpu += m_VMs.at(vm_type_id).m_CPU_num;
             sum_ram += m_VMs.at(vm_type_id).m_RAM;
         }
     }
-    m_coarse_init->set_all_servers(m_servers,sum_cpu*1.2,sum_ram*1.2);
+    m_coarse_init->set_all_servers(m_servers, sum_cpu * 1.2, sum_ram * 1.2);
     return m_coarse_init->solve(true);
+}
+
+// 通过尝试的结果，按照实际的流程来赋值
+void manager::assign_by_try()
+{
+    // try和实际的服务器id不一致，给一个映射表 
+    std::unordered_map<int,int> servers_map;
+    std::vector<int> add_try_servers;
+    // 购买服务器
+    int exist_servers_num = m_serverss_ids.size();
+    for(int i = 0;i < (m_try_serverss_ids.size() - exist_servers_num);i ++)
+    {
+        // 拿到了服务器id 
+        int try_server_id = m_try_serverss_ids.at(exist_servers_num + i);
+        // 对应服务器的类型
+        int server_type = m_try_purchase_servers[try_server_id].get_type();
+        // 实际去购买
+        try_purchase_server(++m_server_id,server_type);
+        // 建立表
+        servers_map.insert(make_pair(try_server_id,m_server_id));
+        add_try_servers.emplace_back(try_server_id);
+    }
+    // 交换操作 
+    // for(auto vm_id:m_VMs_id)
+    // {// 遍历所有旧的虚拟机
+    //     // 在旧的服务器中的id
+    //     int last_server_id = m_deploy_VMs[vm_id].get_server_id();
+    //     int last_node_type = m_deploy_VMs[vm_id].get_server_type();
+    //     // 在try中虚拟机所属服务器id
+    //     auto iter = m_try_deploy_VMs.find(vm_id);
+    //     if(iter == m_try_deploy_VMs.end())
+    //     {// 没有找到说明被删除了
+    //         continue;
+    //     }
+    //     int try_server_id = m_try_deploy_VMs[vm_id].get_server_id();
+    //     int try_node_type = m_try_deploy_VMs[vm_id].get_server_type();
+    //     if(last_server_id == try_server_id)
+    //     {// 相同也可能是AB节点的迁移
+    //         if(last_node_type == try_node_type)
+    //         {
+    //              continue;
+    //         }
+    //         else 
+    //         {// A B 之间的迁移 
+    //            try_migrate_VM(vm_id,last_server_id,try_node_type);
+    //         }
+    //     }
+    //     else
+    //     {
+    //         auto iter = servers_map.find(try_server_id);
+    //         if(iter == servers_map.end())
+    //         {// 没有找到说明是在两个旧服务器上进行的迁移
+    //             try_migrate_VM(vm_id,try_server_id,try_node_type);
+    //         }
+    //         else
+    //         {
+    //             // 真正的id
+    //             int current_server_id = servers_map[try_server_id];
+    //             // 进行迁移操作
+    //             try_migrate_VM(vm_id,current_server_id,try_node_type);
+    //         }
+    //     }
+    // }
+    // 按照命令执行部分
+    auto daily_task = m_tasks.at(m_current_day).cmd;
+    for(auto task:daily_task)
+    {// 遍历所有任务
+        if(task.first == "add")
+        {// 添加
+            // 找到try中的虚拟机
+            auto vm = m_try_deploy_VMs[task.second.first];
+            // try中的服务器id
+            int try_server_id = vm.get_server_id();
+            int node_type = vm.get_type();
+            // // 得到实际的服务器id
+            auto iter = servers_map.find(try_server_id);
+            int server_id = 0;
+            if(iter == servers_map.end())
+            {
+                server_id = try_server_id;
+            }
+            else 
+            {
+                server_id = servers_map[try_server_id];
+            }
+            try_deploy_VM(task.second.first,task.second.second,server_id,node_type);
+        }
+        else 
+        {// 删除我就直接删掉了
+            try_de_deploy_VM(task.second.first);
+        }
+    }
+    // 确保try部分和实际的是一样的
+    m_try_cost = m_cost;
+    m_try_serverss_ids = m_serverss_ids;
+    // 由于服务器的id会错乱因此需要重新分配id
+    for(auto task:daily_task)
+    {// task 中保存了所有新虚拟机的id值
+        if(task.first == "add")
+        {
+            // 尝试的服务器id
+            int try_server_id = m_try_deploy_VMs[task.second.first].get_server_id();
+            // 设置为old
+            m_try_deploy_VMs[task.second.first].set_old();
+            // 查找真正的
+            auto iter = servers_map.find(try_server_id);
+            if(iter == servers_map.end())
+            {// 没有找到，不需要进行操作
+                continue;
+            }
+            else
+            {
+                m_try_deploy_VMs[task.second.first].set_server_id(servers_map[try_server_id]);
+            }
+        }
+    }
+    for(int i = 0;i < add_try_servers.size();i ++)
+    {// 遍历所有新买的服务器
+        if(add_try_servers.at(i) != servers_map[add_try_servers.at(i)])
+        {
+            int server_id = servers_map[add_try_servers.at(i)];
+            auto server = m_purchase_servers[server_id];
+            m_try_purchase_servers.erase(add_try_servers.at(i));
+            m_try_purchase_servers.insert(make_pair(server_id,server));
+        }
+        m_try_purchase_servers[add_try_servers.at(i)].set_old();
+    }
+}
+// 迁移操作
+void manager::try_migrate()
+{
+    std::vector<std::pair<int,server_data>> servers;
+    std::vector<std::vector<std::pair<int,virtual_machine_data>>> VMs;
+    for(int i = 0;i < m_try_serverss_ids.size();i ++)
+    {// 
+        std::vector<std::pair<int,virtual_machine_data>> temp;
+        int server_id = m_try_serverss_ids.at(i);
+        servers.emplace_back(
+            make_pair(m_try_serverss_ids.at(i),
+             m_try_purchase_servers[server_id].get_data()));
+        auto vm_id = m_try_purchase_servers[server_id].get_VM_ids();
+        for(int j = 0;j < vm_id.size();j++)
+        {
+            int id = vm_id.at(j);
+            temp.emplace_back(make_pair(id,
+                m_try_purchase_servers[server_id].get_VM()[id]));
+        }
+        VMs.emplace_back(temp);
+    }
+    m_migrate_op = m_migrate->try_migrate(servers,VMs);
+}
+// 分配操作 
+void manager::try_distribution()
+{
+    std::vector<int> servers_type_id;
+    std::vector<std::vector<int>> VMs_type_id;
+    std::vector<int> left_CPU_A;
+    std::vector<int> left_RAM_A;
+    std::vector<int> left_CPU_B;
+    std::vector<int> left_RAM_B;
+    for(int i = 0;i < m_try_serverss_ids.size();i ++)
+    {
+        int server_id = m_try_serverss_ids.at(i);
+        servers_type_id.emplace_back(m_try_purchase_servers[server_id].get_type());
+        VMs_type_id.emplace_back(m_try_purchase_servers[server_id].get_VM_ids());
+        left_CPU_A.emplace_back(m_try_purchase_servers[server_id].get_CPU_left_A());
+        left_RAM_A.emplace_back(m_try_purchase_servers[server_id].get_RAM_left_A());
+        left_CPU_B.emplace_back(m_try_purchase_servers[server_id].get_CPU_left_B());
+        left_RAM_B.emplace_back(m_try_purchase_servers[server_id].get_RAM_left_B());
+    }
+    m_distribution_op = m_distribution->try_distribution(servers_type_id,
+    VMs_type_id,m_tasks.at(m_current_day),left_CPU_A,left_CPU_B,left_RAM_A,left_RAM_B);
+}
+
+// 尝试删除掉服务器，这在实际中是不存在的，仅在尝试的时候使用
+bool manager::try_delet_server(int server_id)
+{
+    auto iter = m_try_purchase_servers.find(server_id);
+    if(iter == m_try_purchase_servers.end())
+    {// 没有找到
+        std::cerr<<"can not delet server unexits!!"<<std::endl;
+        return false;
+    }
+    if(iter->second.get_VM_num() != 0)
+    {// 服务器里面还有剩余的
+        std::cerr<<"can not delet servers with VMs!!!"<<std::endl;
+        return false;
+    }
+    m_try_purchase_servers.erase(server_id);
+    return true;
+}
+
+// 主要调用的函数，处理所有天的数据 
+void manager::processing()
+{
+    // 初始化的时候进行一些统计数据 
+    //@TODO
+    // 初始化一些变量
+    m_coarse_init = new Integer_program(m_serverss_ids.size());
+    m_distribution = new distribution(m_servers,m_VMs);
+    m_migrate = new migrate();
+    int server_num  = -1;
+    // 开始遍历所有天的操作
+    for(int day = 0;day < get_days();day ++)
+    {
+        // 初步计算需要多少
+        auto init = coarse_init();
+        for(int i = 0; i < init.size();i++)
+        {
+            init.at(i) *= 5;
+        }
+        // 尝试购买
+        for(int i = 0;i < init.size();i++)
+        {
+            for(int j = 0;j < init.at(i);j ++)
+            {
+                try_purchase_server(++server_num,i,true);
+            }
+        }
+        // test 
+        // if(day == 41)
+        // {
+        //     cerr<<"test";
+        // }
+        // 进行分配操作
+        try_distribution();
+        int task_num = 0;
+
+
+        // 尝试进行分配
+        for(auto op:m_distribution_op)
+        {
+            if(op.distribution_type == add)
+            {// 添加服务器 
+                try_purchase_server(op.server_id,op.server_type,true);
+            }
+            else if(op.distribution_type == norm)
+            {// 正常部署或者删除虚拟机
+                auto c = m_tasks.at(day).cmd.at(task_num);
+                if(c.first == "add")
+                {// 部署虚拟机 
+                    try_deploy_VM(c.second.first,c.second.second,op.server_id,op.node_type,false,true);
+                }
+                else
+                {// 删除虚拟机 
+                    try_de_deploy_VM(c.second.first,true);
+                }
+                 task_num ++;
+            }
+            else if(op.distribution_type == erase)
+            {// 删除服务器 
+                try_delet_server(op.server_id);
+            }
+        }
+        // 迁移操作
+        try_migrate();
+        // 尝试进行迁移
+        for(auto op:m_migrate_op)
+        {
+            try_purchase_server(op.vm_id,op.node_type,true);
+        }
+        // 计算当天的电费
+		try_cal_cost(true);// 更新尝试结果的电费 
+        // 根据迁移结果来确定最终当天的结果 
+        assign_by_try();
+        // 一天结束后处理的操作 
+        finish_oneday();// 一天结束的标志
+        std::cerr<<"finish day"<<m_current_day<<std::endl;
+    }
 }
 
 float manager::try_oneday(std::vector<int> distribution, std::vector<int> node_type)
@@ -174,10 +536,9 @@ float manager::try_oneday(std::vector<int> distribution, std::vector<int> node_t
     {
         if (current_day_task.at(i).first == "add")
         { // 添加操作
-
         }
         else
-        {   // 删除操作
+        { // 删除操作
             // 找到需要删除的虚拟机
             auto iter_vm = m_deploy_VMs.find(current_day_task.at(i).second.first);
             if (iter_vm == m_deploy_VMs.end())
@@ -185,7 +546,7 @@ float manager::try_oneday(std::vector<int> distribution, std::vector<int> node_t
                 std::cerr << "can not delet unexit VM" << std::endl;
                 return 1e50;
             }
-            auto server_id = iter_vm->second.get_server_id();// 找到对应的服务器id
+            auto server_id = iter_vm->second.get_server_id(); // 找到对应的服务器id
             auto iter_server = m_purchase_servers.find(server_id);
             if (iter_server == m_purchase_servers.end())
             {
@@ -483,7 +844,6 @@ void manager::readTxt(const string &inputFile)
 
 void manager::readTxtbyStream(const string &inputFile)
 {
-
     //std::freopen(inputFile.c_str(), "rb", stdin);// 文件重定向
     // 标准输入流读取服务器相关信息
     int serverNum = 0;
