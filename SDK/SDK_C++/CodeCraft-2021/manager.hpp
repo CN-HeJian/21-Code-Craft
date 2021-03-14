@@ -2,7 +2,7 @@
 #define __MANAGER_H
 #include <vector>
 #include <unordered_map>
-
+#include "migrate.hpp"
 #include "server.hpp"
 #include "virtualMachine.hpp"
 #include "operation.hpp"
@@ -17,7 +17,9 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include "Integer_program.hpp"
-
+#include "distribution.hpp"
+class migrate;
+struct migrate_operation;
 
 class manager
 {
@@ -32,15 +34,23 @@ public:
     server get_server(int id){return m_purchase_servers[id];}
 
     // 一些操作
-    bool purchase_server(int id,int server_typeId);// 买一个id对应的服务器
+    bool try_purchase_server(int id,int server_typeId,bool is_try = false);// 买一个id对应的服务器
+    bool try_delet_server(int server_id);// 删除服务器，仅在尝试阶段使用
     // 往server_id 对应的服务器上部署vm_id对应的一个虚拟机
     // type选择 A B 或者 AB
-    bool deploy_VM(int vm_id,int vm_type,int server_id,int type,bool is_log=true);
+    bool try_deploy_VM(int vm_id,int vm_type,
+        int server_id,int type,bool is_log=true,
+        bool is_try = false);
     // 注销掉虚拟机 
-    bool de_deploy_VM(int vm_id);
+    bool try_de_deploy_VM(int vm_id,bool is_try = false);
     // 迁移虚拟机
-    bool migrate_VM(int vm_id,int server_to,int type);
-    float cal_cost();
+    bool try_migrate_VM(int vm_id,int server_to,int type,bool is_try = false);
+    float try_cal_cost(bool is_try = false);
+    // 处理所有天的任务
+    void processing();
+    void try_distribution();
+    void try_migrate();
+    void assign_by_try();// 通过尝试的结果，按照实际的流程来赋值
     // 读取数据 
     void readTxt(const std::string &inputFile);// 测试读取txt文件使用
     void readTxtbyStream(const std::string &inputFile);
@@ -59,14 +69,30 @@ public:
 private:
     // 当前的成本
     float m_cost;
+    float m_try_cost;// 尝试操作的成本
     int m_current_day = 0;
+    int m_server_id = -1;// 服务器id，每一次购买时 ++ 
+    // 分配算法类
+    distribution *m_distribution;
+    std::vector<distribution_operation> m_distribution_op;
+    // 交换算法类
+    migrate *m_migrate;
+    std::vector<migrate_operation> m_migrate_op;
     //  初始服务器估计
     Integer_program * m_coarse_init;
     // 实际上购买的服务器
     std::unordered_map<int,server> m_purchase_servers;
     std::vector<int> m_serverss_ids;
+    // 尝试购买的服务器 
+    std::unordered_map<int,server> m_try_purchase_servers;
+    // 尝试购买的服务器id
+    std::vector<int> m_try_serverss_ids;
     // 实际上部署的虚拟机
     std::unordered_map<int,virtual_machine> m_deploy_VMs;
+    // 实际上部署的虚拟机id
+    std::vector<int> m_VMs_id;
+    // 尝试部署的虚拟机 
+    std::unordered_map<int,virtual_machine> m_try_deploy_VMs;
     // 所有天的操作数据 
     operations m_operators;
     // 保存所有虚拟机和服务器的实例

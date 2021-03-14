@@ -27,6 +27,7 @@ migrate::~migrate()
  *      2）judge service_isOld Vm_is_Old
  *      3) define Max_migrate_Cnt
  * */
+
 vector<migrate_operation> migrate::try_migrate(
     vector<std::pair<int,server_data>> &servers,
     vector<vector<pair<int,virtual_machine_data>>> &VMs,

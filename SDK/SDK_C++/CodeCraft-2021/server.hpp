@@ -19,8 +19,8 @@ public:
     int m_RAM;// 内存大小 
     int m_price;// 购买的价格
     int m_daily_cost;// 每天的成本价格
-    bool is_old;
     std::string m_name;
+    bool is_old = false;
     // 构造函数 
     server_data(){}
     server_data(int id,int cpu,int ram,int price,int daily_cost,std::string name):
@@ -53,12 +53,15 @@ public:
     server(const server & s){
         m_data = s.m_data;
         m_index = s.m_index;
-        m_RAM_left_A = m_RAM_left_B = s.m_RAM_left_A;
-        m_CPU_left_A = m_CPU_left_B = s.m_CPU_left_A;
+        m_RAM_left_A = s.m_RAM_left_A;
+        m_RAM_left_B = s.m_RAM_left_B;
+        m_CPU_left_A = s.m_CPU_left_A;
+        m_CPU_left_B = s.m_CPU_left_B;
         m_VM = s.m_VM;
         m_VM_ids = s.m_VM_ids;
     }
     // 数据接口
+    server_data get_data(){return m_data;}
     int get_id(){return m_index;}
     int get_CPU(){return m_data.m_CPU_num;}
     int get_RAM(){return m_data.m_RAM;}
@@ -73,6 +76,7 @@ public:
     std::vector<int> get_VM_ids(){return m_VM_ids;}
     std::unordered_map<int,virtual_machine_data> get_VM(){return m_VM;}
     // 提供一些操作
+    void set_old();
     bool is_power_on();// 判断是否当前开机
     bool add_virtual_machine(int id,virtual_machine_data VM,int type);// 添加一个虚拟机 
     bool remove_virtual_machine(int id);// 删除一个虚拟机 

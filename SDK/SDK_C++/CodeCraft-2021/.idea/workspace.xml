@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated>
+      <config projectName="CodeCraft-2021" targetName="CodeCraft-2021" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" ENABLED="true" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="1dc63e81-45fc-431d-90ed-b33d19e11738" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/migrate" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../2021华为软件精英挑战赛-工程编译指导书-C&amp;C++-v1.0.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../2021华为软件精英挑战赛-工程编译指导书-Java-v1.0.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../2021华为软件精英挑战赛-工程编译指导书-Python-v1.0.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CodeCraft-2021.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CodeCraft-2021.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/distribution.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/distribution.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/distribution.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/distribution.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/manager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/manager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/manager.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/manager.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/migrate.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/migrate.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/migrate.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/migrate.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/server.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/server.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtualMachine.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/virtualMachine.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../SDK_java/CodeCraft_zip.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../SDK_java/bin/startup.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../SDK_java/build.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../SDK_java/build_and_run.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../SDK_java/code/CodeCraft-2021/src/com/huawei/java/main/Main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../SDK_java/makelist.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../SDK_python/CodeCraft-2021/src/CodeCraft-2021.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../SDK_python/CodeCraft_zip.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../SDK_python/build_and_run.sh" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="ProjectId" id="1pf1QSZrcpKArIy42vXScb8nPC3" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showMembers" value="true" />
+    <option name="showVisibilityIcons" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="cf.first.check.clang-format" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/CMakeLists.txt" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+  </component>
+  <component name="RunManager">
+    <configuration name="CodeCraft-2021" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="CodeCraft-2021" TARGET_NAME="CodeCraft-2021" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="CodeCraft-2021" RUN_TARGET_NAME="CodeCraft-2021">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1dc63e81-45fc-431d-90ed-b33d19e11738" name="Default Changelist" comment="" />
+      <created>1615559313425</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1615559313425</updated>
+      <workItem from="1615559315033" duration="167000" />
+      <workItem from="1615559623125" duration="95000" />
+      <workItem from="1615560517353" duration="730000" />
+      <workItem from="1615561401956" duration="3019000" />
+      <workItem from="1615609141388" duration="7287000" />
+      <workItem from="1615616474741" duration="17497000" />
+      <workItem from="1615648147844" duration="765000" />
+      <workItem from="1615648956986" duration="1462000" />
+      <workItem from="1615687147472" duration="14135000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

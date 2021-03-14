@@ -30,6 +30,7 @@ bool server::add_virtual_machine(int id, virtual_machine_data VM, int type)
         require_CPU_B = VM.m_CPU_num / 2;
         break;
     default:
+        std::cerr<<"get a node type not in A B or AB"<<std::endl;
         return false;
     }
     // 判断是否超过当前服务器的资源
@@ -88,5 +89,14 @@ bool server::remove_virtual_machine(int id)
     {
         std::cerr<<"error:can not find the VM!!!"<<std::endl;
         return false;
+    }
+}
+// 
+void server::set_old()
+{
+    m_data.is_old = true;
+    for(auto vm:m_VM_ids)
+    {
+        m_VM[vm].is_old = true;
     }
 }

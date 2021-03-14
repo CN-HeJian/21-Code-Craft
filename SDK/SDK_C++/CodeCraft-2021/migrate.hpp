@@ -1,5 +1,5 @@
-#ifndef __MIGRATE_H
-#define __MIGRATE_H 
+#ifndef __MIGRATE_A_H
+#define __MIGRATE_A_H 
 // 迁移类，实现迁移操作 
 #include <vector>
 #include "tools.hpp"
@@ -25,8 +25,6 @@ struct node{
     bool B;
 };
 
-
-std::pair<int,server_data> server_data_;
 
 class migrate
 {
