@@ -155,7 +155,7 @@ bool manager::try_migrate_VM(int vm_id, int server_to, int type, bool is_try)
         if(iter_vm == m_try_deploy_VMs.end())
         {
             std::cerr << "can not migrate not exit VM!!!" << std::endl;
-            return false;            
+            return false;
         }
         int vm_type = iter_vm->second.get_VM_id();
         if (!try_de_deploy_VM(vm_id,true))
@@ -196,7 +196,7 @@ float manager::try_cal_cost(bool is_try)
     {
         for (auto id : m_try_serverss_ids)
         {
-            m_cost += m_try_purchase_servers[id].get_daily_cost();
+            m_try_cost += m_try_purchase_servers[id].get_daily_cost();
         }
     }
     else
@@ -206,6 +206,7 @@ float manager::try_cal_cost(bool is_try)
             if (m_purchase_servers[id].is_power_on())
             {
                 m_cost += m_purchase_servers[id].get_daily_cost();
+                m_power_cost += m_purchase_servers[id].get_daily_cost();
             }
         }
     }
@@ -243,14 +244,14 @@ std::vector<int> manager::coarse_init()
 // 通过尝试的结果，按照实际的流程来赋值
 void manager::assign_by_try()
 {
-    // try和实际的服务器id不一致，给一个映射表 
+    // try和实际的服务器id不一致，给一个映射表
     std::unordered_map<int,int> servers_map;
     std::vector<int> add_try_servers;
     // 购买服务器
     int exist_servers_num = m_serverss_ids.size();
     for(int i = 0;i < (m_try_serverss_ids.size() - exist_servers_num);i ++)
     {
-        // 拿到了服务器id 
+        // 拿到了服务器id
         int try_server_id = m_try_serverss_ids.at(exist_servers_num + i);
         // 对应服务器的类型
         int server_type = m_try_purchase_servers[try_server_id].get_type();
@@ -260,7 +261,7 @@ void manager::assign_by_try()
         servers_map.insert(make_pair(try_server_id,m_server_id));
         add_try_servers.emplace_back(try_server_id);
     }
-    // 交换操作 
+    // 交换操作
     // for(auto vm_id:m_VMs_id)
     // {// 遍历所有旧的虚拟机
     //     // 在旧的服务器中的id
@@ -280,8 +281,8 @@ void manager::assign_by_try()
     //         {
     //              continue;
     //         }
-    //         else 
-    //         {// A B 之间的迁移 
+    //         else
+    //         {// A B 之间的迁移
     //            try_migrate_VM(vm_id,last_server_id,try_node_type);
     //         }
     //     }
@@ -319,13 +320,13 @@ void manager::assign_by_try()
             {
                 server_id = try_server_id;
             }
-            else 
+            else
             {
                 server_id = servers_map[try_server_id];
             }
             try_deploy_VM(task.second.first,task.second.second,server_id,node_type);
         }
-        else 
+        else
         {// 删除我就直接删掉了
             try_de_deploy_VM(task.second.first);
         }
@@ -365,6 +366,7 @@ void manager::assign_by_try()
         }
         m_try_purchase_servers[add_try_servers.at(i)].set_old();
     }
+    try_cal_cost();
 }
 // 迁移操作
 void manager::try_migrate()
@@ -372,7 +374,7 @@ void manager::try_migrate()
     std::vector<std::pair<int,server_data>> servers;
     std::vector<std::vector<std::pair<int,virtual_machine_data>>> VMs;
     for(int i = 0;i < m_try_serverss_ids.size();i ++)
-    {// 
+    {//
         std::vector<std::pair<int,virtual_machine_data>> temp;
         int server_id = m_try_serverss_ids.at(i);
         servers.emplace_back(
@@ -389,7 +391,7 @@ void manager::try_migrate()
     }
     //m_migrate_op = m_migrate->try_migrate(servers,VMs);
 }
-// 分配操作 
+// 分配操作
 void manager::try_distribution()
 {
     std::vector<int> servers_type_id;
@@ -430,10 +432,10 @@ bool manager::try_delet_server(int server_id)
     return true;
 }
 
-// 主要调用的函数，处理所有天的数据 
+// 主要调用的函数，处理所有天的数据
 void manager::processing()
 {
-    // 初始化的时候进行一些统计数据 
+    // 初始化的时候进行一些统计数据
     //@TODO
     // 初始化一些变量
     m_coarse_init = new Integer_program(m_serverss_ids.size());
@@ -457,7 +459,7 @@ void manager::processing()
                 try_purchase_server(++server_num,i,true);
             }
         }
-        // test 
+        // test
         // if(day == 41)
         // {
         //     cerr<<"test";
@@ -471,24 +473,24 @@ void manager::processing()
         for(auto op:m_distribution_op)
         {
             if(op.distribution_type == add)
-            {// 添加服务器 
+            {// 添加服务器
                 try_purchase_server(op.server_id,op.server_type,true);
             }
             else if(op.distribution_type == norm)
             {// 正常部署或者删除虚拟机
                 auto c = m_tasks.at(day).cmd.at(task_num);
                 if(c.first == "add")
-                {// 部署虚拟机 
+                {// 部署虚拟机
                     try_deploy_VM(c.second.first,c.second.second,op.server_id,op.node_type,false,true);
                 }
                 else
-                {// 删除虚拟机 
+                {// 删除虚拟机
                     try_de_deploy_VM(c.second.first,true);
                 }
                  task_num ++;
             }
             else if(op.distribution_type == erase)
-            {// 删除服务器 
+            {// 删除服务器
                 try_delet_server(op.server_id);
             }
         }
@@ -500,13 +502,19 @@ void manager::processing()
             try_purchase_server(op.vm_id,op.node_type,true);
         }
         // 计算当天的电费
-		try_cal_cost(true);// 更新尝试结果的电费 
-        // 根据迁移结果来确定最终当天的结果 
+		try_cal_cost(true);// 更新尝试结果的电费
+        // 根据迁移结果来确定最终当天的结果
         assign_by_try();
-        // 一天结束后处理的操作 
+        // 一天结束后处理的操作
         finish_oneday();// 一天结束的标志
         std::cerr<<"finish day"<<m_current_day<<std::endl;
+        statistic_busy_rate(m_current_day);
+
+        sum_cost.push_back(m_cost);
+        hard_cost.push_back(m_cost - m_power_cost);
+        ele_cost.push_back(m_power_cost);
     }
+    writetotxt();
 }
 
 float manager::try_oneday(std::vector<int> distribution, std::vector<int> node_type)
@@ -943,4 +951,66 @@ void manager::output()
                  << C.at(j).second.first << "  " << C.at(j).second.second << endl;
         }
     }
+}
+//计算占用率
+void manager::statistic_busy_rate(int m_current_day) {
+    for(int i=0;i<m_serverss_ids.size();++i){
+        int seq = m_serverss_ids[i];
+        auto service = m_purchase_servers[seq];
+        float a_cpu = 1.f - float(service.get_CPU_left_A())/float((service.get_CPU()>>1));
+        float a_ram = 1.f - float(service.get_RAM_left_A())/float((service.get_RAM()>>1));
+        float b_cpu = 1.f - float(service.get_CPU_left_B())/float((service.get_CPU()>>1));
+        float b_ram = 1.f - float(service.get_RAM_left_B())/float((service.get_RAM()>>1));
+        vector<float> oneday_used_rate{a_cpu,a_ram,b_cpu,b_ram};
+        //第一次加的服务器
+        if(i >= lastdayCnt ) {
+            vector<float> day = {m_current_day*1.f};
+            used_rate.push_back({{day}});
+            used_rate[i].push_back(oneday_used_rate);
+        }else {
+            //已经加过了的服务器
+            used_rate[i].push_back(oneday_used_rate);
+        }
+    }
+    lastdayCnt = m_serverss_ids.size();
+}
+
+#include <fstream>
+//将保存的数据写进文件
+void manager::writetotxt(){
+    //准备输出为txt文件
+    ofstream outfile;
+    ofstream ofs("world.txt");
+    ofstream cost("cost.txt");
+    for(int i =0;i<used_rate.size();++i){ //每一个服务器
+        ofs<<used_rate[i][0][0]<<" ";
+        vector<float> onedaysUsedData;
+        for(int j = 1;j<used_rate[i].size();j++){  //每一个服务器每天的占用情况
+            float a_cpu = used_rate[i][j][0];
+            float a_ram = used_rate[i][j][1];
+            float b_cpu = used_rate[i][j][2];
+            float b_ram = used_rate[i][j][3];
+            onedaysUsedData.push_back(a_cpu);
+            onedaysUsedData.push_back(a_ram);
+            onedaysUsedData.push_back(b_cpu);
+            onedaysUsedData.push_back(b_ram);
+        }
+        for (int j = 0; j <onedaysUsedData.size(); ++j) {
+            ofs<<onedaysUsedData[j]<< " ";
+        }
+        ofs<<"\n";
+    }
+    for(int i=0;i<sum_cost.size();++i){
+        cost<<sum_cost[i]<<" ";
+    }
+    cost<<"\n";
+    for(int i =0;i<hard_cost.size();++i){
+        cost<<hard_cost[i]<<" ";
+    }
+    cost<<"\n";
+    for(int i =0;i<ele_cost.size();++i){
+        cost<<ele_cost[i]<<" ";
+    }
+    ofs.close();//关闭文件
+    cost.close();
 }

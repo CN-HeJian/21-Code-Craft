@@ -20,6 +20,7 @@
 #include "distribution.hpp"
 class migrate;
 struct migrate_operation;
+using namespace  std;
 
 class manager
 {
@@ -66,9 +67,14 @@ public:
     float assign_current_day(std::vector<int> distribution,std::vector<int> node_type){return assign_oneday(m_current_day,distribution,node_type);}
     // 初始时快速计算当前大概需要买多少服务器
     std::vector<int> coarse_init();
+    //统计每天每个服务器每个节点CPU、RAM的占用率
+    void statistic_busy_rate(int m_current_day);
+    //将计算结果输出为txt文件
+    void writetotxt();
 private:
     // 当前的成本
     float m_cost;
+    float m_power_cost;
     float m_try_cost;// 尝试操作的成本
     int m_current_day = 0;
     int m_server_id = -1;// 服务器id，每一次购买时 ++ 
@@ -102,6 +108,15 @@ private:
     // 映射关系 
     std::unordered_map<std::string,int> m_server_map;
     std::unordered_map<std::string,int> m_VM_map;
+public:
+    //每天每台服务器的各个节点的CPU以及RAM的占用率
+    std::vector<vector<vector<float>>>  used_rate;
+    //昨天购买的服务器总量
+    int lastdayCnt = 0;
+
+    vector<float> sum_cost;
+    vector<float> hard_cost;
+    vector<float> ele_cost;
 };
 
 #endif // __MANAGER_H
