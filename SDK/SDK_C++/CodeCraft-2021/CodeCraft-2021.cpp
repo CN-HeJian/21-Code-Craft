@@ -1,5 +1,5 @@
 #include "iostream"
-//#include "manager.hpp"
+#include "manager.hpp"
 //#include "tools.hpp"
 
 using namespace std;
@@ -20,14 +20,14 @@ int main()
 
 	//clock_start();
 	// TODO:read standard input
-	//manager m;
+	manager m;
 	#ifdef test
 		m.readTxt(inputTxtName);
 	#else
-		//m.readTxtbyStream();
+		m.readTxtbyStream();
 	#endif
 	// TODO:process
-	//m.processing();
+	m.processing();
 	// TODO:write standard output
 	//m.cout_result();
 	// TODO:fflush(stdout);
