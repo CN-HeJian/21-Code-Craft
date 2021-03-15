@@ -47,7 +47,8 @@ private:
     int m_server_num;
     // 单纯性法求解约束
     double b_matrix[mxm] = { 0 };
-    double co_matrix[mxm][mxn] = { {0} };
+
+    double co_matrix[mxm][mxn] = {{ 0 }};
     double c_matrix[mxn] = { 0 };
 };
 

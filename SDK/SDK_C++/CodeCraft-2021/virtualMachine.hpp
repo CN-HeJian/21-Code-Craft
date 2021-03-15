@@ -29,12 +29,13 @@ public:
         m_type = d.m_type;
         is_old = d.is_old;
     }
-    int m_id;// 虚拟机的型号
+    int m_id;// 虚拟机的型号，用户设置的id
     int m_CPU_num;// CPU 总数
-    int m_RAM;// 内存大小 
-    int m_is_double_node;// 是否是双节点
-    int m_type;// 实际上的类型
-    bool is_old = false; 
+    int m_RAM;// 内存大小
+    bool m_is_double_node;// 是否是双节点
+    int m_type;// 实际上的类型，虚拟机string映射后的id
+    bool is_old = false; //第n天提供的服务器是否是新买的
+    int node_type;
 };
 
 // 虚拟机类 
@@ -56,6 +57,7 @@ public:
     int get_CPU(){return m_data.m_CPU_num;}
     int get_RAM(){return m_data.m_RAM;}
     int get_node_num(){return m_data.m_is_double_node;}
+
     int get_server_id(){return m_server_id;}
     int get_server_type(){return m_node_type;}
     int get_type(){return m_data.m_type;}
@@ -66,6 +68,7 @@ public:
     void set_server_type(int type){m_data.m_type = type;}
     void set_old(){m_data.is_old = true;}
     bool is_deploy(){return(m_server_id>0);}//是否实例化到服务器上
+
     // 将虚拟机添加到id服务器上
     bool deploy(int id,int node_type){
         if(m_server_id<0){
@@ -84,10 +87,12 @@ public:
         return true;
     }
 private:
-    int m_index;// 创建id
+
+    int m_index;// 创建id m_index == m_data.m_type
     int m_node_type = -1;// 放在服务器节点上的方式
     virtual_machine_data m_data;
     int m_server_id;
+
 };
 
 #endif // __VIRTUAL_MACHINE_H

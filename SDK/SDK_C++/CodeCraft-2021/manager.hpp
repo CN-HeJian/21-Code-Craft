@@ -18,12 +18,16 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/mman.h>
+
 #endif
+
+
 
 #include "Integer_program.hpp"
 #include "distribution.hpp"
 class migrate;
 struct migrate_operation;
+
 
 class manager
 {
@@ -55,11 +59,14 @@ public:
     void try_distribution();
     void try_migrate();
     void assign_by_try();// 通过尝试的结果，按照实际的流程来赋值
+
+
     // 读取数据
 #ifdef test
     void readTxt(const std::string &inputFile);// 测试读取txt文件使用
 #endif
     void readTxtbyStream();
+
     void output();
     // cout 
     void finish_oneday();
@@ -72,6 +79,10 @@ public:
     float assign_current_day(std::vector<int> distribution,std::vector<int> node_type){return assign_oneday(m_current_day,distribution,node_type);}
     // 初始时快速计算当前大概需要买多少服务器
     std::vector<int> coarse_init();
+    //统计每天每个服务器每个节点CPU、RAM的占用率
+    void statistic_busy_rate(int m_current_day);
+    //将计算结果输出为txt文件
+    void writetotxt();
 private:
     // 当前的成本
     double m_purchase_cost;
@@ -109,6 +120,15 @@ private:
     // 映射关系 
     std::unordered_map<std::string,int> m_server_map;
     std::unordered_map<std::string,int> m_VM_map;
+public:
+    //每天每台服务器的各个节点的CPU以及RAM的占用率
+    std::vector<vector<vector<float>>>  used_rate;
+    //昨天购买的服务器总量
+    int lastdayCnt = 0;
+
+    vector<float> sum_cost;
+    vector<float> hard_cost;
+    vector<float> ele_cost;
 };
 
 #endif // __MANAGER_H
