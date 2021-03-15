@@ -29,8 +29,8 @@ int main()
 	// TODO:process
 	m.processing();
 	// TODO:write standard output
-	//m.cout_result();
+    m.result();
 	// TODO:fflush(stdout);
-	//std::cerr<<"cost time in ms:"<<clock_end()<<std::endl;
+    fflush(stdout);
 	return 0;
 }
