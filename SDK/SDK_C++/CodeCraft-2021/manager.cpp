@@ -589,7 +589,7 @@ float manager::assign_oneday(int day, std::vector<int> distribution, std::vector
     return 0;
 }
 
-void manager::cout_result()
+void manager::result()
 {
     for (int i = 0; i < m_operators.days(); i++)
     { // 遍历所有天

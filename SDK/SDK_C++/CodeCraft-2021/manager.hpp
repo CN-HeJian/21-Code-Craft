@@ -64,7 +64,7 @@ public:
     // cout 
     void finish_oneday();
     void re_begin();
-    void cout_result();
+    void result();
     // 没有考虑迁移的情况下 
     // 在当前状态下对下一天的任务进行尝试,返回尝试后的成本
     float try_oneday(std::vector<int> distribution,std::vector<int> node_type);
