@@ -68,10 +68,10 @@ RM = /home/jian/Desktop/clion-2020.3.2/bin/cmake/linux/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021
+CMAKE_SOURCE_DIR = /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug
+CMAKE_BINARY_DIR = /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -100,9 +100,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -196,33 +196,6 @@ Integer_program.s: Integer_program.cpp.s
 Integer_program.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/CodeCraft-2021.dir/build.make CMakeFiles/CodeCraft-2021.dir/Integer_program.cpp.s
 .PHONY : Integer_program.cpp.s
-
-PSO.o: PSO.cpp.o
-
-.PHONY : PSO.o
-
-# target to build an object file
-PSO.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/CodeCraft-2021.dir/build.make CMakeFiles/CodeCraft-2021.dir/PSO.cpp.o
-.PHONY : PSO.cpp.o
-
-PSO.i: PSO.cpp.i
-
-.PHONY : PSO.i
-
-# target to preprocess a source file
-PSO.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/CodeCraft-2021.dir/build.make CMakeFiles/CodeCraft-2021.dir/PSO.cpp.i
-.PHONY : PSO.cpp.i
-
-PSO.s: PSO.cpp.s
-
-.PHONY : PSO.s
-
-# target to generate assembly for a file
-PSO.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/CodeCraft-2021.dir/build.make CMakeFiles/CodeCraft-2021.dir/PSO.cpp.s
-.PHONY : PSO.cpp.s
 
 distribution.o: distribution.cpp.o
 
@@ -401,9 +374,6 @@ help:
 	@echo "... Integer_program.o"
 	@echo "... Integer_program.i"
 	@echo "... Integer_program.s"
-	@echo "... PSO.o"
-	@echo "... PSO.i"
-	@echo "... PSO.s"
 	@echo "... distribution.o"
 	@echo "... distribution.i"
 	@echo "... distribution.s"

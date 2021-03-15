@@ -4,15 +4,14 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/CodeCraft-2021.cpp" "/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/CodeCraft-2021.cpp.o"
-  "/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/Integer_program.cpp" "/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/Integer_program.cpp.o"
-  "/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/PSO.cpp" "/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/PSO.cpp.o"
-  "/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/distribution.cpp" "/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/distribution.cpp.o"
-  "/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/manager.cpp" "/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/manager.cpp.o"
-  "/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/migrate.cpp" "/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/migrate.cpp.o"
-  "/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/operation.cpp" "/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/operation.cpp.o"
-  "/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/server.cpp" "/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/server.cpp.o"
-  "/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.cpp" "/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/tools.cpp.o"
+  "/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/CodeCraft-2021.cpp" "/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/CodeCraft-2021.cpp.o"
+  "/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/Integer_program.cpp" "/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/Integer_program.cpp.o"
+  "/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/distribution.cpp" "/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/distribution.cpp.o"
+  "/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/manager.cpp" "/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/manager.cpp.o"
+  "/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/migrate.cpp" "/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/migrate.cpp.o"
+  "/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/operation.cpp" "/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/operation.cpp.o"
+  "/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/server.cpp" "/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/server.cpp.o"
+  "/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.cpp" "/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/tools.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

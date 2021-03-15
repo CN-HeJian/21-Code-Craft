@@ -63,10 +63,10 @@ RM = /home/jian/Desktop/clion-2020.3.2/bin/cmake/linux/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021
+CMAKE_SOURCE_DIR = /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug
+CMAKE_BINARY_DIR = /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug
 
 # Include any dependencies generated for this target.
 include CMakeFiles/CodeCraft-2021.dir/depend.make
@@ -79,126 +79,112 @@ include CMakeFiles/CodeCraft-2021.dir/flags.make
 
 CMakeFiles/CodeCraft-2021.dir/CodeCraft-2021.cpp.o: CMakeFiles/CodeCraft-2021.dir/flags.make
 CMakeFiles/CodeCraft-2021.dir/CodeCraft-2021.cpp.o: ../CodeCraft-2021.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/CodeCraft-2021.dir/CodeCraft-2021.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/CodeCraft-2021.dir/CodeCraft-2021.cpp.o -c /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/CodeCraft-2021.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/CodeCraft-2021.dir/CodeCraft-2021.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/CodeCraft-2021.dir/CodeCraft-2021.cpp.o -c /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/CodeCraft-2021.cpp
 
 CMakeFiles/CodeCraft-2021.dir/CodeCraft-2021.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/CodeCraft-2021.dir/CodeCraft-2021.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/CodeCraft-2021.cpp > CMakeFiles/CodeCraft-2021.dir/CodeCraft-2021.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/CodeCraft-2021.cpp > CMakeFiles/CodeCraft-2021.dir/CodeCraft-2021.cpp.i
 
 CMakeFiles/CodeCraft-2021.dir/CodeCraft-2021.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/CodeCraft-2021.dir/CodeCraft-2021.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/CodeCraft-2021.cpp -o CMakeFiles/CodeCraft-2021.dir/CodeCraft-2021.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/CodeCraft-2021.cpp -o CMakeFiles/CodeCraft-2021.dir/CodeCraft-2021.cpp.s
 
 CMakeFiles/CodeCraft-2021.dir/Integer_program.cpp.o: CMakeFiles/CodeCraft-2021.dir/flags.make
 CMakeFiles/CodeCraft-2021.dir/Integer_program.cpp.o: ../Integer_program.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/CodeCraft-2021.dir/Integer_program.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/CodeCraft-2021.dir/Integer_program.cpp.o -c /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/Integer_program.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/CodeCraft-2021.dir/Integer_program.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/CodeCraft-2021.dir/Integer_program.cpp.o -c /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/Integer_program.cpp
 
 CMakeFiles/CodeCraft-2021.dir/Integer_program.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/CodeCraft-2021.dir/Integer_program.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/Integer_program.cpp > CMakeFiles/CodeCraft-2021.dir/Integer_program.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/Integer_program.cpp > CMakeFiles/CodeCraft-2021.dir/Integer_program.cpp.i
 
 CMakeFiles/CodeCraft-2021.dir/Integer_program.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/CodeCraft-2021.dir/Integer_program.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/Integer_program.cpp -o CMakeFiles/CodeCraft-2021.dir/Integer_program.cpp.s
-
-CMakeFiles/CodeCraft-2021.dir/PSO.cpp.o: CMakeFiles/CodeCraft-2021.dir/flags.make
-CMakeFiles/CodeCraft-2021.dir/PSO.cpp.o: ../PSO.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/CodeCraft-2021.dir/PSO.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/CodeCraft-2021.dir/PSO.cpp.o -c /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/PSO.cpp
-
-CMakeFiles/CodeCraft-2021.dir/PSO.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/CodeCraft-2021.dir/PSO.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/PSO.cpp > CMakeFiles/CodeCraft-2021.dir/PSO.cpp.i
-
-CMakeFiles/CodeCraft-2021.dir/PSO.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/CodeCraft-2021.dir/PSO.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/PSO.cpp -o CMakeFiles/CodeCraft-2021.dir/PSO.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/Integer_program.cpp -o CMakeFiles/CodeCraft-2021.dir/Integer_program.cpp.s
 
 CMakeFiles/CodeCraft-2021.dir/distribution.cpp.o: CMakeFiles/CodeCraft-2021.dir/flags.make
 CMakeFiles/CodeCraft-2021.dir/distribution.cpp.o: ../distribution.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/CodeCraft-2021.dir/distribution.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/CodeCraft-2021.dir/distribution.cpp.o -c /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/distribution.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/CodeCraft-2021.dir/distribution.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/CodeCraft-2021.dir/distribution.cpp.o -c /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/distribution.cpp
 
 CMakeFiles/CodeCraft-2021.dir/distribution.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/CodeCraft-2021.dir/distribution.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/distribution.cpp > CMakeFiles/CodeCraft-2021.dir/distribution.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/distribution.cpp > CMakeFiles/CodeCraft-2021.dir/distribution.cpp.i
 
 CMakeFiles/CodeCraft-2021.dir/distribution.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/CodeCraft-2021.dir/distribution.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/distribution.cpp -o CMakeFiles/CodeCraft-2021.dir/distribution.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/distribution.cpp -o CMakeFiles/CodeCraft-2021.dir/distribution.cpp.s
 
 CMakeFiles/CodeCraft-2021.dir/manager.cpp.o: CMakeFiles/CodeCraft-2021.dir/flags.make
 CMakeFiles/CodeCraft-2021.dir/manager.cpp.o: ../manager.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/CodeCraft-2021.dir/manager.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/CodeCraft-2021.dir/manager.cpp.o -c /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/manager.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/CodeCraft-2021.dir/manager.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/CodeCraft-2021.dir/manager.cpp.o -c /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/manager.cpp
 
 CMakeFiles/CodeCraft-2021.dir/manager.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/CodeCraft-2021.dir/manager.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/manager.cpp > CMakeFiles/CodeCraft-2021.dir/manager.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/manager.cpp > CMakeFiles/CodeCraft-2021.dir/manager.cpp.i
 
 CMakeFiles/CodeCraft-2021.dir/manager.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/CodeCraft-2021.dir/manager.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/manager.cpp -o CMakeFiles/CodeCraft-2021.dir/manager.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/manager.cpp -o CMakeFiles/CodeCraft-2021.dir/manager.cpp.s
 
 CMakeFiles/CodeCraft-2021.dir/migrate.cpp.o: CMakeFiles/CodeCraft-2021.dir/flags.make
 CMakeFiles/CodeCraft-2021.dir/migrate.cpp.o: ../migrate.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/CodeCraft-2021.dir/migrate.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/CodeCraft-2021.dir/migrate.cpp.o -c /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/migrate.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/CodeCraft-2021.dir/migrate.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/CodeCraft-2021.dir/migrate.cpp.o -c /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/migrate.cpp
 
 CMakeFiles/CodeCraft-2021.dir/migrate.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/CodeCraft-2021.dir/migrate.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/migrate.cpp > CMakeFiles/CodeCraft-2021.dir/migrate.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/migrate.cpp > CMakeFiles/CodeCraft-2021.dir/migrate.cpp.i
 
 CMakeFiles/CodeCraft-2021.dir/migrate.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/CodeCraft-2021.dir/migrate.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/migrate.cpp -o CMakeFiles/CodeCraft-2021.dir/migrate.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/migrate.cpp -o CMakeFiles/CodeCraft-2021.dir/migrate.cpp.s
 
 CMakeFiles/CodeCraft-2021.dir/operation.cpp.o: CMakeFiles/CodeCraft-2021.dir/flags.make
 CMakeFiles/CodeCraft-2021.dir/operation.cpp.o: ../operation.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/CodeCraft-2021.dir/operation.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/CodeCraft-2021.dir/operation.cpp.o -c /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/operation.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/CodeCraft-2021.dir/operation.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/CodeCraft-2021.dir/operation.cpp.o -c /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/operation.cpp
 
 CMakeFiles/CodeCraft-2021.dir/operation.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/CodeCraft-2021.dir/operation.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/operation.cpp > CMakeFiles/CodeCraft-2021.dir/operation.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/operation.cpp > CMakeFiles/CodeCraft-2021.dir/operation.cpp.i
 
 CMakeFiles/CodeCraft-2021.dir/operation.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/CodeCraft-2021.dir/operation.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/operation.cpp -o CMakeFiles/CodeCraft-2021.dir/operation.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/operation.cpp -o CMakeFiles/CodeCraft-2021.dir/operation.cpp.s
 
 CMakeFiles/CodeCraft-2021.dir/server.cpp.o: CMakeFiles/CodeCraft-2021.dir/flags.make
 CMakeFiles/CodeCraft-2021.dir/server.cpp.o: ../server.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/CodeCraft-2021.dir/server.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/CodeCraft-2021.dir/server.cpp.o -c /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/server.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/CodeCraft-2021.dir/server.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/CodeCraft-2021.dir/server.cpp.o -c /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/server.cpp
 
 CMakeFiles/CodeCraft-2021.dir/server.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/CodeCraft-2021.dir/server.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/server.cpp > CMakeFiles/CodeCraft-2021.dir/server.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/server.cpp > CMakeFiles/CodeCraft-2021.dir/server.cpp.i
 
 CMakeFiles/CodeCraft-2021.dir/server.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/CodeCraft-2021.dir/server.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/server.cpp -o CMakeFiles/CodeCraft-2021.dir/server.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/server.cpp -o CMakeFiles/CodeCraft-2021.dir/server.cpp.s
 
 CMakeFiles/CodeCraft-2021.dir/tools.cpp.o: CMakeFiles/CodeCraft-2021.dir/flags.make
 CMakeFiles/CodeCraft-2021.dir/tools.cpp.o: ../tools.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/CodeCraft-2021.dir/tools.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/CodeCraft-2021.dir/tools.cpp.o -c /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/CodeCraft-2021.dir/tools.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/CodeCraft-2021.dir/tools.cpp.o -c /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.cpp
 
 CMakeFiles/CodeCraft-2021.dir/tools.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/CodeCraft-2021.dir/tools.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.cpp > CMakeFiles/CodeCraft-2021.dir/tools.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.cpp > CMakeFiles/CodeCraft-2021.dir/tools.cpp.i
 
 CMakeFiles/CodeCraft-2021.dir/tools.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/CodeCraft-2021.dir/tools.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.cpp -o CMakeFiles/CodeCraft-2021.dir/tools.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.cpp -o CMakeFiles/CodeCraft-2021.dir/tools.cpp.s
 
 # Object files for target CodeCraft-2021
 CodeCraft__2021_OBJECTS = \
 "CMakeFiles/CodeCraft-2021.dir/CodeCraft-2021.cpp.o" \
 "CMakeFiles/CodeCraft-2021.dir/Integer_program.cpp.o" \
-"CMakeFiles/CodeCraft-2021.dir/PSO.cpp.o" \
 "CMakeFiles/CodeCraft-2021.dir/distribution.cpp.o" \
 "CMakeFiles/CodeCraft-2021.dir/manager.cpp.o" \
 "CMakeFiles/CodeCraft-2021.dir/migrate.cpp.o" \
@@ -211,7 +197,6 @@ CodeCraft__2021_EXTERNAL_OBJECTS =
 
 ../bin/CodeCraft-2021: CMakeFiles/CodeCraft-2021.dir/CodeCraft-2021.cpp.o
 ../bin/CodeCraft-2021: CMakeFiles/CodeCraft-2021.dir/Integer_program.cpp.o
-../bin/CodeCraft-2021: CMakeFiles/CodeCraft-2021.dir/PSO.cpp.o
 ../bin/CodeCraft-2021: CMakeFiles/CodeCraft-2021.dir/distribution.cpp.o
 ../bin/CodeCraft-2021: CMakeFiles/CodeCraft-2021.dir/manager.cpp.o
 ../bin/CodeCraft-2021: CMakeFiles/CodeCraft-2021.dir/migrate.cpp.o
@@ -220,7 +205,7 @@ CodeCraft__2021_EXTERNAL_OBJECTS =
 ../bin/CodeCraft-2021: CMakeFiles/CodeCraft-2021.dir/tools.cpp.o
 ../bin/CodeCraft-2021: CMakeFiles/CodeCraft-2021.dir/build.make
 ../bin/CodeCraft-2021: CMakeFiles/CodeCraft-2021.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Linking CXX executable ../bin/CodeCraft-2021"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX executable ../bin/CodeCraft-2021"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/CodeCraft-2021.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -233,6 +218,6 @@ CMakeFiles/CodeCraft-2021.dir/clean:
 .PHONY : CMakeFiles/CodeCraft-2021.dir/clean
 
 CMakeFiles/CodeCraft-2021.dir/depend:
-	cd /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021 /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021 /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021 /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021 /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/CodeCraft-2021.dir/depend
 

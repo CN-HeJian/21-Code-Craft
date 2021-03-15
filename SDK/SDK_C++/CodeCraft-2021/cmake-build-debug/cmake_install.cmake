@@ -1,4 +1,4 @@
-# Install script for directory: /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021
+# Install script for directory: /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

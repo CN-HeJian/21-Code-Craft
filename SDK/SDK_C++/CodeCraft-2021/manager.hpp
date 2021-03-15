@@ -11,11 +11,15 @@
 #include <string>
 #include <stdio.h>
 #include <stdlib.h>
+
+#ifdef test
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/mman.h>
+#endif
+
 #include "Integer_program.hpp"
 #include "distribution.hpp"
 class migrate;
@@ -52,14 +56,16 @@ public:
     void try_distribution();
     void try_migrate();
     void assign_by_try();// 通过尝试的结果，按照实际的流程来赋值
-    // 读取数据 
+    // 读取数据
+#ifdef test
     void readTxt(const std::string &inputFile);// 测试读取txt文件使用
-    void readTxtbyStream(const std::string &inputFile);
+#endif
+    void readTxtbyStream();
     void output();
     // cout 
     void finish_oneday();
     void re_begin();
-    void cout_result();
+    void result();
     // 没有考虑迁移的情况下 
     // 在当前状态下对下一天的任务进行尝试,返回尝试后的成本
     float try_oneday(std::vector<int> distribution,std::vector<int> node_type);
@@ -73,9 +79,9 @@ public:
     void writetotxt();
 private:
     // 当前的成本
-    float m_cost;
-    float m_power_cost;
-    float m_try_cost;// 尝试操作的成本
+    double m_purchase_cost;
+    double m_power_cost = 0;
+    double m_try_cost;// 尝试操作的成本
     int m_current_day = 0;
     int m_server_id = -1;// 服务器id，每一次购买时 ++ 
     // 分配算法类

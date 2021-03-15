@@ -71,7 +71,7 @@ int Simplex::init_simplex()
         }
         if (!y)
         {
-            std::cout << "Infeasible";
+            //std::cerr << "Infeasible";
             return 0;
         }
         Pivot(x, y); //把第x行的第y列的元素作为主元 进行高斯消元
@@ -122,7 +122,7 @@ int Simplex::run()
     {
         return init; //无解
     }
-    int i, j;
+    int i;
     while (1)
     {
         int x = 0, y = 0;
@@ -147,7 +147,7 @@ int Simplex::run()
         }
         if (!x)
         {
-            std::cout << "Unbounded";
+            //std::cerr << "Unbounded";
             return -1; //无界
         }
         Pivot(x, y);
@@ -191,26 +191,59 @@ Integer_program::~Integer_program()
 
 void Integer_program::set_all_servers(std::vector<server_data> server_data, int min_cpu, int min_ram)
 {
+    int max_cpu = 0;
+    int max_ram = 0;
     m_server_num = server_data.size();
     // 约束 server_num+2
     // 变量 server_num+1
     m_solver = new Simplex(m_server_num + 2, m_server_num + 1);
     // cpu 约束
     b_matrix[0] = -min_cpu;
-    for (int i = 0; i < server_data.size(); i++)
+    for (size_t i = 0; i < server_data.size(); i++)
     { // 遍历所有的服务器获取其对应的cpu数目
         co_matrix[0][i] = -server_data.at(i).m_CPU_num;
+        if(max_cpu < -co_matrix[0][i])
+        {
+            max_cpu = -co_matrix[0][i];
+        }
     }
     // ram 约束
     b_matrix[1] = -min_ram;
-    for (int i = 0; i < server_data.size(); i++)
+    for (size_t i = 0; i < server_data.size(); i++)
     { // 遍历所有服务其获取其对应的ram数目
         co_matrix[1][i] = -server_data.at(i).m_RAM;
+        if(max_ram < -co_matrix[1][i])
+        {
+            max_ram = -co_matrix[1][i];
+        }
     }
     // 非零约束
-    for (int i = 0; i < server_data.size(); i++)
+    for (size_t i = 0; i < server_data.size(); i++)
     {
         co_matrix[2 + i][i] = -1;
+    }
+    // 目标函数 
+    for(size_t i = 0; i < server_data.size(); i++)
+    {// 价格越便宜越好 + 服务器容量越大越好
+        int cpu = 0;
+        int ram = 0;
+        if(server_data.at(i).m_CPU_num > 2 * max_cpu)
+        {
+            cpu = 0;
+        }
+        else 
+        {
+            cpu = 2 * max_cpu - server_data.at(i).m_CPU_num;
+        }
+        if(server_data.at(i).m_RAM > 2 * max_ram)
+        {
+            ram = 0;
+        }
+        else 
+        {
+            ram = 2 * max_ram - server_data.at(i).m_RAM;
+        }
+        c_matrix[i] = server_data.at(i).m_price + 100 * cpu + 100 * ram;
     }
 }
 

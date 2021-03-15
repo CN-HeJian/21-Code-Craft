@@ -6,15 +6,13 @@
 
 #IncludeRegexTransform: 
 
-/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/CodeCraft-2021.cpp
+/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/CodeCraft-2021.cpp
 iostream
-/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/iostream
+/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/iostream
 manager.hpp
-/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/manager.hpp
-tools.hpp
-/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.hpp
+/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/manager.hpp
 
-/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/Integer_program.hpp
+/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/Integer_program.hpp
 iostream
 -
 algorithm
@@ -28,35 +26,35 @@ cmath
 vector
 -
 server.hpp
-/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/server.hpp
+/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/server.hpp
 
-/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/distribution.hpp
+/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/distribution.hpp
 vector
 -
 server.hpp
-/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/server.hpp
+/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/server.hpp
 virtualMachine.hpp
-/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/virtualMachine.hpp
+/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/virtualMachine.hpp
 tools.hpp
-/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.hpp
+/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.hpp
 
-/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/manager.hpp
+/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/manager.hpp
 vector
 -
 unordered_map
 -
 migrate.hpp
-/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/migrate.hpp
+/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/migrate.hpp
 server.hpp
-/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/server.hpp
+/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/server.hpp
 virtualMachine.hpp
-/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/virtualMachine.hpp
+/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/virtualMachine.hpp
 operation.hpp
-/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/operation.hpp
+/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/operation.hpp
 iostream
-/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/iostream
+/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/iostream
 tools.hpp
-/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.hpp
+/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.hpp
 string
 -
 stdio.h
@@ -74,21 +72,21 @@ fcntl.h
 sys/mman.h
 -
 Integer_program.hpp
-/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/Integer_program.hpp
+/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/Integer_program.hpp
 distribution.hpp
-/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/distribution.hpp
+/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/distribution.hpp
 
-/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/migrate.hpp
+/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/migrate.hpp
 vector
 -
 tools.hpp
-/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.hpp
+/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.hpp
 server.hpp
-/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/server.hpp
+/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/server.hpp
 manager.hpp
-/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/manager.hpp
+/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/manager.hpp
 
-/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/operation.hpp
+/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/operation.hpp
 vector
 -
 string
@@ -96,21 +94,21 @@ string
 unordered_map
 -
 
-/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/server.hpp
+/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/server.hpp
 map
 -
 unordered_map
 -
 virtualMachine.hpp
-/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/virtualMachine.hpp
+/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/virtualMachine.hpp
 tools.hpp
-/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.hpp
+/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.hpp
 vector
 -
 string
 -
 
-/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.hpp
+/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.hpp
 chrono
 -
 string
@@ -118,11 +116,11 @@ string
 vector
 -
 
-/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/virtualMachine.hpp
+/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/virtualMachine.hpp
 iostream
 -
 tools.hpp
-/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.hpp
+/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.hpp
 vector
 -
 

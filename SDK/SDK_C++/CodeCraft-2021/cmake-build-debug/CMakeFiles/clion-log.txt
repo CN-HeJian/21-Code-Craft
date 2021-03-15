@@ -1,4 +1,4 @@
-/home/jian/Desktop/clion-2020.3.2/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021
+/home/jian/Desktop/clion-2020.3.2/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021
 -- The C compiler identification is GNU 9.3.0
 -- The CXX compiler identification is GNU 9.3.0
 -- Check for working C compiler: /usr/bin/cc
@@ -15,4 +15,4 @@
 -- Detecting CXX compile features - done
 -- Configuring done
 -- Generating done
--- Build files have been written to: /home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug
+-- Build files have been written to: /home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug

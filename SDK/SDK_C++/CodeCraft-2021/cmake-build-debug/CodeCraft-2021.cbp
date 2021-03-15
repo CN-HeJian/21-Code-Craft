@@ -8,44 +8,44 @@
 		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug"/>
+				<Option working_dir="/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug"/>
+				<Option working_dir="/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug"/>
+				<Option working_dir="/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="CodeCraft-2021">
-				<Option output="/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/bin/CodeCraft-2021" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/../bin"/>
+				<Option output="/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/bin/CodeCraft-2021" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/../bin"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
 					<Add option="-D_DEBUG"/>
-					<Add directory="/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/lib"/>
+					<Add directory="/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/lib"/>
 					<Add directory="/usr/include/c++/9"/>
 					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
 					<Add directory="/usr/include/c++/9/backward"/>
@@ -55,21 +55,21 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 CodeCraft-2021"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 CodeCraft-2021"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="CodeCraft-2021/fast">
-				<Option output="/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/bin/CodeCraft-2021" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/../bin"/>
+				<Option output="/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/bin/CodeCraft-2021" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/../bin"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
 					<Add option="-D_DEBUG"/>
-					<Add directory="/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/lib"/>
+					<Add directory="/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/lib"/>
 					<Add directory="/usr/include/c++/9"/>
 					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
 					<Add directory="/usr/include/c++/9/backward"/>
@@ -79,65 +79,59 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 CodeCraft-2021/fast"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 CodeCraft-2021/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/CodeCraft-2021.cpp">
+		<Unit filename="/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/CodeCraft-2021.cpp">
 			<Option target="CodeCraft-2021"/>
 		</Unit>
-		<Unit filename="/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/Integer_program.cpp">
+		<Unit filename="/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/Integer_program.cpp">
 			<Option target="CodeCraft-2021"/>
 		</Unit>
-		<Unit filename="/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/Integer_program.hpp">
+		<Unit filename="/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/Integer_program.hpp">
 			<Option target="CodeCraft-2021"/>
 		</Unit>
-		<Unit filename="/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/PSO.cpp">
+		<Unit filename="/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/distribution.cpp">
 			<Option target="CodeCraft-2021"/>
 		</Unit>
-		<Unit filename="/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/PSO.hpp">
+		<Unit filename="/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/distribution.hpp">
 			<Option target="CodeCraft-2021"/>
 		</Unit>
-		<Unit filename="/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/distribution.cpp">
+		<Unit filename="/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/manager.cpp">
 			<Option target="CodeCraft-2021"/>
 		</Unit>
-		<Unit filename="/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/distribution.hpp">
+		<Unit filename="/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/manager.hpp">
 			<Option target="CodeCraft-2021"/>
 		</Unit>
-		<Unit filename="/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/manager.cpp">
+		<Unit filename="/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/migrate.cpp">
 			<Option target="CodeCraft-2021"/>
 		</Unit>
-		<Unit filename="/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/manager.hpp">
+		<Unit filename="/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/migrate.hpp">
 			<Option target="CodeCraft-2021"/>
 		</Unit>
-		<Unit filename="/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/migrate.cpp">
+		<Unit filename="/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/operation.cpp">
 			<Option target="CodeCraft-2021"/>
 		</Unit>
-		<Unit filename="/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/migrate.hpp">
+		<Unit filename="/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/operation.hpp">
 			<Option target="CodeCraft-2021"/>
 		</Unit>
-		<Unit filename="/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/operation.cpp">
+		<Unit filename="/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/server.cpp">
 			<Option target="CodeCraft-2021"/>
 		</Unit>
-		<Unit filename="/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/operation.hpp">
+		<Unit filename="/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/server.hpp">
 			<Option target="CodeCraft-2021"/>
 		</Unit>
-		<Unit filename="/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/server.cpp">
+		<Unit filename="/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.cpp">
 			<Option target="CodeCraft-2021"/>
 		</Unit>
-		<Unit filename="/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/server.hpp">
+		<Unit filename="/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.hpp">
 			<Option target="CodeCraft-2021"/>
 		</Unit>
-		<Unit filename="/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.cpp">
-			<Option target="CodeCraft-2021"/>
-		</Unit>
-		<Unit filename="/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.hpp">
-			<Option target="CodeCraft-2021"/>
-		</Unit>
-		<Unit filename="/home/jian/Downloads/demo/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/CMakeLists.txt">
+		<Unit filename="/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
 	</Project>

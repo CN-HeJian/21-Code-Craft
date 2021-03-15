@@ -17,17 +17,6 @@ CMakeFiles/CodeCraft-2021.dir/Integer_program.cpp.o: ../server.hpp
 CMakeFiles/CodeCraft-2021.dir/Integer_program.cpp.o: ../tools.hpp
 CMakeFiles/CodeCraft-2021.dir/Integer_program.cpp.o: ../virtualMachine.hpp
 
-CMakeFiles/CodeCraft-2021.dir/PSO.cpp.o: ../Integer_program.hpp
-CMakeFiles/CodeCraft-2021.dir/PSO.cpp.o: ../PSO.cpp
-CMakeFiles/CodeCraft-2021.dir/PSO.cpp.o: ../PSO.hpp
-CMakeFiles/CodeCraft-2021.dir/PSO.cpp.o: ../distribution.hpp
-CMakeFiles/CodeCraft-2021.dir/PSO.cpp.o: ../manager.hpp
-CMakeFiles/CodeCraft-2021.dir/PSO.cpp.o: ../migrate.hpp
-CMakeFiles/CodeCraft-2021.dir/PSO.cpp.o: ../operation.hpp
-CMakeFiles/CodeCraft-2021.dir/PSO.cpp.o: ../server.hpp
-CMakeFiles/CodeCraft-2021.dir/PSO.cpp.o: ../tools.hpp
-CMakeFiles/CodeCraft-2021.dir/PSO.cpp.o: ../virtualMachine.hpp
-
 CMakeFiles/CodeCraft-2021.dir/distribution.cpp.o: ../distribution.cpp
 CMakeFiles/CodeCraft-2021.dir/distribution.cpp.o: ../distribution.hpp
 CMakeFiles/CodeCraft-2021.dir/distribution.cpp.o: ../server.hpp

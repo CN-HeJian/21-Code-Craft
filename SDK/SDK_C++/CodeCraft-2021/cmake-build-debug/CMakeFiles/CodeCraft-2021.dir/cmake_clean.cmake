@@ -3,7 +3,6 @@ file(REMOVE_RECURSE
   "../bin/CodeCraft-2021.pdb"
   "CMakeFiles/CodeCraft-2021.dir/CodeCraft-2021.cpp.o"
   "CMakeFiles/CodeCraft-2021.dir/Integer_program.cpp.o"
-  "CMakeFiles/CodeCraft-2021.dir/PSO.cpp.o"
   "CMakeFiles/CodeCraft-2021.dir/distribution.cpp.o"
   "CMakeFiles/CodeCraft-2021.dir/manager.cpp.o"
   "CMakeFiles/CodeCraft-2021.dir/migrate.cpp.o"
