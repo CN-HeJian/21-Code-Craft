@@ -457,20 +457,34 @@ void manager::processing()
     // 开始遍历所有天的操作
     for(int day = 0;day < get_days();day ++)
     {
+
         // 初步计算需要多少
-        auto init = coarse_init();
-        for(size_t i = 0; i < init.size();i++)
+//        auto init = coarse_init();
+        if(day == 0)
         {
-            init.at(i) *= 2;
-        }
-        // 尝试购买
-        for(size_t i = 0;i < init.size();i++)
-        {
-            for(int j = 0;j < init.at(i);j ++)
+            int max_type = 0;
+            int max_price = 0;
+            for(int i = 0;i < m_servers.size();i++)
             {
-                try_purchase_server(++server_num,i,true);
+                if(max_price < m_servers.at(i).m_price)
+                {
+                    max_type = i;
+                    max_price = m_servers.at(i).m_price;
+                }
+            }
+            for(int i = 0;i < 5000;i ++)
+            {
+                try_purchase_server(++server_num,max_type,true);
             }
         }
+        // 尝试购买
+//        for(size_t i = 0;i < init.size();i++)
+//        {
+//            for(int j = 0;j < init.at(i);j ++)
+//            {
+//                try_purchase_server(++server_num,i,true);
+//            }
+//        }
         //std::cerr<<"init cost time in ms:"<<clock_end()<<std::endl;
         //clock_start();
         // test 
