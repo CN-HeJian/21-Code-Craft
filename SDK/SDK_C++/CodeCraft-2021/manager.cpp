@@ -3,7 +3,9 @@
 using namespace std;
 
 
+
 manager::manager() : m_purchase_cost(0)
+
 {
 }
 // 买一个id对应的服务器
@@ -11,6 +13,7 @@ manager::manager() : m_purchase_cost(0)
 // 服务器类型
 bool manager::try_purchase_server(int id, int server_typeId, bool is_try)
 {
+
     if ((size_t)server_typeId > m_servers.size() - 1)
     {
         std::cerr << "can not find the server!!!" << std::endl;
@@ -28,6 +31,7 @@ bool manager::try_purchase_server(int id, int server_typeId, bool is_try)
         data.is_old = true;
         m_purchase_servers.insert(std::pair<int, server>(id, server(id, data)));
         m_serverss_ids.emplace_back(id);
+
         m_purchase_cost += data.m_price;
 
         // 记录操作
@@ -40,6 +44,7 @@ bool manager::try_purchase_server(int id, int server_typeId, bool is_try)
 bool manager::try_deploy_VM(int vm_id, int vm_typeId, int server_id, int type, bool is_log, bool is_try)
 {
     // 构造一个虚拟机
+
     if ((size_t)vm_typeId > m_VMs.size() - 1)
     {
         std::cerr << "can not find the virtual machine !!!" << std::endl;
@@ -160,7 +165,6 @@ bool manager::try_migrate_VM(int vm_id, int server_to, int type, bool is_try)
             return false;
         }
         int vm_type = iter_vm->second.get_VM_id();
-
         if (!try_de_deploy_VM(vm_id,true))
         {
             return false;
@@ -657,6 +661,7 @@ void manager::result()
 //            }
 //        }
         // 当前部署
+
         for (const auto& d : op.m_deploys)
         {
             if (d.is_double)
@@ -672,6 +677,7 @@ void manager::result()
 }
 
 #ifdef test
+
 void manager::readTxt(const string &inputFile)
 {
     int fd = open(inputFile.c_str(), O_RDONLY);
@@ -916,7 +922,6 @@ void manager::readTxtbyStream()
 {
     // std::string test = "/home/lyc/21-Code-Craft/training-data/training-1.txt";
     // std::freopen(test.c_str(), "rb", stdin);// 文件重定向
-
     // 标准输入流读取服务器相关信息
     int serverNum = 0;
     cin >> serverNum;
@@ -1077,5 +1082,6 @@ void manager::writetotxt(){
     }
     ofs.close();//关闭文件
     cost.close();
+    lastdayCnt = m_serverss_ids.size();
 }
 
