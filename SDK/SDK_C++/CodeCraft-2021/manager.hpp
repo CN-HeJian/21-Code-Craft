@@ -74,9 +74,9 @@ public:
     std::vector<int> coarse_init();
 private:
     // 当前的成本
-    float m_purchase_cost;
-    float m_power_cost = 0;
-    float m_try_cost;// 尝试操作的成本
+    double m_purchase_cost;
+    double m_power_cost = 0;
+    double m_try_cost;// 尝试操作的成本
     int m_current_day = 0;
     int m_server_id = -1;// 服务器id，每一次购买时 ++ 
     // 分配算法类
