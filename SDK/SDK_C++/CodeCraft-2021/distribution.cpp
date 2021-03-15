@@ -145,8 +145,8 @@ int distribution::get_maxServer_index()
 {
     int max_typeid = 0;
     for(int i=0; i<m_servers.size(); i++){
-        if(m_servers[max_typeid].m_CPU_num >= m_servers[i].m_CPU_num
-            && m_servers[max_typeid].m_RAM >= m_servers[i].m_RAM){
+        if(m_servers[max_typeid].m_CPU_num <= m_servers[i].m_CPU_num
+            && m_servers[max_typeid].m_RAM <= m_servers[i].m_RAM){
                 max_typeid = i;
             }
     }
@@ -154,33 +154,28 @@ int distribution::get_maxServer_index()
 }
 
 std::vector<distribution_operation> distribution::try_distribution(
-        std::vector<int>& servers_type_id,
-        std::vector<std::vector<int>>& VMs_type_id,
+        std::vector<int>& servers_type_id,  //所有的服务器对应的型号
+        std::vector<std::vector<int>>& VMs_type_id, //所有服务器上装的虚拟机
         task& task_today,
         std::vector<int>& remain_CPU_A,
         std::vector<int>& remain_RAM_A,
         std::vector<int>& remain_CPU_B,
         std::vector<int>& remain_RAM_B)
 {
-    int next_server_id = servers_type_id.size();// 如果需要购买服务器，则是购买服务器的起始id
+    int next_server_id = servers_type_id.size();// 如果需要购买服务器，则是购买服务器的起始id，变
     int task_whole_num = task_today.cmd.size();
-    int server_whole_num = servers_type_id.size();
-    distribution_result_queue.clear();
+    int server_whole_num = servers_type_id.size();//不变
+    distribution_result_queue.clear();//操作
     distribution_result_queue.resize(task_whole_num);// 初始化返回结果的数组
 
-    // 将今日命令中del命令的vm型号都置为-1,表示不考虑买入
+    std::vector<int> split_pos;//存放del命令在今日命令中的索引
+    // 将今日命令中del命令的vm型号都置为-1,表示不考虑买入，用户设置的id---虚拟机type
+    // 根据del所在位置分割命令，进行分段排序，按照需求容量从小到大
     for(int i=0; i<task_today.cmd.size(); i++){
         if(task_today.cmd[i].first == "del"){
             task_today.cmd[i].second.second = -1;
-        }
-    }
-    // 根据del所在位置分割命令，进行分段排序，按照需求容量从小到大
-    // 1 完成对输入命令的需求排序
-    std::vector<int> split_pos;//存放del命令在今日命令中的索引
-    for(int i=0; i<task_whole_num; i++){
-        // 命令只需要函数开始调用时进行一次排序
-        if(task_today.cmd[i].first == "del")
             split_pos.emplace_back(i);
+        }
     }
 
     // sorted_vm_id[i]表示第i小需求对应的今日任务index
@@ -213,6 +208,7 @@ std::vector<distribution_operation> distribution::try_distribution(
             });
             start_pose = cur_interval+1;
         }
+        //排最后情况
         if(start_pose < sorted_vm_id.size()-1){
             std::sort(sorted_vm_id.begin()+start_pose, sorted_vm_id.end(), 
             [this, task_today](int a, int b){
@@ -240,6 +236,7 @@ std::vector<distribution_operation> distribution::try_distribution(
     int needCpuNum=0, needRamNum=0;// 还缺的cpu、ram资源总和
     // 开始根据命令进行每条命令的处理
     while(count < task_whole_num){
+
         // 2.1 对现有的所有服务器按照剩余容量从小到大排序
         if(count == 0 || count == task_whole_num/2){
             std::sort(sorted_server_id.begin(), sorted_server_id.end(),[
@@ -251,7 +248,7 @@ std::vector<distribution_operation> distribution::try_distribution(
             });
         }
         // 2.2 服务器容量和命令所需容量都是升序排列，逐vector begin 和end 次挨个放置尝试<first-fit算法>
-        int cur_vmtypeid_intask = sorted_vm_id[count];// 取出今日任务中需要放置的第count小虚拟机
+        int cur_vmtypeid_intask = sorted_vm_id[count];// 取出今日任务中需要放置的第count小虚拟机，当前虚拟机在任务列表的索引
         // 修复bug
         int vm_typeid = task_today.cmd[cur_vmtypeid_intask].second.second;// 当前任务要处理的vm型号，-1表示是删除命令
         // 删除命令的处理
@@ -337,7 +334,6 @@ std::vector<distribution_operation> distribution::try_distribution(
         }
         count++;
     }
-    
 
     // 3 如果存在没有完成的命令
     if(remains_task_num){
@@ -353,13 +349,13 @@ std::vector<distribution_operation> distribution::try_distribution(
         {
             if(m_servers[ph_index].m_CPU_num >= needCpuNum &&
                 m_servers[ph_index].m_RAM >= needRamNum){
-                index_fit = ph_index;
+                index_fit = ph_index;//适合的服务器的索引
                 server_num_fit = 1;
                 break;
             }
         }
         if(ph_index == m_servers.size()){
-            index_fit = max_server_typeid;
+            index_fit = max_server_typeid; //
             server_num_fit = max(needCpuNum / m_servers[index_fit].m_CPU_num,
                             needRamNum / m_servers[index_fit].m_RAM) + 1;
         } 
@@ -469,7 +465,7 @@ std::vector<distribution_operation> distribution::try_distribution(
     }
     for(int i=0; i<distribution_result_queue.size()-count_buy; i++)
     {
-        result.emplace_back(distribution_result_queue[i]);   
+        result.emplace_back(distribution_result_queue[i]);
     }
     return result;
 }

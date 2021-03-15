@@ -17,21 +17,21 @@ int main()
 	// TODO:write standard output
 	// TODO:fflush(stdout);
 
-	clock_start();
+	//clock_start();
 	// TODO:read standard input
 	manager m;
 	#ifdef test
 		m.readTxt(inputTxtName);
 	#else
-		m.readTxtbyStream();
+		//m.readTxtbyStream();
 	#endif
 	// TODO:process
 	m.processing();
 	// TODO:write standard output
-    //m.result();
+    	m.result();
 	// TODO:fflush(stdout);
     fflush(stdout);
-    std::cerr<<"cost time:"<<clock_end()<<std::endl;
+    //std::cerr<<"cost time:"<<clock_end()<<std::endl;
 	return 0;
 }
 

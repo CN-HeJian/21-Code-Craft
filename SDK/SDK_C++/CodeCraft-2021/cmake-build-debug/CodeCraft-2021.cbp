@@ -44,7 +44,6 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add option="-D_DEBUG"/>
 					<Add directory="/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/lib"/>
 					<Add directory="/usr/include/c++/9"/>
 					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
@@ -68,7 +67,6 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add option="-D_DEBUG"/>
 					<Add directory="/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/lib"/>
 					<Add directory="/usr/include/c++/9"/>
 					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>

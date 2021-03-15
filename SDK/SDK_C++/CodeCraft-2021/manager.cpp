@@ -17,6 +17,7 @@ bool manager::try_purchase_server(int id, int server_typeId, bool is_try)
     if ((size_t)server_typeId > m_servers.size() - 1)
     {
         std::cerr << "can not find the server!!!" << std::endl;
+        while (1){}
         return false;
     }
     if (is_try)
@@ -48,6 +49,7 @@ bool manager::try_deploy_VM(int vm_id, int vm_typeId, int server_id, int type, b
     if ((size_t)vm_typeId > m_VMs.size() - 1)
     {
         std::cerr << "can not find the virtual machine !!!" << std::endl;
+        while (1){}
         return false;
     }
     virtual_machine VM(vm_id, m_VMs.at(vm_typeId));
@@ -58,6 +60,7 @@ bool manager::try_deploy_VM(int vm_id, int vm_typeId, int server_id, int type, b
         if (iter == m_try_purchase_servers.end())
         {
             std::cerr << "can not find the server !!!" << std::endl;
+            while (1){}
             return false;
         }
         //
@@ -80,6 +83,7 @@ bool manager::try_deploy_VM(int vm_id, int vm_typeId, int server_id, int type, b
         if (iter == m_purchase_servers.end())
         {
             std::cerr << "can not find the server !!!" << std::endl;
+            while (1){}
             return false;
         }
         if (!VM.deploy(server_id,type))
@@ -109,6 +113,7 @@ bool manager::try_de_deploy_VM(int vm_id, bool is_try)
         if (iter_vm == m_try_deploy_VMs.end())
         { // 没有找到
             std::cerr << "can not delet unexit VM" << std::endl;
+            while (1){}
             return false;
         }
         auto server_id = iter_vm->second.get_server_id();
@@ -117,6 +122,7 @@ bool manager::try_de_deploy_VM(int vm_id, bool is_try)
         if (iter_server == m_purchase_servers.end())
         {
             std::cerr << "can not find corresponde server " << std::endl;
+            while (1){}
             return false;
         }
         if (!iter_server->second.remove_virtual_machine(vm_id))
@@ -130,6 +136,7 @@ bool manager::try_de_deploy_VM(int vm_id, bool is_try)
         if (iter_vm == m_deploy_VMs.end())
         {
             std::cerr << "can not delet unexit VM" << std::endl;
+            while (1){}
             return false;
         }
         auto server_id = iter_vm->second.get_server_id();
@@ -138,6 +145,7 @@ bool manager::try_de_deploy_VM(int vm_id, bool is_try)
         if (iter_server == m_purchase_servers.end())
         {
             std::cerr << "can not find corresponde server " << std::endl;
+            while (1){}
             return false;
         }
         if (!iter_server->second.remove_virtual_machine(vm_id))
@@ -162,6 +170,7 @@ bool manager::try_migrate_VM(int vm_id, int server_to, int type, bool is_try)
         if(iter_vm == m_try_deploy_VMs.end())
         {
             std::cerr << "can not migrate not exit VM!!!" << std::endl;
+            while (1){}
             return false;
         }
         int vm_type = iter_vm->second.get_VM_id();
@@ -180,6 +189,7 @@ bool manager::try_migrate_VM(int vm_id, int server_to, int type, bool is_try)
         if (iter_vm == m_deploy_VMs.end())
         {
             std::cerr << "can not migrate not exit VM!!!" << std::endl;
+            while (1){}
             return false;
         }
         int vm_type = iter_vm->second.get_VM_id();
@@ -245,8 +255,8 @@ std::vector<int> manager::coarse_init()
     }
     for (auto s : m_serverss_ids)
     {
-        sum_cpu -= 0.05 * (m_purchase_servers[s].get_CPU_left_A() + m_purchase_servers[s].get_CPU_left_B());
-        sum_ram -= 0.05 * (m_purchase_servers[s].get_RAM_left_A() + m_purchase_servers[s].get_RAM_left_B());
+        sum_cpu -= 0.1 * (m_purchase_servers[s].get_CPU_left_A() + m_purchase_servers[s].get_CPU_left_B());
+        sum_ram -= 0.1 * (m_purchase_servers[s].get_RAM_left_A() + m_purchase_servers[s].get_RAM_left_B());
     }
     sum_cpu = sum_cpu < 0 ? 0 : sum_cpu;
     sum_ram = sum_ram < 0 ? 0 : sum_ram;
@@ -446,11 +456,13 @@ bool manager::try_delet_server(int server_id)
     if(iter == m_try_purchase_servers.end())
     {// 没有找到
         std::cerr<<"can not delet server unexits!!"<<std::endl;
+        while (1){}
         return false;
     }
     if(iter->second.get_VM_num() != 0)
     {// 服务器里面还有剩余的
         std::cerr<<"can not delet servers with VMs!!!"<<std::endl;
+        while (1){}
         return false;
     }
     m_try_purchase_servers.erase(server_id);
@@ -499,12 +511,8 @@ void manager::processing()
     m_migrate = new migrate();
     int server_num = -1;
     // 开始遍历所有天的操作
-    for (int day = 0; day < get_days(); day++)
+    for (size_t day = 0; day < get_days(); day++)
     {
-        if(day == 133){
-            cerr<<"134天故障"<<endl;
-        }
-
         // 初步计算需要多少
         auto init = coarse_init();
         // 尝试购买
@@ -518,10 +526,11 @@ void manager::processing()
         // 进行分配操作
         try_distribution();
         int task_num = 0;
-
+        int iii = 0;
         // 尝试进行分配
         for(const auto& op:m_distribution_op)
         {
+            iii ++;
             if(op.distribution_type == add)
             {// 添加服务器
                 try_purchase_server(op.server_id,op.server_type,true);
@@ -530,6 +539,10 @@ void manager::processing()
             else if(op.distribution_type == norm)
             {// 正常部署或者删除虚拟机
                 auto c = m_tasks.at(day).cmd.at(task_num);
+                if(op.server_id == 9)
+                {
+                    cerr<<"9";
+                }
                 if(c.first == "add")
                 {// 部署虚拟机
                     try_deploy_VM(c.second.first,c.second.second,op.server_id,op.node_type,false,true);
@@ -564,17 +577,19 @@ void manager::processing()
         finish_oneday();// 一天结束的标志
 
         std::cerr<<"finish day"<<m_current_day<<std::endl;
-
+#ifdef test
         statistic_busy_rate(m_current_day);
         sum_cost.push_back(m_purchase_cost+m_power_cost);
         hard_cost.push_back(m_purchase_cost);
         ele_cost.push_back(m_power_cost);
-
+#endif
 
         std::cerr<<"cost:"<<m_purchase_cost + m_power_cost<<std::endl;
 
     }
+#ifdef test
     writetotxt();
+#endif
 }
 
 float manager::try_oneday(std::vector<int> distribution, std::vector<int> node_type)
@@ -613,6 +628,7 @@ float manager::try_oneday(std::vector<int> distribution, std::vector<int> node_t
             if (iter_vm == m_deploy_VMs.end())
             {
                 std::cerr << "can not delet unexit VM" << std::endl;
+                while (1){}
                 return 1e50;
             }
             auto server_id = iter_vm->second.get_server_id(); // 找到对应的服务器id
@@ -620,6 +636,7 @@ float manager::try_oneday(std::vector<int> distribution, std::vector<int> node_t
             if (iter_server == m_purchase_servers.end())
             {
                 std::cerr << "can not find corresponde server " << std::endl;
+                while (1){}
                 return 1e50;
             }
         }

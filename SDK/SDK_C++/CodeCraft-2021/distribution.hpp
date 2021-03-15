@@ -34,7 +34,7 @@ struct  distribution_operation
     distribution_operation(const distribution_operation & op)
     {
         server_id = op.server_id;
-        server_type = op.node_type;
+        server_type = op.server_type;
         node_type = op.node_type;
         distribution_type = op.distribution_type;
     }

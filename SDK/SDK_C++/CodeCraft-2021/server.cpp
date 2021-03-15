@@ -40,6 +40,8 @@ bool server::add_virtual_machine(int id, virtual_machine_data VM, int type)
         require_CPU_B - m_CPU_left_B > 0)
     {
         std::cerr<<"CPU or RAM is not enough !!!"<<std::endl;
+        std::vector<int> i;
+        i.at(2) = 1;
         return false;
     }
     else
