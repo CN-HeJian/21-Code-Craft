@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-//#define test
+#define test
 enum TYPE{
     A = 0,
     B = 1,

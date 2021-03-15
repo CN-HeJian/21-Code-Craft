@@ -2,7 +2,7 @@
 #include <iostream>
 using namespace std;
 
-manager::manager() : m_cost(0)
+manager::manager() : m_purchase_cost(0)
 {
 }
 // 买一个id对应的服务器
@@ -27,7 +27,7 @@ bool manager::try_purchase_server(int id, int server_typeId, bool is_try)
         data.is_old = true;
         m_purchase_servers.insert(std::pair<int, server>(id, server(id, data)));
         m_serverss_ids.emplace_back(id);
-        m_cost += data.m_price;
+        m_purchase_cost += data.m_price;
         // 记录操作
         m_operators.purchase_server(data.m_name);
     }
@@ -205,12 +205,12 @@ float manager::try_cal_cost(bool is_try)
         {
             if (m_purchase_servers[id].is_power_on())
             {
-                m_cost += m_purchase_servers[id].get_daily_cost();
+                //m_cost += m_purchase_servers[id].get_daily_cost();
                 m_power_cost += m_purchase_servers[id].get_daily_cost();
             }
         }
     }
-    return m_cost;
+    return m_power_cost;
 }
 
 void manager::finish_oneday()
@@ -345,7 +345,7 @@ void manager::assign_by_try()
         }
     }
     // 确保try部分和实际的是一样的
-    m_try_cost = m_cost;
+    m_try_cost = m_purchase_cost;
     m_try_serverss_ids = m_serverss_ids;
     // 由于服务器的id会错乱因此需要重新分配id
     for(const auto& task:daily_task)
@@ -542,7 +542,7 @@ void manager::processing()
         finish_oneday();// 一天结束的标志
         //std::cerr<<"assign cost time in ms:"<<clock_end()<<std::endl;
         //std::cerr<<"finish day"<<m_current_day<<std::endl;
-        //std::cerr<<"cost:"<<m_cost<<std::endl;
+        std::cerr<<"cost:"<<m_purchase_cost + m_power_cost<<std::endl;
     }
 }
 

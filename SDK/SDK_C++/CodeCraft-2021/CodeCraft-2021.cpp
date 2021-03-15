@@ -10,7 +10,7 @@ int main()
 {
 	// TODO:read standard input
 
-	string inputTxtName = "/home/lyc/21-Code-Craft/training-data/training-2.txt";
+	string inputTxtName = "/home/lyc/21-Code-Craft/training-data/training-1.txt";
     //string inputTxtName = "/home/jian/Downloads/demo/21-Code-Craft/training-data/test.txt";
 
 	//readTxt(inputTxtName);
@@ -18,7 +18,7 @@ int main()
 	// TODO:write standard output
 	// TODO:fflush(stdout);
 
-	//clock_start();
+	clock_start();
 	// TODO:read standard input
 	manager m;
 	#ifdef test
@@ -29,8 +29,9 @@ int main()
 	// TODO:process
 	m.processing();
 	// TODO:write standard output
-    m.result();
+    //m.result();
 	// TODO:fflush(stdout);
     fflush(stdout);
+    std::cerr<<"cost time:"<<clock_end()<<std::endl;
 	return 0;
 }
