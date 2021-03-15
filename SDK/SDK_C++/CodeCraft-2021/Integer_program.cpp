@@ -147,7 +147,6 @@ int Simplex::run()
         }
         if (!x)
         {
-            //std::cerr << "Unbounded";
             return -1; //无界
         }
         Pivot(x, y);
@@ -222,7 +221,7 @@ void Integer_program::set_all_servers(std::vector<server_data> server_data, int 
     {
         co_matrix[2 + i][i] = -1;
     }
-    // 目标函数 
+    // 目标函数
     for(size_t i = 0; i < server_data.size(); i++)
     {// 价格越便宜越好 + 服务器容量越大越好
         int cpu = 0;

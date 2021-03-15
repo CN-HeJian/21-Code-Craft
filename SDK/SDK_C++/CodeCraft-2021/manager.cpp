@@ -2,6 +2,7 @@
 #include <iostream>
 using namespace std;
 
+
 manager::manager() : m_purchase_cost(0)
 {
 }
@@ -28,6 +29,7 @@ bool manager::try_purchase_server(int id, int server_typeId, bool is_try)
         m_purchase_servers.insert(std::pair<int, server>(id, server(id, data)));
         m_serverss_ids.emplace_back(id);
         m_purchase_cost += data.m_price;
+
         // 记录操作
         m_operators.purchase_server(data.m_name);
     }
@@ -48,7 +50,7 @@ bool manager::try_deploy_VM(int vm_id, int vm_typeId, int server_id, int type, b
     if (is_try)
     { // 尝试部署虚拟机
         auto iter = m_try_purchase_servers.find(server_id);
-        if (iter == m_purchase_servers.end())
+        if (iter == m_try_purchase_servers.end())
         {
             std::cerr << "can not find the server !!!" << std::endl;
             return false;
@@ -158,6 +160,7 @@ bool manager::try_migrate_VM(int vm_id, int server_to, int type, bool is_try)
             return false;
         }
         int vm_type = iter_vm->second.get_VM_id();
+
         if (!try_de_deploy_VM(vm_id,true))
         {
             return false;
@@ -236,20 +239,15 @@ std::vector<int> manager::coarse_init()
             sum_ram += m_VMs.at(vm_type_id).m_RAM;
         }
     }
-    for(auto s:m_serverss_ids)
+    for (auto s : m_serverss_ids)
     {
-        sum_cpu -= 0.015*(m_purchase_servers[s].get_CPU_left_A() + m_purchase_servers[s].get_CPU_left_B());
-        sum_ram -= 0.015*(m_purchase_servers[s].get_RAM_left_A() + m_purchase_servers[s].get_RAM_left_B());
+        sum_cpu -= 0.05 * (m_purchase_servers[s].get_CPU_left_A() + m_purchase_servers[s].get_CPU_left_B());
+        sum_ram -= 0.05 * (m_purchase_servers[s].get_RAM_left_A() + m_purchase_servers[s].get_RAM_left_B());
     }
-    if(sum_cpu < 0)
-    {
-        sum_cpu = 0;
-    }
-    if(sum_ram < 0)
-    {
-        sum_ram = 0;
-    }
-    m_coarse_init->set_all_servers(m_servers, sum_cpu * 1.2, sum_ram * 1.2);
+    sum_cpu = sum_cpu < 0 ? 0 : sum_cpu;
+    sum_ram = sum_ram < 0 ? 0 : sum_ram;
+    m_coarse_init->set_all_servers(m_servers, sum_cpu, sum_ram);
+
     return m_coarse_init->solve(true);
 }
 
@@ -316,10 +314,10 @@ void manager::assign_by_try()
     // }
     // 按照命令执行部分
     auto daily_task = m_tasks.at(m_current_day).cmd;
-    for(auto task:daily_task)
-    {// 遍历所有任务
-        if(task.first == "add")
-        {// 添加
+    for (auto task : daily_task)
+    { // 遍历所有任务
+        if (task.first == "add")
+        { // 添加
             // 找到try中的虚拟机
             auto vm = m_try_deploy_VMs[task.second.first];
             // try中的服务器id
@@ -340,6 +338,7 @@ void manager::assign_by_try()
         }
         else
         {// 删除我就直接删掉了
+
             try_de_deploy_VM(task.second.first);
         }
     }
@@ -367,16 +366,26 @@ void manager::assign_by_try()
             }
         }
     }
-    for(int & add_try_server : add_try_servers)
-    {// 遍历所有新买的服务器
-        if(add_try_server != servers_map[add_try_server])
+
+    std::vector<int> add_server_ids;
+    for (int i = 0; i < add_try_servers.size(); i++)
+    { // 遍历所有新买的服务器
+        if (add_try_servers.at(i) != servers_map[add_try_servers.at(i)])
         {
-            int server_id = servers_map[add_try_server];
-            auto server = m_purchase_servers[server_id];
-            m_try_purchase_servers.erase(add_try_server);
-            m_try_purchase_servers.insert(make_pair(server_id,server));
+            int server_id = servers_map[add_try_servers.at(i)];
+            m_try_purchase_servers.erase(add_try_servers.at(i));
+            add_server_ids.emplace_back(server_id);
         }
-        m_try_purchase_servers[add_try_server].set_old();
+        else
+        {
+            m_try_purchase_servers[add_try_servers.at(i)].set_old();
+        }
+    }
+    for (int i = 0; i < add_server_ids.size(); i++)
+    {
+        auto s = m_purchase_servers[add_server_ids.at(i)];
+        m_try_purchase_servers.insert(make_pair(add_server_ids.at(i), s));
+        m_try_purchase_servers[add_server_ids.at(i)].set_old();
     }
     try_cal_cost();
 }
@@ -412,6 +421,7 @@ void manager::try_distribution()
     std::vector<int> left_RAM_A;
     std::vector<int> left_CPU_B;
     std::vector<int> left_RAM_B;
+
     for(int server_id : m_try_serverss_ids)
     {
         servers_type_id.emplace_back(m_try_purchase_servers[server_id].get_type());
@@ -422,7 +432,7 @@ void manager::try_distribution()
         left_RAM_B.emplace_back(m_try_purchase_servers[server_id].get_RAM_left_B());
     }
     m_distribution_op = m_distribution->try_distribution(servers_type_id,
-    VMs_type_id,m_tasks.at(m_current_day),left_CPU_A,left_CPU_B,left_RAM_A,left_RAM_B);
+                                                         VMs_type_id, m_tasks.at(m_current_day), left_CPU_A, left_RAM_A, left_CPU_B, left_RAM_B);
 }
 
 // 尝试删除掉服务器，这在实际中是不存在的，仅在尝试的时候使用
@@ -449,35 +459,59 @@ void manager::processing()
     // 初始化的时候进行一些统计数据
     //@TODO
     // 初始化一些变量
-    clock_start();
-    m_coarse_init = new Integer_program(m_serverss_ids.size());
-    m_distribution = new distribution(m_servers,m_VMs);
-    m_migrate = new migrate();
-    int server_num  = -1;
-    // 开始遍历所有天的操作
-    for(int day = 0;day < get_days();day ++)
-    {
 
-        // 初步计算需要多少
-//        auto init = coarse_init();
-        if(day == 0)
-        {
-            int max_type = 0;
-            int max_price = 0;
-            for(int i = 0;i < m_servers.size();i++)
-            {
-                if(max_price < m_servers.at(i).m_price)
-                {
-                    max_type = i;
-                    max_price = m_servers.at(i).m_price;
-                }
-            }
-            for(int i = 0;i < 5000;i ++)
-            {
-                try_purchase_server(++server_num,max_type,true);
-            }
+//    clock_start();
+//    m_coarse_init = new Integer_program(m_serverss_ids.size());
+//    m_distribution = new distribution(m_servers,m_VMs);
+//    m_migrate = new migrate();
+//    int server_num  = -1;
+//    // 开始遍历所有天的操作
+//    for(int day = 0;day < get_days();day ++)
+//    {
+//
+//        // 初步计算需要多少
+////        auto init = coarse_init();
+//        if(day == 0)
+//        {
+//            int max_type = 0;
+//            int max_price = 0;
+//            for(int i = 0;i < m_servers.size();i++)
+//            {
+//                if(max_price < m_servers.at(i).m_price)
+//                {
+//                    max_type = i;
+//                    max_price = m_servers.at(i).m_price;
+//                }
+//            }
+//            for(int i = 0;i < 5000;i ++)
+//            {
+//                try_purchase_server(++server_num,max_type,true);
+//            }
+//        }
+
+
+    m_coarse_init = new Integer_program(m_serverss_ids.size());
+    m_distribution = new distribution(m_servers, m_VMs);
+    m_migrate = new migrate();
+    int server_num = -1;
+    // 开始遍历所有天的操作
+    for (int day = 0; day < get_days(); day++)
+    {
+        if(day == 133){
+            cerr<<"134天故障"<<endl;
         }
 
+        // 初步计算需要多少
+        auto init = coarse_init();
+        // 尝试购买
+        for (int i = 0; i < init.size(); i++)
+        {
+            for (int j = 0; j < init.at(i); j++)
+            {
+                try_purchase_server(++server_num, i, true);
+            }
+        }
+        // 进行分配操作
         try_distribution();
         int task_num = 0;
 
@@ -571,6 +605,7 @@ float manager::try_oneday(std::vector<int> distribution, std::vector<int> node_t
         { // 删除操作
             // 找到需要删除的虚拟机
             auto iter_vm = m_deploy_VMs.find(i.second.first);
+
             if (iter_vm == m_deploy_VMs.end())
             {
                 std::cerr << "can not delet unexit VM" << std::endl;
@@ -635,6 +670,7 @@ void manager::result()
         }
     }
 }
+
 #ifdef test
 void manager::readTxt(const string &inputFile)
 {
@@ -875,10 +911,12 @@ void manager::readTxt(const string &inputFile)
     munmap(buffer, sb.st_size); // 解除内存映射
 }
 #endif
+
 void manager::readTxtbyStream()
 {
     // std::string test = "/home/lyc/21-Code-Craft/training-data/training-1.txt";
     // std::freopen(test.c_str(), "rb", stdin);// 文件重定向
+
     // 标准输入流读取服务器相关信息
     int serverNum = 0;
     cin >> serverNum;
@@ -1040,3 +1078,4 @@ void manager::writetotxt(){
     ofs.close();//关闭文件
     cost.close();
 }
+

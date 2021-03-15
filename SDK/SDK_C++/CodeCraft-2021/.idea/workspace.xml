@@ -13,45 +13,30 @@
   <component name="ChangeListManager">
     <list default="true" id="1dc63e81-45fc-431d-90ed-b33d19e11738" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CodeCraft-2021.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CodeCraft-2021.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Integer_program.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Integer_program.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Integer_program.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/Integer_program.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/CodeCraft-2021" beforeDir="false" afterPath="$PROJECT_DIR$/bin/CodeCraft-2021" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/CXX.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/CXX.includecache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/CodeCraft-2021.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/CodeCraft-2021.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/DependInfo.cmake" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/Integer_program.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/Integer_program.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/PSO.cpp.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/build.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/cmake_clean.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/cmake_clean.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/depend.internal" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/depend.internal" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/depend.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/depend.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/distribution.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/distribution.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/flags.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/flags.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/link.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/distribution.cpp.o" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/manager.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/manager.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/migrate.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/migrate.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/operation.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/operation.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/progress.make" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/server.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/server.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/tools.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/tools.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/progress.marks" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/progress.marks" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CodeCraft-2021.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CodeCraft-2021.cbp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/cmake_install.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/cmake_install.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir/tools.cpp.o" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/distribution.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/distribution.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/distribution.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/distribution.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/manager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/manager.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/manager.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/manager.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrate" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/migrate.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/migrate.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/migrate.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/migrate.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/operation.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/operation.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/operation.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/operation.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/server.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/server.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tools.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tools.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/tools.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/virtualMachine.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/virtualMachine.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,7 +109,7 @@
       <workItem from="1615648147844" duration="765000" />
       <workItem from="1615648956986" duration="1462000" />
       <workItem from="1615687147472" duration="14135000" />
-      <workItem from="1615811542520" duration="412000" />
+      <workItem from="1615811542520" duration="3185000" />
     </task>
     <servers />
   </component>

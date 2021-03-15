@@ -60,6 +60,17 @@ public:
         m_VM = s.m_VM;
         m_VM_ids = s.m_VM_ids;
     }
+    void operator =(const server& s) //重载=
+    {
+        m_data = s.m_data;
+        m_index = s.m_index;
+        m_RAM_left_A = s.m_RAM_left_A;
+        m_RAM_left_B = s.m_RAM_left_B;
+        m_CPU_left_A = s.m_CPU_left_A;
+        m_CPU_left_B = s.m_CPU_left_B;
+        m_VM = s.m_VM;
+        m_VM_ids = s.m_VM_ids;
+    }
     // 数据接口
     server_data get_data(){return m_data;}
     int get_id(){return m_index;}
@@ -90,7 +101,8 @@ private:
     int m_RAM_left_B;// B节点当前服务器剩余的RAM数目
     // 含有的虚拟机 
     std::vector<int> m_VM_ids;//依次记录配置的每一个虚拟机的id，m_VM_ids_size即这个服务器上包含的虚拟机的总数
-    std::unordered_map<int,virtual_machine_data> m_VM;// 包含的虚拟机数据，通过id范围
+
+    std::unordered_map<int,virtual_machine_data> m_VM;// 包含的虚拟机数据，通过id索引
 
 };
 
