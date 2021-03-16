@@ -21,6 +21,10 @@ public:
     int m_daily_cost;// 每天的成本价格
     std::string m_name;
     bool is_old = false;
+        // 占用率 A 
+    float occupancy_factor_A = 0.f;// A节点占用率
+    // 占用率 B
+    float occupancy_factor_B = 0.f;// B节点占用率
     // 构造函数 
     server_data(){}
     server_data(int id,int cpu,int ram,int price,int daily_cost,std::string name):
@@ -35,6 +39,8 @@ public:
         m_price = d.m_price;
         m_RAM = d.m_RAM;
         m_name = d.m_name;
+        occupancy_factor_A = d.occupancy_factor_A;// A节点占用率
+        occupancy_factor_B = d.occupancy_factor_B;// B节点占用率
     }
 };
 
@@ -85,6 +91,8 @@ public:
     int get_CPU_left_B(){return m_CPU_left_B;}
     int get_RAM_left_B(){return m_RAM_left_B;}
     int get_VM_num(){return m_VM.size();}
+    float get_occupancy_factor_A(){return m_data.occupancy_factor_A;}
+    float get_occupancy_factor_B(){return m_data.occupancy_factor_B;}
     std::vector<int> get_VM_ids(){return m_VM_ids;}
     std::unordered_map<int,virtual_machine_data> get_VM(){return m_VM;}
     // 提供一些操作
@@ -100,6 +108,7 @@ private:
     int m_RAM_left_A;// A节点当前服务器剩余的RAM数目
     int m_CPU_left_B;// B节点当前服务器剩余的CPU数目
     int m_RAM_left_B;// B节点当前服务器剩余的RAM数目
+
     // 含有的虚拟机 
     std::vector<int> m_VM_ids;//依次记录配置的每一个虚拟机的id，m_VM_ids_size即这个服务器上包含的虚拟机的总数
     std::unordered_map<int,virtual_machine_data> m_VM;// 包含的虚拟机数据，通过id索引

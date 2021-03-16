@@ -51,6 +51,13 @@ bool server::add_virtual_machine(int id, virtual_machine_data VM, int type)
         m_RAM_left_B -= require_RAM_B;
         m_CPU_left_A -= require_CPU_A;
         m_CPU_left_B -= require_CPU_B;
+        // 更新占用率
+        float ram_rate_A = 1.f - 2.f * (float)m_RAM_left_A / (float)m_data.m_RAM;
+        float ram_rate_B = 1.f - 2.f * (float)m_RAM_left_B / (float)m_data.m_RAM;
+        float cpu_rate_A = 1.f - 2.f * (float)m_CPU_left_A / (float)m_data.m_CPU_num;
+        float cpu_rate_B = 1.f - 2.f * (float)m_CPU_left_B / (float)m_data.m_CPU_num;
+        m_data.occupancy_factor_A = ram_rate_A>cpu_rate_A?ram_rate_A:cpu_rate_A;
+        m_data.occupancy_factor_B = ram_rate_B>cpu_rate_B?ram_rate_B:cpu_rate_B;
         return true;
     }
 }
@@ -83,6 +90,13 @@ bool server::remove_virtual_machine(int id)
             return false;
         }
         m_VM.erase(id);
+                // 更新占用率
+        float ram_rate_A = 1.f - 2.f * (float)m_RAM_left_A / (float)m_data.m_RAM;
+        float ram_rate_B = 1.f - 2.f * (float)m_RAM_left_B / (float)m_data.m_RAM;
+        float cpu_rate_A = 1.f - 2.f * (float)m_CPU_left_A / (float)m_data.m_CPU_num;
+        float cpu_rate_B = 1.f - 2.f * (float)m_CPU_left_B / (float)m_data.m_CPU_num;
+        m_data.occupancy_factor_A = ram_rate_A>cpu_rate_A?ram_rate_A:cpu_rate_A;
+        m_data.occupancy_factor_B = ram_rate_B>cpu_rate_B?ram_rate_B:cpu_rate_B;
         return true;
     }
     else

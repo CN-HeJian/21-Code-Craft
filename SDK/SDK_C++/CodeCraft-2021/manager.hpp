@@ -53,6 +53,7 @@ public:
     // 处理所有天的任务
     void processing();
     void try_distribution();
+    void try_delet_unused(std::vector<int> new_server_ids);
     void try_migrate();
     void assign_by_try();// 通过尝试的结果，按照实际的流程来赋值
     // 读取数据

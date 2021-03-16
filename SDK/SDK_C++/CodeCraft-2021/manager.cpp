@@ -226,7 +226,7 @@ void manager::re_begin()
 std::vector<int> manager::coarse_init()
 {
     auto task = m_tasks.at(m_current_day).cmd;
-    int sum_cpu = 0, sum_ram = 0;
+    float sum_cpu = 0, sum_ram = 0;
     for (const auto& t : task)
     { // 遍历当前所有任务
         if (t.first == "add")
@@ -238,8 +238,13 @@ std::vector<int> manager::coarse_init()
     }
     for(auto s:m_serverss_ids)
     {
-        sum_cpu -= 0.05 * (m_purchase_servers[s].get_CPU_left_A() + m_purchase_servers[s].get_CPU_left_B());
-        sum_ram -= 0.05 * (m_purchase_servers[s].get_RAM_left_A() + m_purchase_servers[s].get_RAM_left_B());
+        //  sum_cpu -= 0.05 * (m_purchase_servers[s].get_CPU_left_A() + m_purchase_servers[s].get_CPU_left_B());
+        // sum_ram -= 0.05 * (m_purchase_servers[s].get_RAM_left_A() + m_purchase_servers[s].get_RAM_left_B());
+        float rate_A =  m_purchase_servers[s].get_occupancy_factor_A()<0.5?1:0;
+        float rate_B =  m_purchase_servers[s].get_occupancy_factor_B()<0.5?1:0;
+
+        sum_cpu -= (rate_A * m_purchase_servers[s].get_CPU_left_A() + rate_B * m_purchase_servers[s].get_CPU_left_B());
+        sum_ram -= (rate_A * m_purchase_servers[s].get_RAM_left_A() + rate_B * m_purchase_servers[s].get_RAM_left_B());
     }
     sum_cpu = sum_cpu < 0 ? 0 : sum_cpu;
     sum_ram = sum_ram < 0 ? 0 : sum_ram;
@@ -429,6 +434,22 @@ void manager::try_distribution()
     VMs_type_id,m_tasks.at(m_current_day),left_CPU_A,left_RAM_A,left_CPU_B,left_RAM_B);
 }
 
+// 尝试删除掉新购买的服务器
+//  new_server_ids 所有新购买的服务器id
+void manager::try_delet_unused(std::vector<int> new_server_ids)
+{
+    int delet_num = 0;
+    for(int i = 0;i < new_server_ids.size();i ++)
+    {
+        if(!m_try_purchase_servers[new_server_ids[i]].is_power_on())
+        {// 如果当前服务器没有开机，处于空载状态
+            // 删除掉服务器 
+             try_delet_server(new_server_ids[i]);
+             delet_num ++;
+        }
+    }
+    //std::cerr<<"delet num"<<delet_num<<std::endl;
+}
 // 尝试删除掉服务器，这在实际中是不存在的，仅在尝试的时候使用
 bool manager::try_delet_server(int server_id)
 {
@@ -522,6 +543,7 @@ void manager::processing()
                 try_delet_server(op.server_id);
             }
         }
+       try_delet_unused(init);
         //std::cerr<<"cost cost time in ms:"<<clock_end()<<std::endl;
         //clock_start();
         // 迁移操作
@@ -549,8 +571,10 @@ void manager::processing()
         hard_cost.push_back(m_purchase_cost);
         ele_cost.push_back(m_power_cost);
 #endif
-
     }
+#ifdef test
+    writetotxt();
+#endif
 }
 
 float manager::try_oneday(std::vector<int> distribution, std::vector<int> node_type)
