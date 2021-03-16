@@ -421,8 +421,8 @@ void manager::try_distribution()
         left_CPU_B.emplace_back(m_try_purchase_servers[server_id].get_CPU_left_B());
         left_RAM_B.emplace_back(m_try_purchase_servers[server_id].get_RAM_left_B());
     }
-    m_distribution_op = m_distribution->try_distribution(servers_type_id,
-    VMs_type_id,m_tasks.at(m_current_day),left_CPU_A,left_CPU_B,left_RAM_A,left_RAM_B);
+    m_distribution_op = m_distribution->try_violence_distribution(servers_type_id,
+    VMs_type_id,m_tasks.at(m_current_day),left_CPU_A,left_RAM_A,left_CPU_B,left_RAM_B);
 }
 
 // 尝试删除掉服务器，这在实际中是不存在的，仅在尝试的时候使用
