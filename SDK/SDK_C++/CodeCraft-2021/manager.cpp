@@ -461,34 +461,33 @@ void manager::processing()
     // 开始遍历所有天的操作
     for(int day = 0;day < get_days();day ++)
     {
-
         // 初步计算需要多少
-//        auto init = coarse_init();
-//        // 尝试购买
-//        for (int i = 0; i < init.size(); i++)
-//        {
-//            for (int j = 0; j < init.at(i); j++)
-//            {
-//                try_purchase_server(++server_num, i, true);
-//            }
-//        }
-        if(day == 0)
+        auto init = coarse_init();
+        // 尝试购买
+        for (int i = 0; i < init.size(); i++)
         {
-            int max_server = 0;
-            int max_price = 0;
-            for(auto &s:m_servers)
+            for (int j = 0; j < init.at(i); j++)
             {
-                if(s.m_price > max_price)
-                {
-                    max_price = s.m_price;
-                    max_server = s.m_type;
-                }
-            }
-            for(int i = 0;i < 5000;i ++)
-            {
-                try_purchase_server(++server_num, max_server, true);
+                try_purchase_server(++server_num, i, true);
             }
         }
+//        if(day == 0)
+//        {
+//            int max_server = 0;
+//            int max_price = 0;
+//            for(auto &s:m_servers)
+//            {
+//                if(s.m_price > max_price)
+//                {
+//                    max_price = s.m_price;
+//                    max_server = s.m_type;
+//                }
+//            }
+//            for(int i = 0;i < 5000;i ++)
+//            {
+//                try_purchase_server(++server_num, max_server, true);
+//            }
+//        }
         // 进行分配操作
         try_distribution();
         int task_num = 0;
@@ -609,35 +608,19 @@ void manager::result()
         auto op = m_operators.get_operator(i);
         // 当前购买服务器
         std::cout << "(purchase, " << op.m_purchases.size() << ")" << std::endl;
-        auto iter = op.m_purchases.begin();
-        for (size_t j = 0; j < op.m_purchases.size(); j++)
+
+        auto names = m_operators.get_servers_name(i);
+        for(auto & name : names)
         {
-            std::cout << "(" << iter->first << ", " << iter->second.num << ")" << std::endl;
-            iter++;
+            std::cout << "(" << name << ", " << op.m_purchases[name].num << ")" << std::endl;
         }
-//        auto names = m_operators.get_servers_name(i);
-//        for(auto & name : names)
-//        {
-//            std::cout << "(" << name << ", " << op.m_purchases[name].num << ")" << std::endl;
-//        }
         // 当前迁移服务器
         std::cout << "(migration, " << 0 << ")" << std::endl;
-//        std::cout << "(migration, " << op.m_migrates.size() << ")" << std::endl;
-//        for (auto m : op.m_migrates)
-//        {
-//            if (m.is_double)
-//            { // 双节点
-//                std::cout << "(" << m.server_from_id << ", " << m.server_to_id << ")" << std::endl;
-//            }
-//            else
-//            { // 单节点
-//                std::cout << "(" << m.server_from_id << ", " << m.server_to_id << ", " << m.node << ")" << std::endl;
-//            }
-//        }
+
         // 当前部署
         for (const auto& d : op.m_deploys)
         {
-            int map_id = d.server_id;//m_operators.m_server_id_map[d.server_id];
+            int map_id = m_operators.m_server_id_map[d.server_id];
             if (d.is_double)
             { // 双节点
                 std::cout << "(" << map_id << ")" << std::endl;
