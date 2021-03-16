@@ -501,10 +501,6 @@ void manager::processing()
     // 开始遍历所有天的操作
     for (int day = 0; day < get_days(); day++)
     {
-        if(day == 133){
-            cerr<<"134天故障"<<endl;
-        }
-
         // 初步计算需要多少
         auto init = coarse_init();
         // 尝试购买

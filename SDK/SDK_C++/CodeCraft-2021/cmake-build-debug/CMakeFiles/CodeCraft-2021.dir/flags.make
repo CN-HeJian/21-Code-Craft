@@ -6,5 +6,5 @@ CXX_FLAGS =  -O0 -Wall -g -ggdb -std=c++11
 
 CXX_DEFINES = -D_DEBUG
 
-CXX_INCLUDES = -I/home/jian/Desktop/hj/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/lib 
+CXX_INCLUDES = -I/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/lib 
 

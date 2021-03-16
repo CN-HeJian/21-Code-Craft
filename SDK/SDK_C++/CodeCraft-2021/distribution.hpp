@@ -34,7 +34,7 @@ struct  distribution_operation
     distribution_operation(const distribution_operation & op)
     {
         server_id = op.server_id;
-        server_type = op.node_type;
+        server_type = op.server_type;
         node_type = op.node_type;
         distribution_type = op.distribution_type;
     }
@@ -69,6 +69,10 @@ private:
     std::vector<distribution_operation> distribution_result_queue;//当天操作完成后返回的操作数据队列
     std::vector<distribution_operation> server_buy_queue;//当天操作完成后返回的操作数据队列
     int max_server_typeid;// 服务器表中容量最大的服务器所在位置索引
+    int lastday_server_num = 0;//表示前一天购买的虚拟机的数量，用于标记当天尝试购买的虚拟机
+    vector<int> not_purchaseServer;
+public:
+    int serverCnt = 0;
 };
 
 #endif // __DISTRIBUTION_H

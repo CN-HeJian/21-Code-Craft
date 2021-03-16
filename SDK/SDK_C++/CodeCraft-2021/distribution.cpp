@@ -1,4 +1,5 @@
 #include "distribution.hpp"
+#include "string.h"
 
 distribution::distribution(std::vector<server_data>& servers, std::vector<virtual_machine_data>& VMs)
 {
@@ -162,6 +163,7 @@ std::vector<distribution_operation> distribution::try_distribution(
         std::vector<int>& remain_CPU_B,
         std::vector<int>& remain_RAM_B)
 {
+    int last_head = 0;
     int next_server_id = servers_type_id.size();// 如果需要购买服务器，则是购买服务器的起始id
     int task_whole_num = task_today.cmd.size();
     int server_whole_num = servers_type_id.size();
@@ -182,7 +184,6 @@ std::vector<distribution_operation> distribution::try_distribution(
         if(task_today.cmd[i].first == "del")
             split_pos.emplace_back(i);
     }
-
     // sorted_vm_id[i]表示第i小需求对应的今日任务index
     std::vector<int> sorted_vm_id;
     for(int i = 0; i < task_whole_num; i++){
@@ -191,18 +192,31 @@ std::vector<distribution_operation> distribution::try_distribution(
     if(split_pos.size() == 0){
         // 1.1 如果没有del命令，就对今天的所有命令进行排序
         std::sort(sorted_vm_id.begin(), sorted_vm_id.end(), [this, task_today](int a, int b){
-            virtual_machine_data data_a = m_VMs[task_today.cmd[a].second.second];
-            virtual_machine_data data_b = m_VMs[task_today.cmd[b].second.second];
-            int need_of_a = data_a.m_CPU_num + data_a.m_RAM;
-            int need_of_b = data_b.m_CPU_num + data_b.m_RAM;
-            return need_of_a < need_of_b;
+            int need_a = m_VMs[task_today.cmd[a].second.second].m_CPU_num + m_VMs[task_today.cmd[a].second.second].m_RAM;
+            int need_b = m_VMs[task_today.cmd[b].second.second].m_CPU_num + m_VMs[task_today.cmd[b].second.second].m_RAM;
+            return need_a<need_b;
         });
     }
     else{
+        //简写版本
+        for(size_t index=0;index<split_pos.size();++index){
+            auto head = sorted_vm_id.begin()+last_head;
+            auto tail = sorted_vm_id.begin()+split_pos[index]+1;
+            if(tail < sorted_vm_id.end()-1){
+                sort(head,tail,[this,&task_today](int a,int b){
+                        int need_a = m_VMs[task_today.cmd[a].second.second].m_CPU_num + m_VMs[task_today.cmd[a].second.second].m_RAM;
+                        int need_b = m_VMs[task_today.cmd[b].second.second].m_CPU_num + m_VMs[task_today.cmd[b].second.second].m_RAM;
+                        return need_a<need_b;
+                });
+            }
+            last_head = split_pos[index] + 2;
+        }
         // 1.2 按照del命令分段对今天的命令进行排序
+        /*
         int start_pose = 0;
         for(int i = 0; i < split_pos.size(); i++){
             int cur_interval = split_pos[i];// 指向del命令在当前命令列表中的下标
+            //排序过程
             std::sort(sorted_vm_id.begin()+start_pose, sorted_vm_id.begin()+cur_interval,
             [this, task_today](int a, int b){
                 virtual_machine_data data_a = m_VMs[task_today.cmd[a].second.second];
@@ -223,8 +237,8 @@ std::vector<distribution_operation> distribution::try_distribution(
                 return need_of_a < need_of_b;
             });
         }
+        */
     }
-
     // 2 对现有的所有服务器按照剩余容量从小到大排序，只在算法开始时排序一次，进行一半之后再排序一次
     //   ，并根据前面排序好的命令行顺序来进行逐一放置
     // sorted_server_id[i]表示第i小容量对应的服务器id
@@ -233,7 +247,7 @@ std::vector<distribution_operation> distribution::try_distribution(
         sorted_server_id.emplace_back(i);// 进行初始化
         
     }
-    int count = 0;
+    int count = 0;//记录第几天操作
     std::vector<bool> is_assigned_correct(task_whole_num ,false);// 标志位判断是否放置成功
     int remains_task_num = 0;// 未完成的放置任务的数量
     std::vector<int> remains_task_index;// 未完成的放置任务在任务数组中的索引
@@ -262,7 +276,7 @@ std::vector<distribution_operation> distribution::try_distribution(
             _operation.node_type = -1;
             _operation.server_id = -1;
             _operation.server_type = -1;// 表示不添加任何服务器
-            is_assigned_correct[cur_vmtypeid_intask] = true;
+            //is_assigned_correct[cur_vmtypeid_intask] = true;
             distribution_result_queue[cur_vmtypeid_intask] = _operation;
             count++;
             continue;
@@ -454,6 +468,27 @@ std::vector<distribution_operation> distribution::try_distribution(
             }
         }
     }
+
+    //退回操作，用于返回不需要用到的服务器
+    //judge
+    memset(&not_purchaseServer,0,sizeof not_purchaseServer);
+    for(int index = lastday_server_num;index<servers_type_id.size();index++){
+        int server_mapid = servers_type_id[index];
+        int origin_ram_data = m_servers[server_mapid].m_RAM;
+        int origin_cpu_data = m_servers[server_mapid].m_CPU_num;
+        int remain_cpu = remain_CPU_A[index] + remain_CPU_B[index];
+        int remain_ram = remain_RAM_A[index] + remain_RAM_B[index];
+        if(origin_cpu_data == remain_cpu || origin_ram_data == remain_ram){
+           // cout<<"--------------------------------------------------------------"<<endl;
+            not_purchaseServer.emplace_back(index);
+            serverCnt++;
+        }
+    }
+    //update flag
+    lastday_server_num = servers_type_id.size();
+    //test
+    cout<<"----"<<serverCnt<<endl;
+
 
     // 4 整理返回数据信息，将数组中顺序按照购买->分配顺序返回
     std::vector<distribution_operation> result;
