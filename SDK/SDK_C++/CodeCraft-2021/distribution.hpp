@@ -2,12 +2,14 @@
 #define __DISTRIBUTION_H 
 
 #include <vector>
+
 #include <algorithm>
 #include <unordered_set>
 #include "server.hpp"
 #include "virtualMachine.hpp"
 #include "tools.hpp"
 using namespace std;
+
 
 // 返回不同的操作
 enum distribution_type{
@@ -22,11 +24,22 @@ struct  distribution_operation
     int server_id;// 分配到id对应的服务器上
     int server_type;//只有当额外添加服务器时才用
     int node_type;//节点的类型，放置在A节点上还是B节点上，或者双节点AB
-    // norm 正常操作分配操作
+    // norm 正常操作 
     // erase 将 server_id 对应的服务器删除 
     // add 则是再添加一个server_type类型的服务器，其id为 server_id 
     int distribution_type;
+    distribution_operation()
+    {
+    }
+    distribution_operation(const distribution_operation & op)
+    {
+        server_id = op.server_id;
+        server_type = op.server_type;
+        node_type = op.node_type;
+        distribution_type = op.distribution_type;
+    }
 };
+
 
 class distribution
 {
@@ -37,7 +50,7 @@ public:
     std::vector<distribution_operation> try_distribution(
         std::vector<int>& servers_type_id,
         std::vector<std::vector<int>>& VMs_type_id,
-        task& task_today,
+        task task_today,
         std::vector<int>& remain_CPU_A,
         std::vector<int>& remain_RAM_A,
         std::vector<int>& remain_CPU_B,

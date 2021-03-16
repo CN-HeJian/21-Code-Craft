@@ -1,8 +1,9 @@
 #include "distribution.hpp"
 
-distribution::distribution(std::vector<server_data>& servers, std::vector<virtual_machine_data>& VMs) :
- m_VMs(VMs), m_servers(servers)
+distribution::distribution(std::vector<server_data>& servers, std::vector<virtual_machine_data>& VMs)
 {
+    m_VMs = VMs;
+    m_servers = servers;
     max_server_typeid = get_maxServer_index();// 获取服务器表中容量最大服务器的typeid
 }
 
@@ -29,14 +30,122 @@ distribution::~distribution()
  *                    3、删除服务器命令
  *          
  * */
+//std::vector<distribution_operation> distribution::try_distribution(
+//        std::vector<int> servers_type_id,
+//        std::vector<std::vector<int>> VMs_type_id,
+//        task tasks,
+//        std::vector<int> left_CPU_A,
+//        std::vector<int> left_CPU_B,
+//        std::vector<int> left_RAM_A,
+//        std::vector<int> left_RAM_B)
+//{
+//        int server_cnt = 0;
+//        int state_AB = 0;// A = 0 , B = 1
+//
+//
+//        std::vector<distribution_operation> result;
+//        int cnt = 0;
+//        for(auto t:tasks.cmd)
+//        {
+//                cnt ++;
+//                distribution_operation op;
+//                if(t.first == "add")
+//                {// 如果是添加
+//                        if(m_VMs[t.second.second].m_is_double_node)
+//                        {// 双节点添加
+//                                int lc_A = left_CPU_A.at(server_cnt) - m_VMs[t.second.second].m_CPU_num/2;
+//                                int lc_B = left_CPU_B.at(server_cnt) - m_VMs[t.second.second].m_CPU_num/2;
+//                                int lr_A = left_RAM_A.at(server_cnt) - m_VMs[t.second.second].m_RAM/2;
+//                                int lr_B = left_RAM_B.at(server_cnt) - m_VMs[t.second.second].m_RAM/2;
+//                                // 保证当前有足够的资源
+//                                while(lc_A < 0 || lc_B < 0 || lr_A < 0 || lr_B < 0)
+//                                {
+//                                        server_cnt ++;
+//                                        lc_A = left_CPU_A.at(server_cnt) - m_VMs[t.second.second].m_CPU_num/2;
+//                                        lc_B = left_CPU_B.at(server_cnt) - m_VMs[t.second.second].m_CPU_num/2;
+//                                        lr_A = left_RAM_A.at(server_cnt) - m_VMs[t.second.second].m_RAM/2;
+//                                        lr_B = left_RAM_B.at(server_cnt) - m_VMs[t.second.second].m_RAM/2;
+//                                }
+//                                left_CPU_A.at(server_cnt) = lc_A;
+//                                left_CPU_B.at(server_cnt) = lc_B;
+//                                left_RAM_A.at(server_cnt) = lr_A;
+//                                left_RAM_B.at(server_cnt) = lr_B;
+//                                op.distribution_type = norm;
+//                                op.server_id = server_cnt;
+//                                op.node_type = AB;
+//                        }
+//                        else
+//                        {// 单节点添加
+//                                int lc_A = -10;
+//                                int lc_B = -10;
+//                                int lr_A = -10;
+//                                int lr_B = -10;
+//                                while (lc_A < 0 || lc_B<0 || lr_A<0 || lr_B<0)
+//                                {
+//                                        if(state_AB == 0)
+//                                        {// 从A节点开始添加
+//                                                lc_A = left_CPU_A.at(server_cnt) - m_VMs[t.second.second].m_CPU_num;
+//                                                lr_A = left_RAM_A.at(server_cnt) - m_VMs[t.second.second].m_RAM;
+//                                                lc_B = 10;
+//                                                lr_B = 10;
+//                                                if(lc_A < 0 || lr_A < 0)
+//                                                {
+//                                                        state_AB = 1;
+//                                                }
+//                                                else
+//                                                {
+//                                                        left_CPU_A.at(server_cnt) = lc_A;
+//                                                        left_RAM_A.at(server_cnt) = lr_A;
+//                                                        op.distribution_type = norm;
+//                                                        op.server_id = server_cnt;
+//                                                        op.node_type = A;
+//                                                }
+//                                        }
+//                                        else if(state_AB == 1)
+//                                        {// 添加到B节点
+//                                                lc_B = left_CPU_B.at(server_cnt) - m_VMs[t.second.second].m_CPU_num;
+//                                                lr_B = left_RAM_B.at(server_cnt) - m_VMs[t.second.second].m_RAM;
+//                                                lc_A = 10;
+//                                                lr_A = 10;
+//                                                if(lc_B < 0 || lr_B < 0)
+//                                                {
+//                                                        state_AB = 0;
+//                                                        server_cnt ++;
+//                                                }
+//                                                else
+//                                                {
+//                                                        left_CPU_B.at(server_cnt) = lc_B;
+//                                                        left_RAM_B.at(server_cnt) = lr_B;
+//                                                        op.distribution_type = norm;
+//                                                        op.server_id = server_cnt;
+//                                                        op.node_type = B;
+//                                                }
+//                                        }
+//                                        else
+//                                        {
+//                                                std::cerr<<"state_AB is :"<<state_AB<<std::endl;
+//                                        }
+//                                }
+//                        }
+//                }
+//                else
+//                {// 删除操作
+//                        op.distribution_type = norm;
+//                }
+//                // 添加到结果中
+//                result.emplace_back(op);
+//        }
+//        return result;
+//}
+
 
 // 获取容量最大f服务器的索引
 int distribution::get_maxServer_index()
 {
     int max_typeid = 0;
     for(int i=0; i<m_servers.size(); i++){
-        if(m_servers[max_typeid].m_CPU_num >= m_servers[i].m_CPU_num
-            && m_servers[max_typeid].m_RAM >= m_servers[i].m_RAM){
+        if(m_servers[max_typeid].m_CPU_num <= m_servers[i].m_CPU_num
+            && m_servers[max_typeid].m_RAM <= m_servers[i].m_RAM){
                 max_typeid = i;
             }
     }
@@ -46,7 +155,7 @@ int distribution::get_maxServer_index()
 std::vector<distribution_operation> distribution::try_distribution(
         std::vector<int>& servers_type_id,
         std::vector<std::vector<int>>& VMs_type_id,
-        task& task_today,
+        task task_today,
         std::vector<int>& remain_CPU_A,
         std::vector<int>& remain_RAM_A,
         std::vector<int>& remain_CPU_B,
@@ -59,20 +168,15 @@ std::vector<distribution_operation> distribution::try_distribution(
     distribution_result_queue.resize(task_whole_num);// 初始化返回结果的数组
 
     // 将今日命令中del命令的vm型号都置为-1,表示不考虑买入
-    for(int i=0; i<task_today.cmd.size(); i++){
-        if(task_today.cmd[i].first == "del"){
-            task_today.cmd[i].second.second = -1;
-        }
-    }
     // 根据del所在位置分割命令，进行分段排序，按照需求容量从小到大
-    // 1 完成对输入命令的需求排序
     std::vector<int> split_pos;//存放del命令在今日命令中的索引
     for(int i=0; i<task_whole_num; i++){
-        // 命令只需要函数开始调用时进行一次排序
-        if(task_today.cmd[i].first == "del")
+        if(task_today.cmd[i].first == "del"){
+            task_today.cmd[i].second.second = -1;
             split_pos.emplace_back(i);
+        }
     }
-
+    // 1 完成对输入命令的需求排序
     // sorted_vm_id[i]表示第i小需求对应的今日任务index
     std::vector<int> sorted_vm_id;
     for(int i = 0; i < task_whole_num; i++){
@@ -363,3 +467,4 @@ std::vector<distribution_operation> distribution::try_distribution(
     }
     return result;
 }
+

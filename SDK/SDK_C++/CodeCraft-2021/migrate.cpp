@@ -112,7 +112,6 @@ vector<migrate_operation> migrate::try_migrate(
     std::cerr<<"VmNums "<<VmNums<<"max_migrateCnt "<<max_migrateCnt<<endl;
 
     //二次规划问题
-    //int cost = 0;
 
     //图论问题
     //首先过滤掉使用效率较高的节点，或者加上随机采样优化

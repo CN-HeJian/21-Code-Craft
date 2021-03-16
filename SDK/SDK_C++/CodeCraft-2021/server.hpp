@@ -68,6 +68,7 @@ public:
         m_RAM_left_B = s.m_RAM_left_B;
         m_CPU_left_A = s.m_CPU_left_A;
         m_CPU_left_B = s.m_CPU_left_B;
+
         m_VM = s.m_VM;
         m_VM_ids = s.m_VM_ids;
     }
@@ -102,7 +103,6 @@ private:
     // 含有的虚拟机 
     std::vector<int> m_VM_ids;//依次记录配置的每一个虚拟机的id，m_VM_ids_size即这个服务器上包含的虚拟机的总数
     std::unordered_map<int,virtual_machine_data> m_VM;// 包含的虚拟机数据，通过id索引
-
 };
 
 #endif //__SERVER_H

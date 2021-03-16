@@ -71,7 +71,7 @@ int Simplex::init_simplex()
         }
         if (!y)
         {
-            std::cerr << "Infeasible";
+            //std::cerr << "Infeasible";
             return 0;
         }
         Pivot(x, y); //把第x行的第y列的元素作为主元 进行高斯消元
@@ -122,7 +122,7 @@ int Simplex::run()
     {
         return init; //无解
     }
-    int i, j;
+    int i;
     while (1)
     {
         int x = 0, y = 0;
@@ -147,7 +147,6 @@ int Simplex::run()
         }
         if (!x)
         {
-            std::cerr << "Unbounded";
             return -1; //无界
         }
         Pivot(x, y);
@@ -199,7 +198,7 @@ void Integer_program::set_all_servers(std::vector<server_data> server_data, int 
     m_solver = new Simplex(m_server_num + 2, m_server_num + 1);
     // cpu 约束
     b_matrix[0] = -min_cpu;
-    for (int i = 0; i < server_data.size(); i++)
+    for (size_t i = 0; i < server_data.size(); i++)
     { // 遍历所有的服务器获取其对应的cpu数目
         co_matrix[0][i] = -server_data.at(i).m_CPU_num;
         if(max_cpu < -co_matrix[0][i])
@@ -209,7 +208,7 @@ void Integer_program::set_all_servers(std::vector<server_data> server_data, int 
     }
     // ram 约束
     b_matrix[1] = -min_ram;
-    for (int i = 0; i < server_data.size(); i++)
+    for (size_t i = 0; i < server_data.size(); i++)
     { // 遍历所有服务其获取其对应的ram数目
         co_matrix[1][i] = -server_data.at(i).m_RAM;
         if(max_ram < -co_matrix[1][i])
@@ -218,12 +217,12 @@ void Integer_program::set_all_servers(std::vector<server_data> server_data, int 
         }
     }
     // 非零约束
-    for (int i = 0; i < server_data.size(); i++)
+    for (size_t i = 0; i < server_data.size(); i++)
     {
         co_matrix[2 + i][i] = -1;
     }
-    // 目标函数 
-    for(int i = 0; i < server_data.size(); i++)
+    // 目标函数
+    for(size_t i = 0; i < server_data.size(); i++)
     {// 价格越便宜越好 + 服务器容量越大越好
         int cpu = 0;
         int ram = 0;
