@@ -31,10 +31,11 @@ public:
     }
     int m_id;// 虚拟机的型号
     int m_CPU_num;// CPU 总数
-    int m_RAM;// 内存大小 
-    int m_is_double_node;// 是否是双节点
-    int m_type;// 实际上的类型
-    bool is_old = false; 
+    int m_RAM;// 内存大小
+    bool m_is_double_node;// 是否是双节点
+    int m_type;// 实际上的类型，虚拟机string映射后的id
+    bool is_old = false; //第n天提供的服务器是否是新买的
+    int node_type;
 };
 
 // 虚拟机类 
@@ -84,7 +85,8 @@ public:
         return true;
     }
 private:
-    int m_index;// 创建id
+
+    int m_index;// 创建id m_index == m_data.m_type
     int m_node_type = -1;// 放在服务器节点上的方式
     virtual_machine_data m_data;
     int m_server_id;

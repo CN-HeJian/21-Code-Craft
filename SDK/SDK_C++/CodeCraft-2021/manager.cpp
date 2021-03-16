@@ -449,7 +449,7 @@ void manager::processing()
     // 初始化的时候进行一些统计数据 
     //@TODO
     // 初始化一些变量
-    clock_start();
+    //clock_start();
     m_coarse_init = new Integer_program(m_serverss_ids.size());
     m_distribution = new distribution(m_servers,m_VMs);
     m_migrate = new migrate();

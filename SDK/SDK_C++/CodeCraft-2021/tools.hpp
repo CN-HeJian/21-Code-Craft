@@ -17,7 +17,4 @@ struct task
     std::vector<std::pair<std::string,std::pair<int,int>>> cmd;
 };
 
-void clock_start();
-float clock_end();
-
 #endif //__TOOLS_H
