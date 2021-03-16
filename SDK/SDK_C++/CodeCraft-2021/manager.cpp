@@ -401,7 +401,7 @@ void manager::try_migrate()
         }
         VMs.emplace_back(temp);
     }
-    m_migrate_op = m_migrate->try_migrate(servers,VMs);
+    //m_migrate_op = m_migrate->try_migrate(servers,VMs);
 }
 // 分配操作 
 void manager::try_distribution()
