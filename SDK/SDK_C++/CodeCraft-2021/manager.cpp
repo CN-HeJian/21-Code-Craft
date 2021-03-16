@@ -29,7 +29,7 @@ bool manager::try_purchase_server(int id, int server_typeId, bool is_try)
         m_serverss_ids.emplace_back(id);
         m_purchase_cost += data.m_price;
         // 记录操作
-        m_operators.purchase_server(data.m_name);
+        m_operators.purchase_server(data.m_name,id);
     }
     return true;
 }
@@ -611,7 +611,7 @@ void manager::result()
         auto iter = op.m_purchases.begin();
         for (size_t j = 0; j < op.m_purchases.size(); j++)
         {
-            std::cout << "(" << iter->first << ", " << iter->second << ")" << std::endl;
+            std::cout << "(" << iter->first << ", " << iter->second.num << ")" << std::endl;
             iter++;
         }
         // 当前迁移服务器
