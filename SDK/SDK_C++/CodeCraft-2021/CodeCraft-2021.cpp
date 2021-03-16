@@ -10,7 +10,7 @@ int main()
 {
 	// TODO:read standard input
 
-	string inputTxtName = "/home/lyc/21-Code-Craft/training-data/training-2.txt";
+	string inputTxtName = "/home/lyc/21-Code-Craft/training-data/training-1.txt";
     //string inputTxtName = "/home/jian/Downloads/demo/21-Code-Craft/training-data/test.txt";
 
 	//readTxt(inputTxtName);
@@ -29,7 +29,9 @@ int main()
 	// TODO:process
 	m.processing();
 	// TODO:write standard output
+#ifndef test
     m.result();
+#endif
 	// TODO:fflush(stdout);
     fflush(stdout);
 	return 0;

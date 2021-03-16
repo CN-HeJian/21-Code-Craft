@@ -541,7 +541,15 @@ void manager::processing()
         finish_oneday();// 一天结束的标志
         //std::cerr<<"assign cost time in ms:"<<clock_end()<<std::endl;
         //std::cerr<<"finish day"<<m_current_day<<std::endl;
-        //std::cerr<<"cost:"<<m_cost<<std::endl;
+
+#ifdef test
+        std::cerr<<"cost:"<<m_purchase_cost + m_power_cost<<std::endl;
+        statistic_busy_rate(m_current_day);
+        sum_cost.push_back(m_purchase_cost+m_power_cost);
+        hard_cost.push_back(m_purchase_cost);
+        ele_cost.push_back(m_power_cost);
+#endif
+
     }
 }
 
