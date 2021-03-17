@@ -1,5 +1,6 @@
 #include "distribution.hpp"
 
+
 distribution::distribution(std::vector<server_data>& servers, std::vector<virtual_machine_data>& VMs)
 {
     m_VMs = VMs;

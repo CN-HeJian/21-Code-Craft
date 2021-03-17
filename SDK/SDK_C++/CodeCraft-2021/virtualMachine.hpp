@@ -20,7 +20,7 @@ public:
         m_type = d.m_type;
         is_old = d.is_old;
     }
-    void operator =(const virtual_machine_data& d) //重载=
+    virtual_machine_data &operator =(const virtual_machine_data& d) //重载=
     {
         m_is_double_node = d.m_is_double_node;
         m_RAM = d.m_RAM;
@@ -29,13 +29,13 @@ public:
         m_type = d.m_type;
         is_old = d.is_old;
     }
-    int m_id;// 虚拟机的型号
-    int m_CPU_num;// CPU 总数
-    int m_RAM;// 内存大小
-    bool m_is_double_node;// 是否是双节点
-    int m_type;// 实际上的类型，虚拟机string映射后的id
+    int m_id{};// 虚拟机的型号
+    int m_CPU_num{};// CPU 总数
+    int m_RAM{};// 内存大小
+    bool m_is_double_node{};// 是否是双节点
+    int m_type{};// 实际上的类型，虚拟机string映射后的id
     bool is_old = false; //第n天提供的服务器是否是新买的
-    int node_type;
+    int node_type{};
 };
 
 // 虚拟机类 

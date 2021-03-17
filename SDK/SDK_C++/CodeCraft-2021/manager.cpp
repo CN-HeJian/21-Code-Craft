@@ -223,6 +223,36 @@ void manager::re_begin()
     m_current_day = 0;
 }
 
+std::vector<int> manager::fine_init(std::queue<int> task_ids)
+{
+    auto task = m_tasks.at(m_current_day).cmd;
+    float sum_cpu = 0, sum_ram = 0;
+    for (int i = 0;i < task_ids.size();i ++)
+    { // 遍历当前所有任务
+        int id = task_ids.front();
+        task_ids.pop();
+        int sign = task.at(id).first == "add"?1:-1;
+        {
+            int vm_type_id = task.at(id).second.second;
+            sum_cpu += (float)(sign * m_VMs.at(vm_type_id).m_CPU_num);
+            sum_ram += (float)(sign * m_VMs.at(vm_type_id).m_RAM);
+        }
+    }
+    for(auto s:m_try_serverss_ids)
+    {
+        float rate_A =  m_try_purchase_servers[s].get_occupancy_factor_A()<0.5?1:0;
+        float rate_B =  m_try_purchase_servers[s].get_occupancy_factor_B()<0.5?1:0;
+
+        sum_cpu -= (rate_A * (float)m_try_purchase_servers[s].get_CPU_left_A() + rate_B * (float)m_purchase_servers[s].get_CPU_left_B());
+        sum_ram -= (rate_A * (float)m_try_purchase_servers[s].get_RAM_left_A() + rate_B * (float)m_purchase_servers[s].get_RAM_left_B());
+    }
+    sum_cpu = sum_cpu < 0 ? 0 : sum_cpu;
+    sum_ram = sum_ram < 0 ? 0 : sum_ram;
+    m_coarse_init->set_all_servers(m_servers, (int)(sum_cpu+0.99), (int)(sum_ram+0.99));
+
+    return m_coarse_init->solve(true);
+}
+
 std::vector<int> manager::coarse_init()
 {
     auto task = m_tasks.at(m_current_day).cmd;
@@ -316,7 +346,7 @@ void manager::assign_by_try()
     // }
     // 按照命令执行部分
     auto daily_task = m_tasks.at(m_current_day).cmd;
-    for(auto task:daily_task)
+    for(const auto& task:daily_task)
     {// 遍历所有任务
         if(task.first == "add")
         {// 添加
@@ -369,24 +399,24 @@ void manager::assign_by_try()
     }
 
     std::vector<int> add_server_ids;
-    for (int i = 0; i < add_try_servers.size(); i++)
+    for (int & add_try_server : add_try_servers)
     { // 遍历所有新买的服务器
-        if (add_try_servers.at(i) != servers_map[add_try_servers.at(i)])
+        if (add_try_server != servers_map[add_try_server])
         {
-            int server_id = servers_map[add_try_servers.at(i)];
-            m_try_purchase_servers.erase(add_try_servers.at(i));
+            int server_id = servers_map[add_try_server];
+            m_try_purchase_servers.erase(add_try_server);
             add_server_ids.emplace_back(server_id);
         }
         else
         {
-            m_try_purchase_servers[add_try_servers.at(i)].set_old();
+            m_try_purchase_servers[add_try_server].set_old();
         }
     }
-    for (int i = 0; i < add_server_ids.size(); i++)
+    for (int & add_server_id : add_server_ids)
     {
-        auto s = m_purchase_servers[add_server_ids.at(i)];
-        m_try_purchase_servers.insert(make_pair(add_server_ids.at(i), s));
-        m_try_purchase_servers[add_server_ids.at(i)].set_old();
+        auto s = m_purchase_servers[add_server_id];
+        m_try_purchase_servers.insert(make_pair(add_server_id, s));
+        m_try_purchase_servers[add_server_id].set_old();
     }
     try_cal_cost();
 }
@@ -434,6 +464,10 @@ void manager::try_distribution()
     VMs_type_id,m_tasks.at(m_current_day),left_CPU_A,left_RAM_A,left_CPU_B,left_RAM_B);
 }
 
+std::vector<distribution_data> manager::try_fine_distribution(std::queue<int> task_ids)
+{
+
+}
 // 尝试删除掉新购买的服务器
 //  new_server_ids 所有新购买的服务器id
 void manager::try_delet_unused(std::vector<int> new_server_ids)
@@ -468,6 +502,73 @@ bool manager::try_delet_server(int server_id)
     return true;
 }
 
+void manager::try_fine_purchase()
+{
+    int remain_task = m_tasks.at(m_current_day).cmd.size();
+    int server_id_cnt = m_purchase_servers.size();
+    std::unordered_map<int,distribution_data> tasks;
+    int current_task = 0;
+    // get all tasks
+    tasks.reserve(remain_task);
+    for(int i = 0;i < remain_task;i ++)
+    {
+        tasks.insert(make_pair(i,distribution_data()));
+    }
+    std::queue<int> task_ids_30;
+    int last_task_num = 0;
+    while (remain_task != 0)
+    {
+        int remain_distribution = 0;
+        while (remain_distribution == 0)
+        {
+            //1. get 30 tasks
+            int tmp = current_task;
+            for(int i = tmp;i < tmp + 30 - last_task_num;i ++)
+            {
+                task_ids_30.push(i);
+                current_task ++;
+            }
+            //2. cal distribution
+            auto result = try_fine_distribution(task_ids_30);
+            //3. try distribution
+            auto temp_id = task_ids_30;
+            for(int i = 0;i < task_ids_30.size();i ++)
+            {
+                auto id = temp_id.front();
+                temp_id.pop();
+                if(result.at(i).is_distribution)
+                {
+                    tasks.at(id) = result.at(i);
+                    remain_task --;
+                }
+                else
+                {
+                    remain_distribution ++;
+                }
+            }
+        }
+        //4. get 30 - remain_distribution task
+        int tmp = current_task;
+        for(int i = tmp;i < tmp + 30 - remain_distribution;i ++)
+        {
+            task_ids_30.push(i);
+            current_task ++;
+        }
+        last_task_num = 30;
+
+        //5. buy some server
+        auto init = fine_init(task_ids_30);
+        // 尝试购买
+        for (int i = 0; i < init.size(); i++)
+        {
+            for (int j = 0; j < init.at(i); j++)
+            {
+                try_purchase_server(++server_id_cnt, i, true);
+            }
+        }
+    }
+}
+
 // 主要调用的函数，处理所有天的数据
 void manager::processing()
 {
@@ -482,6 +583,8 @@ void manager::processing()
     // 开始遍历所有天的操作
     for(int day = 0;day < get_days();day ++)
     {
+        try_fine_purchase();
+        /*
         // 初步计算需要多少
         auto init = coarse_init();
         // 尝试购买
@@ -543,7 +646,7 @@ void manager::processing()
                 try_delet_server(op.server_id);
             }
         }
-       try_delet_unused(init);
+       try_delet_unused(init);*/
         //std::cerr<<"cost cost time in ms:"<<clock_end()<<std::endl;
         //clock_start();
         // 迁移操作
@@ -1074,6 +1177,7 @@ void manager::statistic_busy_rate(int m_current_day) {
 }
 
 #include <fstream>
+#include <utility>
 //将保存的数据写进文件
 void manager::writetotxt(){
     //准备输出为txt文件

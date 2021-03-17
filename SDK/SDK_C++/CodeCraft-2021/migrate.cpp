@@ -3,7 +3,6 @@ using namespace std;
 #include "string.h"
 
 
-
 migrate::migrate(/* args */)
 {
 }

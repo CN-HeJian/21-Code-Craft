@@ -11,6 +11,7 @@
 #include <string>
 #include <stdio.h>
 #include <stdlib.h>
+#include <queue>
 
 #ifdef test
 #include <sys/stat.h>
@@ -24,6 +25,30 @@
 #include "distribution.hpp"
 class migrate;
 struct migrate_operation;
+
+struct distribution_data
+{
+    int server_id;
+    int node_type;
+    bool is_distribution = false;
+    distribution_data()
+    {
+        server_id = 0;
+        node_type = 0;
+    }
+    distribution_data(const distribution_data & d)
+    {
+        server_id = d.server_id;
+        node_type = d.node_type;
+        is_distribution = d.is_distribution;
+    }
+    distribution_data &operator =(const distribution_data& d) //重载=
+    {
+        server_id = d.server_id;
+        node_type = d.node_type;
+        is_distribution = d.is_distribution;
+    }
+};
 
 class manager
 {
@@ -52,6 +77,8 @@ public:
     float try_cal_cost(bool is_try = false);
     // 处理所有天的任务
     void processing();
+    void try_fine_purchase();
+    std::vector<distribution_data> try_fine_distribution(std::queue<int> task_ids);
     void try_distribution();
     void try_delet_unused(std::vector<int> new_server_ids);
     void try_migrate();
@@ -74,6 +101,7 @@ public:
     float assign_current_day(std::vector<int> distribution,std::vector<int> node_type){return assign_oneday(m_current_day,distribution,node_type);}
     // 初始时快速计算当前大概需要买多少服务器
     std::vector<int> coarse_init();
+    std::vector<int> fine_init(std::queue<int> task_ids);
     //统计每天每个服务器每个节点CPU、RAM的占用率
     void statistic_busy_rate(int m_current_day);
     //将计算结果输出为txt文件

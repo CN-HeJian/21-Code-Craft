@@ -2,7 +2,6 @@
 #define __DISTRIBUTION_H 
 
 #include <vector>
-
 #include <algorithm>
 #include <unordered_set>
 #include "server.hpp"
