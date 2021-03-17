@@ -49,17 +49,24 @@ public:
     // 数据接口，尝试根据task的任务将虚拟机往服务器上分配
     std::vector<distribution_operation> try_distribution(
         std::vector<int>& servers_type_id,
-        std::vector<std::vector<int>>& VMs_type_id,
+        std::vector<std::vector<int> >& VMs_type_id,
         task task_today,
         std::vector<int>& remain_CPU_A,
         std::vector<int>& remain_RAM_A,
         std::vector<int>& remain_CPU_B,
         std::vector<int>& remain_RAM_B
     );
-    
+std::vector<distribution_operation> try_violence_distribution(
+        std::vector<int> servers_type_id,
+        std::vector<std::vector<int> > VMs_type_id,
+        task tasks,
+        std::vector<int> left_CPU_A,
+        std::vector<int> left_RAM_A,
+        std::vector<int> left_CPU_B,
+        std::vector<int> left_RAM_B);
 private:    
     /************ used for violent distribution ***************/
-    int get_maxServer_index();// 获取当前容量最大的服务器索引
+    void sort_Server_Index();// 对服务器表进行排序
     /********************************************************/
 private:
     /* data */    
@@ -68,7 +75,15 @@ private:
     std::vector<virtual_machine_data> m_VMs;// 目前按照读入顺序排序
     std::vector<distribution_operation> distribution_result_queue;//当天操作完成后返回的操作数据队列
     std::vector<distribution_operation> server_buy_queue;//当天操作完成后返回的操作数据队列
-    int max_server_typeid;// 服务器表中容量最大的服务器所在位置索引
+
+    std::vector<int> sorted_server_table;// 按照约定排序方式排序好的服务器表，存的元素是对应型号的索引
+    std::vector<int> sorted_vm_table;// 按照约定排序方式排序好的虚拟机表，存的元素是对应型号的索引
+
+    std::vector<int> split_pos;//存放del命令在今日命令中的索引
+    const int num_of_server_type = 105;// 服务器的最大种类数
+
+    float weight_cpu = 0.5;
+    float weight_ram = 0.5;
 };
 
 #endif // __DISTRIBUTION_H

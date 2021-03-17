@@ -147,6 +147,7 @@ int Simplex::run()
         }
         if (!x)
         {
+            //std::cerr << "Unbounded";
             return -1; //无界
         }
         Pivot(x, y);

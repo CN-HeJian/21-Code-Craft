@@ -4,16 +4,21 @@
 
 using namespace std;
 
+
 // 最终的金额计算为 537898
 int main()
 {
 	// TODO:read standard input
 
-	//string inputTxtName = "/home/lyc/21-Code-Craft/training-data/training-1.txt";
-  //string inputTxtName = "/home/jian/Downloads/demo/21-Code-Craft/training-data/training-1.txt";
 	string inputTxtName = "/home/ljh/huawei2021/21-Code-Craft/training-data/training-2.txt";
+    //string inputTxtName = "/home/jian/Downloads/demo/21-Code-Craft/training-data/test.txt";
 
-	clock_start();
+	//readTxt(inputTxtName);
+	// TODO:process
+	// TODO:write standard output
+	// TODO:fflush(stdout);
+
+	//clock_start();
 	// TODO:read standard input
 	manager m;
 	#ifdef test
@@ -24,11 +29,10 @@ int main()
 	// TODO:process
 	m.processing();
 	// TODO:write standard output
-  //m.result();
+#ifndef test
+    m.result();
+#endif
 	// TODO:fflush(stdout);
-	fflush(stdout);
-	std::cerr<<"cost time:"<<clock_end()<<std::endl;
+    fflush(stdout);
 	return 0;
 }
-
-

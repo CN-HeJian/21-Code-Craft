@@ -18,16 +18,12 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/mman.h>
-
 #endif
-
-
 
 #include "Integer_program.hpp"
 #include "distribution.hpp"
 class migrate;
 struct migrate_operation;
-
 
 class manager
 {
@@ -57,21 +53,20 @@ public:
     // 处理所有天的任务
     void processing();
     void try_distribution();
+    void try_delet_unused(std::vector<int> new_servers_ids);
     void try_migrate();
     void assign_by_try();// 通过尝试的结果，按照实际的流程来赋值
-
-
     // 读取数据
 #ifdef test
     void readTxt(const std::string &inputFile);// 测试读取txt文件使用
 #endif
     void readTxtbyStream();
-
     void output();
     // cout 
     void finish_oneday();
     void re_begin();
     void result();
+    bool vertify_result();
     // 没有考虑迁移的情况下 
     // 在当前状态下对下一天的任务进行尝试,返回尝试后的成本
     float try_oneday(std::vector<int> distribution,std::vector<int> node_type);
