@@ -76,7 +76,7 @@ private:
     //随机生成数
     int rand_one(int min, int max);
     //评判交换策略
-    static float judge_operate(std::vector<int>& servers_type_id,
+    float judge_operate(std::vector<int>& servers_type_id,
                         std::vector<std::vector<int>>& VMs_type_id,
                         std::vector<int>& remain_CPU_A,
                         std::vector<int>& remain_RAM_A,

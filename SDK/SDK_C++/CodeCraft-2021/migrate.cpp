@@ -34,8 +34,13 @@ migrate::~migrate()
  *      2）judge service_isOld Vm_is_Old
  *      3) define Max_migrate_Cnt
  * */
-
+//1000个虚拟机只可以迁移5次
 #define SAMPLENUM  1000
+//评分函数的侧重点不一致
+#define EXTREMUM 0.4
+#define AVERGAE 0.2
+#define VARIANCE 0.4
+
 //1000个虚拟机只可以迁移5次
 
 int migrate::rand_one(int min, int max){
@@ -104,12 +109,15 @@ vector<migrate_operation> migrate::try_migrate(
     change_twoVm temp_change_twoVm{};
     vector<change_twoVm> recode_jude;
     for(int i=0;i<recordSelectedPos.size();++i){
-        for(int j = i;j<recordSelectedPos.size();++j){remain_CPU_B
+        for(int j = i;j<recordSelectedPos.size();++j){
             //判断能否进行迁移,是否有必要迁移以及能否迁移
             bool flag = canMigrate(servers_type_id,VMs_type_id,remain_CPU_A,remain_RAM_A,\
             remain_CPU_B,remain_RAM_B,recordSelectedPos,i,j);
             if(flag ) {
-                //temp_change_twoVm.jude_point = judge();
+                //评判过程
+                temp_change_twoVm.jude_point = judge_operate(servers_type_id,VMs_type_id,remain_CPU_A,remain_RAM_A,\
+                remain_CPU_B,remain_RAM_B,recordSelectedPos,i,j);
+
                 temp_change_twoVm.one_sever_id = recordSelectedPos[i].first;
                 temp_change_twoVm.one_vm_id = recordSelectedPos[i].second;
                 temp_change_twoVm.another_server_id = recordSelectedPos[j].first;
@@ -120,22 +128,101 @@ vector<migrate_operation> migrate::try_migrate(
     }
 
     //对尝试交换的虚拟机进行排序，选择性价比最高的几个操作,从大到小操作
-    sort(recode_jude.begin(),recode_jude.end(),[](change_twoVm a,change_twoVm b ){
-        return a.jude_point>b.jude_point;
+    vector<int> record_sort_index;
+    for(int i=0;i<recode_jude.size();++i){
+        record_sort_index[i] = i;
+    }
+    sort(record_sort_index.begin(),record_sort_index.end(),[recode_jude](int a,int b ){
+        return recode_jude[a].jude_point  <recode_jude[b].jude_point;
     });
     //确定最大的迁移次数
     int maxMigrateCnt = int(old_vmNum*0.005);
     //迁移操作集合
     vector<migrate_operation> res;
-    //当前已经操作的次数
-    int current_Ope_Cnt = 0;
-    //依次排入
-    while(current_Ope_Cnt<maxMigrateCnt){
-
-        current_Ope_Cnt++;
+    //临时操作
+    migrate_operation temp_migrate_operator;
+    //开始选择
+    for(int i=0;i<maxMigrateCnt;++i){
+        if(i>maxMigrateCnt)
+            cout<<"out of maxMigrate time"<<endl;
+        //排序之后的id
+        int index = record_sort_index[i];
+        //找到对应的哪台VM
+        temp_migrate_operator.is_new = false;
+        temp_migrate_operator.vm_id = VMs_type_id[recode_jude[index].one_sever_id][recode_jude[index].one_vm_id];
+        temp_migrate_operator.to_server_id = servers_type_id[recode_jude[index].another_server_id];
+        int oneWhichNode = m_VMs[VMs_type_id[recode_jude[index].one_sever_id][recode_jude[index].one_vm_id]].node_type;
+        if(oneWhichNode==2)
+            temp_migrate_operator.node_type = 2;
+        int need_cpu = m_VMs[VMs_type_id[recode_jude[index].one_sever_id][recode_jude[index].one_vm_id]].m_CPU_num;
+        int need_ram = m_VMs[VMs_type_id[recode_jude[index].one_sever_id][recode_jude[index].one_vm_id]].m_RAM;
+        if(remain_CPU_A[recode_jude[index].another_server_id]>need_cpu && remain_RAM_A[recode_jude[index].another_server_id]>need_ram){
+            temp_migrate_operator.node_type = 1; //B节点
+        }else if(remain_CPU_B[recode_jude[index].another_server_id]>need_cpu && remain_RAM_B[recode_jude[index].another_server_id]>need_ram){
+            temp_migrate_operator.node_type = 0; //A节点
+        }else{
+            cout<<"***************************judge comes wrong********************"<<endl;
+        }
+        res.push_back(temp_migrate_operator);
     }
+    return res;
+}
 
-    return {};
+//如果进行了迁移操作，计算操作后的得分
+float migrate::judge_operate(std::vector<int>& servers_type_id,
+                             std::vector<std::vector<int>>& VMs_type_id,
+                             std::vector<int>& remain_CPU_A,
+                             std::vector<int>& remain_RAM_A,
+                             std::vector<int>& remain_CPU_B,
+                             std::vector<int>& remain_RAM_B,
+                             vector<pair<int,int>> &recordSelectedPos,
+                             int &oneVM,
+                             int &anotherVM){
+    float judge_point = 0.f;
+    //计算当前虚拟机在哪个服务器中，
+    int oneVm_serverId = recordSelectedPos[oneVM].first;
+    //计算服务器的当前配置
+    int origin_cpu_1 = m_servers[servers_type_id[oneVm_serverId]].m_CPU_num;
+    int origin_ram_1 = m_servers[servers_type_id[oneVm_serverId]].m_RAM;
+    //计算占用比例
+    float orgin_cpu_used_1 = 1.f - (remain_CPU_A[oneVm_serverId]+remain_CPU_B[oneVm_serverId])/origin_cpu_1;
+    float origin_ram_used_1 = 1.f - (remain_RAM_A[oneVm_serverId]+remain_RAM_B[oneVm_serverId])/origin_ram_1;
+    //计算另外一个
+    int anotherVm_serverId = recordSelectedPos[anotherVM].first;
+    //计算服务器的当前配置
+    int origin_cpu_2 = m_servers[servers_type_id[anotherVm_serverId]].m_CPU_num;
+    int origin_ram_2 = m_servers[servers_type_id[anotherVm_serverId]].m_RAM;
+    //计算占用比例
+    float orgin_cpu_used_2 = 1.f - (remain_CPU_A[anotherVm_serverId]+remain_CPU_B[anotherVm_serverId])/origin_cpu_2;
+    float origin_ram_used_2 = 1.f - (remain_RAM_A[anotherVm_serverId]+remain_RAM_B[anotherVm_serverId])/origin_ram_2;
+    //统计一下结果
+    float origin_extremum = max(orgin_cpu_used_1,origin_ram_used_1)+max(orgin_cpu_used_2,origin_ram_used_2);
+    cout<<"origin_extremum"<<origin_extremum<<endl;
+    float cpu_average = (orgin_cpu_used_1+orgin_cpu_used_2)/2;
+    float ram_average = (origin_ram_used_1+origin_ram_used_2)/2;
+    float origin_average = (cpu_average+ram_average)/2;
+    cout<<"origin_average"<<origin_average<<endl;
+
+    //转移之后的情况
+    int oneVm_VmsId = recordSelectedPos[oneVM].second;
+    int changeCpu = m_VMs[VMs_type_id[oneVm_serverId][oneVm_VmsId]].m_CPU_num;
+    int changeRam = m_VMs[VMs_type_id[oneVm_serverId][oneVm_VmsId]].m_RAM;
+    float change_cpu_1 =  1.f - (remain_CPU_A[oneVm_serverId]+remain_CPU_B[oneVm_serverId]+changeCpu)/origin_cpu_1;
+    if(change_cpu_1<0.00001)
+        cout<<"---------------------------------------turn offf------------------------------"<<endl;
+    float change_ram_1 =  1.f - (remain_CPU_A[oneVm_serverId]+remain_CPU_B[oneVm_serverId]+changeRam)/origin_ram_1;
+    float change_cpu_2 =  1.f - (remain_CPU_A[anotherVm_serverId]+remain_CPU_B[anotherVm_serverId]-changeCpu)/origin_cpu_2;
+    float change_ram_2 =  1.f - (remain_CPU_A[anotherVm_serverId]+remain_CPU_B[anotherVm_serverId]-changeRam)/origin_ram_2;
+    //统计一下结果
+    float change_extremum = max(orgin_cpu_used_1,origin_ram_used_1)+max(orgin_cpu_used_2,origin_ram_used_2);
+    cout<<"total_extremum"<<change_extremum<<endl;
+    float change_cpu_average = (change_cpu_1+change_cpu_2)/2;
+    float change_ram_average = (change_ram_1+change_ram_2)/2;
+    float change_average = (change_cpu_average+change_ram_average)/2;
+    cout<<"change_average"<<change_average<<endl;
+
+    judge_point = EXTREMUM*(change_extremum-origin_extremum)+AVERGAE*(change_average-origin_average);
+    return judge_point;
 }
 
 //判断能否进行迁移
@@ -158,71 +245,29 @@ bool migrate::canMigrate(std::vector<int>& servers_type_id,
     //判断是服务器集群中的第几号虚拟机
     int oneVm_VmsId = recordSelectedPos[oneVM].second;
     int anotherVm_VmsId = recordSelectedPos[anotherVM].second;
-    //当不再同一个服务器中时，直接进去判断资源是否够用问题，否则还要判断是否是否放置在同一个节点
-    if(oneVm_serverId != anotherVm_serverId){
-        //进入资源是否够用的环节
-        //优先排进资源平衡的服务器
-        int needCpu = m_VMs[VMs_type_id[oneVm_serverId][oneVm_VmsId]].m_CPU_num;
-        int needRam = m_VMs[VMs_type_id[oneVm_serverId][oneVm_VmsId]].m_RAM;
-        int half_need_cpu = needCpu>>1;
-        int half_need_ram = needRam>>1;
-        //剩余的资源
-        int remainCPU_A = remain_CPU_A[anotherVm_serverId];
-        int remainRAM_A = remain_RAM_A[anotherVm_serverId];
-        int remainCPU_B = remain_CPU_B[anotherVm_serverId];
-        int remainRAM_B = remain_RAM_B[anotherVm_serverId];
-        //如果是单节点的
-        if((remainCPU_A>needCpu&&remainRAM_A>needRam) || (remainCPU_B>needCpu&& remainRAM_B>needRam)){
+    //对应的虚拟机器的型号
+    int needCpu = m_VMs[VMs_type_id[oneVm_serverId][oneVm_VmsId]].m_CPU_num;
+    int needRam = m_VMs[VMs_type_id[oneVm_serverId][oneVm_VmsId]].m_RAM;
+    int half_need_cpu = needCpu>>1;
+    int half_need_ram = needRam>>1;
+    //剩余的资源
+    int remainCPU_A = remain_CPU_A[anotherVm_serverId];
+    int remainRAM_A = remain_RAM_A[anotherVm_serverId];
+    int remainCPU_B = remain_CPU_B[anotherVm_serverId];
+    int remainRAM_B = remain_RAM_B[anotherVm_serverId];
+    //在哪个节点
+    int oneWhichNode = m_VMs[VMs_type_id[oneVm_serverId][oneVm_VmsId]].node_type;
+    int anotherWhichNode = m_VMs[VMs_type_id[anotherVm_serverId][anotherVm_VmsId]].node_type;
+    //判断是否在同一个服务器的同一个节点中
+    if((oneVm_serverId != anotherVm_serverId) || oneWhichNode != anotherWhichNode) {
+        //单节点服务器，随意排放即可
+        if(oneWhichNode == 0 || oneWhichNode == 1) {
+            if ((remainCPU_A > needCpu && remainRAM_A > needRam) || (remainCPU_B > needCpu && remainRAM_B > needRam))
+                return true;
+        }
+        else if ((remainCPU_A > half_need_cpu && remainRAM_A > half_need_ram) &&(remainCPU_B > half_need_cpu && remainRAM_B > half_need_ram)) {
             return true;
-        }else{
-            if((remainCPU_A>half_need_cpu&&remainRAM_A>half_need_ram) && (remainCPU_B>half_need_cpu&& remainRAM_B>half_need_ram)){
-                return true;
-            }
-        }
-        return false;
-    }else{
-        int oneWhichNode = m_VMs[VMs_type_id[oneVm_serverId][oneVm_VmsId]].node_type;
-        int anotherWhichNode = m_VMs[VMs_type_id[anotherVm_serverId][anotherVm_VmsId]].node_type;
-        if(oneWhichNode == anotherWhichNode) {
-            return false;
-        }
-        else{
-            //优先排进资源平衡的服务器
-            int needCpu = m_VMs[VMs_type_id[oneVm_serverId][oneVm_VmsId]].m_CPU_num;
-            int needRam = m_VMs[VMs_type_id[oneVm_serverId][oneVm_VmsId]].m_RAM;
-            int half_need_cpu = needCpu>>1;
-            int half_need_ram = needRam>>1;
-            //剩余的资源
-            int remainCPU_A = remain_CPU_A[anotherVm_serverId];
-            int remainRAM_A = remain_RAM_A[anotherVm_serverId];
-            int remainCPU_B = remain_CPU_B[anotherVm_serverId];
-            int remainRAM_B = remain_RAM_B[anotherVm_serverId];
-            //如果是单节点的
-            if((remainCPU_A>needCpu&&remainRAM_A>needRam) || (remainCPU_B>needCpu&& remainRAM_B>needRam)){
-                return true;
-            }else{
-                if((remainCPU_A>half_need_cpu&&remainRAM_A>half_need_ram) && (remainCPU_B>half_need_cpu&& remainRAM_B>half_need_ram)){
-                    return true;
-                }
-            }
-            return false;
         }
     }
-    cout<<"can not reach"<<endl;
     return false;
-}
-
-
-//评价当前策略的好坏
-float migrate::judge_operate(std::vector<int>& servers_type_id,
-                             std::vector<std::vector<int>>& VMs_type_id,
-                             std::vector<int>& remain_CPU_A,
-                             std::vector<int>& remain_RAM_A,
-                             std::vector<int>& remain_CPU_B,
-                             std::vector<int>& remain_RAM_B,
-                             vector<pair<int,int>> &recordSelectedPos,
-                             int &oneVM,
-                             int &anotherVM){
-
-    return 0.0;
 }
