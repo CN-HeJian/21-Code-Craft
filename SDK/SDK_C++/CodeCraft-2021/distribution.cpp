@@ -444,7 +444,6 @@ std::vector<distribution_operation> distribution::try_distribution(
 
                         needCpuNum -= cur_vm.m_CPU_num;
                         needRamNum -= cur_vm.m_RAM;
-
                     }
                     else if(CPU_B >= cur_vm.m_CPU_num && RAM_B >= cur_vm.m_RAM){
                         distribution_operation _operation;
@@ -454,13 +453,10 @@ std::vector<distribution_operation> distribution::try_distribution(
                         _operation.server_type = -1;// 表示不添加任何服务器
                         distribution_result_queue[task_id] = _operation;
                         is_assigned_correct[task_id] = true;
-
                         remains_task_index[j] = -1;
                         remains_task_num--;
-
                         CPU_B -= cur_vm.m_CPU_num;
                         RAM_B -= cur_vm.m_RAM;
-
                         needCpuNum -= cur_vm.m_CPU_num;
                         needRamNum -= cur_vm.m_RAM;
                     }
@@ -468,7 +464,6 @@ std::vector<distribution_operation> distribution::try_distribution(
             }
         }
     }
-
     //退回操作，用于返回不需要用到的服务器
     //judge
     memset(&not_purchaseServer,0,sizeof not_purchaseServer);

@@ -1,12 +1,19 @@
 #include "migrate.hpp"
 using namespace std;
 #include "string.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 
 
-migrate::migrate(/* args */)
+migrate::migrate(std::vector<server_data>& servers, std::vector<virtual_machine_data>& VMs)
 {
+    m_VMs = VMs;
+    m_servers = servers;
+    //max_server_typeid = get_maxServer_index();// 获取服务器表中容量最大服务器的typeid
 }
+
 
 migrate::~migrate()
 {
@@ -28,118 +35,194 @@ migrate::~migrate()
  *      3) define Max_migrate_Cnt
  * */
 
+#define SAMPLENUM  1000
+//1000个虚拟机只可以迁移5次
+
+int migrate::rand_one(int min, int max){
+    srand((unsigned int)time(NULL));
+    return rand()%(max - min + 1)+min;
+}
+
 vector<migrate_operation> migrate::try_migrate(
-    vector<std::pair<int,server_data>> &servers,
-    vector<vector<pair<int,virtual_machine_data>>> &VMs,
-    vector<int> &remain_CPU_A,
-    vector<int> &remain_RAM_A,
-    vector<int> &remain_CPU_B,
-    vector<int> &remain_RAM_B) {
-
-    //此处不判断是否合法，传进内容保证是合法的
-
-    //复位
-    VmNums = 0 ;
-    max_migrateCnt = 0;
-    std::memset(&servers_isOld,0,sizeof servers_isOld);     //服务器是否为旧的
-    std::memset(&vm_isOld,0,sizeof vm_isOld);               //虚拟机是否为旧的
-    std::memset(&servers_isEmpty,0,sizeof servers_isEmpty);
-    std::memset(&A_CPU_used_rate,0,sizeof A_CPU_used_rate);
-    std::memset(&A_RAM_used_rate,0,sizeof A_RAM_used_rate);
-    std::memset(&B_CPU_used_rate,0,sizeof B_CPU_used_rate);
-    std::memset(&B_RAM_used_rate,0,sizeof B_RAM_used_rate);
-    std::memset(&is_highUsed,0,sizeof is_highUsed);
-    std::memset(&cpu_busy,0,sizeof cpu_busy);
-    std::memset(&ram_busy,0,sizeof ram_busy);
-    std::memset(&is_VMs_double,0,sizeof is_VMs_double);
-    std::memset(&is_VMs_newAndDouble,0,sizeof is_VMs_newAndDouble);
-    std::memset(&VMs__serverNode,0,sizeof VMs__serverNode);
-    std::memset(&server_id,0,sizeof server_id);
-    std::memset(&vM_id,0,sizeof vM_id);
-
-    //设置大小
-    int s_size = servers.size();
-    servers_isOld.resize(s_size);
-    vm_isOld.resize(s_size);
-    servers_isEmpty.resize(s_size);
-    A_CPU_used_rate.resize(s_size);
-    A_RAM_used_rate.resize(s_size);
-    B_CPU_used_rate.resize(s_size);
-    B_RAM_used_rate.resize(s_size);
-    is_highUsed.resize(s_size);
-    cpu_busy.resize(s_size);
-    ram_busy.resize(s_size);
-    server_id.resize(s_size);
-
-    //servers_isOld[i]  vm_isOld[i][j]
-    for(int i =0;i<s_size;++i) {
-        server_id[i] = servers.at(i).first;
-        servers_isOld[i] = servers.at(i).second.is_old;
-        int oneServerVMNUms = VMs.at(i).size();
-        int server_half_cpu = servers.at(i).second.m_CPU_num>>1;
-        int server_half_ram = servers.at(i).second.m_RAM>>1;
-        A_CPU_used_rate[i] = 1.f - remain_CPU_A[i]/server_half_cpu;
-        A_RAM_used_rate[i] = 1.f - remain_RAM_A[i]/server_half_ram;
-        B_CPU_used_rate[i] = 1.f - remain_CPU_B[i]/server_half_cpu;
-        B_RAM_used_rate[i] = 1.f - remain_RAM_B[i]/server_half_ram;
-        if (!oneServerVMNUms) //判断服务器是否被使用
-            servers_isEmpty[i] = true;
-        vm_isOld[i].resize(oneServerVMNUms);
-        for (int j = 0; j < oneServerVMNUms; ++j) {
-            vm_isOld[i][j] = VMs.at(i).at(j).second.is_old; //是否虚拟机是否为新的
-            is_VMs_double.push_back(VMs.at(i).at(j).second.m_is_double_node);//判断虚拟机是否为双节点的，可以重写用空间换时间
-            is_VMs_newAndDouble.push_back((VMs.at(i).at(j).second.m_is_double_node&&(~vm_isOld[i][j]))); //是否为新的并且是双节点的
-            VMs__serverNode.push_back(VMs.at(i).at(j).second.node_type); //获取虚拟机当前挂在哪个服务器的哪个节点上
-            vM_id.push_back(VMs.at(i).at(j).first);
-            VmNums++;
-        }
-    }
-    
-    //假设同一台服务器的各种资源是均衡分配的，判断每一台服务器是否高负载,此处定义了参数 Defined_highUsed
-    for(int i=0;i<s_size;++i){
-        if(A_CPU_used_rate[i]> Defined_highUsed || A_RAM_used_rate[i]> Defined_highUsed || \
-        B_CPU_used_rate[i]>Defined_highUsed || B_RAM_used_rate[i]> Defined_highUsed ){
-            is_highUsed[i] = true;
+    std::vector<int>& servers_type_id,
+    std::vector<std::vector<int>>& VMs_type_id,
+    const vector<int>& service_is_new,
+    vector<vector<int>> vm_is_new,
+    std::vector<int>& remain_CPU_A,
+    std::vector<int>& remain_RAM_A,
+    std::vector<int>& remain_CPU_B,
+    std::vector<int>& remain_RAM_B)
+{
+    //统计信息
+    int serverNum = servers_type_id.size();//服务器数目
+    int old_vmNum = 0;//旧的虚拟机数目
+    vector<pair<int,int>>  recordOriginPos;//记录展开后的一维虚拟机的原始位置
+    for(int i=0;i<serverNum;+i){
+        for(int j=0;j<VMs_type_id[i].size();++j){
+            recordOriginPos.emplace_back(make_pair(i,j));
+            if(!vm_is_new[i][j])
+                ++old_vmNum;
         }
     }
 
-    //操作,分成多种情况来判断，如果同一服务器各个资源分配不均匀
-    cpu_busy[0].A = false;
-    cpu_busy[0].B = true;
+    //确定采样的虚拟机的个数
+    int sampleNum = 0;
+    if(old_vmNum<SAMPLENUM)
+        sampleNum = old_vmNum;
+    else
+        sampleNum = SAMPLENUM;
 
-    // 最大迁移次数,旧的节点只可以移动千分之五次，新的节点任意移动
-    max_migrateCnt = VmNums*0.005;
-    std::cerr<<"VmNums "<<VmNums<<"max_migrateCnt "<<max_migrateCnt<<endl;
+    //随机选择虚拟机的过程
+    vector<pair<int,int>> recordSelectedPos;
+    //如果虚拟机数量小于采样数目，所有的用来寻优,否则部分寻优
+    if(sampleNum == SAMPLENUM) {
+        vector<bool> is_selected(old_vmNum,false); //用来记录虚拟机是否被选中了
+        int selected_nums = 0;//当前选择了多少虚拟机
+        while(selected_nums<sampleNum){
+            bool isRepeat = false;
+            while(!isRepeat){
+                int val = rand_one(0, old_vmNum);//随机选择的是虚拟机的id
+                if(!is_selected[val]) {
+                    selected_nums++;
+                    isRepeat = true;
+                    int whichServe = recordOriginPos[val].first;
+                    int whichVm = recordOriginPos[val].second;
+                    recordSelectedPos.emplace_back(whichServe,whichVm);
+                    is_selected[val] = true;
+                }
+            }
+        }
+    }else{
+        for(int i=0 ;i<serverNum;++i){
+            for(int j =0;j<VMs_type_id[i].size();++i){
+                recordSelectedPos.emplace_back(make_pair(i,j));
+            }
+        }
+    }
 
-    //二次规划问题
+    //逐次比较
+    change_twoVm temp_change_twoVm{};
+    vector<change_twoVm> recode_jude;
+    for(int i=0;i<recordSelectedPos.size();++i){
+        for(int j = i;j<recordSelectedPos.size();++j){remain_CPU_B
+            //判断能否进行迁移,是否有必要迁移以及能否迁移
+            bool flag = canMigrate(servers_type_id,VMs_type_id,remain_CPU_A,remain_RAM_A,\
+            remain_CPU_B,remain_RAM_B,recordSelectedPos,i,j);
+            if(flag ) {
+                //temp_change_twoVm.jude_point = judge();
+                temp_change_twoVm.one_sever_id = recordSelectedPos[i].first;
+                temp_change_twoVm.one_vm_id = recordSelectedPos[i].second;
+                temp_change_twoVm.another_server_id = recordSelectedPos[j].first;
+                temp_change_twoVm.another_vm_id = recordSelectedPos[j].second;
+                recode_jude.emplace_back(temp_change_twoVm);
+            }
+        }
+    }
 
-    //图论问题
-    //首先过滤掉使用效率较高的节点，或者加上随机采样优化
-    //保证同一节点的各种资源的利用率均衡，Trick
-    //稀疏图---Trick
-    //设置优先级，旧的虚拟机有迁移次数限制，新的虚拟机器没有迁移次数限制，尽可能移动较多的次数，减少成本，若成本相同，按照迁移次数来评判
-    //前一天的迁移结果较优--前提
-    //查询某台虚拟机是否为双节点，有什么用呢？确定代价函数
-    //尽量移动到旧的虚拟机上面去，空出新的虚拟机，最关键的目标,优先迁移到旧的虚拟机上面去
-    //将新增的双节点的虚拟机先删除掉，暂时不考虑，减少先前占用的迁移次数，先对单节点进行资源分配更有利于资源负载均衡
-    //获取单节点虚拟机设置在服务器哪个节点上
+    //对尝试交换的虚拟机进行排序，选择性价比最高的几个操作,从大到小操作
+    sort(recode_jude.begin(),recode_jude.end(),[](change_twoVm a,change_twoVm b ){
+        return a.jude_point>b.jude_point;
+    });
+    //确定最大的迁移次数
+    int maxMigrateCnt = int(old_vmNum*0.005);
+    //迁移操作集合
+    vector<migrate_operation> res;
+    //当前已经操作的次数
+    int current_Ope_Cnt = 0;
+    //依次排入
+    while(current_Ope_Cnt<maxMigrateCnt){
 
-
-    //智能算法
-    //记忆化
-    //设置最大迁移次数
-    //定义可行域区间
-    //随机初始化粒子,需要定义粒子数量，判断收敛条件
-    //定义代价函数
-    //迭代终止条件
-
-
-    //组合数问题
+        current_Ope_Cnt++;
+    }
 
     return {};
 }
 
+//判断能否进行迁移
+bool migrate::canMigrate(std::vector<int>& servers_type_id,
+                std::vector<std::vector<int>>& VMs_type_id,
+                std::vector<int>& remain_CPU_A,
+                std::vector<int>& remain_RAM_A,
+                std::vector<int>& remain_CPU_B,
+                std::vector<int>& remain_RAM_B,
+                vector<pair<int,int>> &recordSelectedPos,
+                int &oneVM,
+                int &anotherVM){
+    //异常报错，选择了同一个虚拟机
+    if(oneVM == anotherVM){
+        cerr<<"you have select the same VM"<<endl;
+    }
+    //获取当前虚拟机在哪个服务器中
+    int oneVm_serverId = recordSelectedPos[oneVM].first;
+    int anotherVm_serverId = recordSelectedPos[anotherVM].first;
+    //判断是服务器集群中的第几号虚拟机
+    int oneVm_VmsId = recordSelectedPos[oneVM].second;
+    int anotherVm_VmsId = recordSelectedPos[anotherVM].second;
+    //当不再同一个服务器中时，直接进去判断资源是否够用问题，否则还要判断是否是否放置在同一个节点
+    if(oneVm_serverId != anotherVm_serverId){
+        //进入资源是否够用的环节
+        //优先排进资源平衡的服务器
+        int needCpu = m_VMs[VMs_type_id[oneVm_serverId][oneVm_VmsId]].m_CPU_num;
+        int needRam = m_VMs[VMs_type_id[oneVm_serverId][oneVm_VmsId]].m_RAM;
+        int half_need_cpu = needCpu>>1;
+        int half_need_ram = needRam>>1;
+        //剩余的资源
+        int remainCPU_A = remain_CPU_A[anotherVm_serverId];
+        int remainRAM_A = remain_RAM_A[anotherVm_serverId];
+        int remainCPU_B = remain_CPU_B[anotherVm_serverId];
+        int remainRAM_B = remain_RAM_B[anotherVm_serverId];
+        //如果是单节点的
+        if((remainCPU_A>needCpu&&remainRAM_A>needRam) || (remainCPU_B>needCpu&& remainRAM_B>needRam)){
+            return true;
+        }else{
+            if((remainCPU_A>half_need_cpu&&remainRAM_A>half_need_ram) && (remainCPU_B>half_need_cpu&& remainRAM_B>half_need_ram)){
+                return true;
+            }
+        }
+        return false;
+    }else{
+        int oneWhichNode = m_VMs[VMs_type_id[oneVm_serverId][oneVm_VmsId]].node_type;
+        int anotherWhichNode = m_VMs[VMs_type_id[anotherVm_serverId][anotherVm_VmsId]].node_type;
+        if(oneWhichNode == anotherWhichNode) {
+            return false;
+        }
+        else{
+            //优先排进资源平衡的服务器
+            int needCpu = m_VMs[VMs_type_id[oneVm_serverId][oneVm_VmsId]].m_CPU_num;
+            int needRam = m_VMs[VMs_type_id[oneVm_serverId][oneVm_VmsId]].m_RAM;
+            int half_need_cpu = needCpu>>1;
+            int half_need_ram = needRam>>1;
+            //剩余的资源
+            int remainCPU_A = remain_CPU_A[anotherVm_serverId];
+            int remainRAM_A = remain_RAM_A[anotherVm_serverId];
+            int remainCPU_B = remain_CPU_B[anotherVm_serverId];
+            int remainRAM_B = remain_RAM_B[anotherVm_serverId];
+            //如果是单节点的
+            if((remainCPU_A>needCpu&&remainRAM_A>needRam) || (remainCPU_B>needCpu&& remainRAM_B>needRam)){
+                return true;
+            }else{
+                if((remainCPU_A>half_need_cpu&&remainRAM_A>half_need_ram) && (remainCPU_B>half_need_cpu&& remainRAM_B>half_need_ram)){
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+    cout<<"can not reach"<<endl;
+    return false;
+}
 
 
+//评价当前策略的好坏
+float migrate::judge_operate(std::vector<int>& servers_type_id,
+                             std::vector<std::vector<int>>& VMs_type_id,
+                             std::vector<int>& remain_CPU_A,
+                             std::vector<int>& remain_RAM_A,
+                             std::vector<int>& remain_CPU_B,
+                             std::vector<int>& remain_RAM_B,
+                             vector<pair<int,int>> &recordSelectedPos,
+                             int &oneVM,
+                             int &anotherVM){
 
-
+    return 0.0;
+}
