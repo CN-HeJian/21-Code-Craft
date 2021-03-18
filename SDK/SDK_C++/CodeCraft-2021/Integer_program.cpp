@@ -243,7 +243,7 @@ void Integer_program::set_all_servers(std::vector<server_data> server_data, int 
         {
             ram = 2 * max_ram - server_data.at(i).m_RAM;
         }
-        c_matrix[i] = server_data.at(i).m_price + 100 * cpu + 100 * ram;
+        c_matrix[i] = 1000000 + server_data.at(i).m_price + 500*server_data.at(i).m_daily_cost + 100 * cpu + 100 * ram;
     }
 }
 

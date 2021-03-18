@@ -46,7 +46,7 @@ std::vector<distribution_operation> distribution::try_violence_distribution(
         int server_num = servers_type_id.size();
         std::vector<distribution_operation> result;
         int cnt = 0;
-        for(auto t:tasks.cmd)
+        for(const auto& t:tasks.cmd)
         {
                 cnt ++;
                 distribution_operation op;
@@ -115,35 +115,27 @@ std::vector<distribution_operation> distribution::try_violence_distribution(
                                                         op.node_type = A;
                                                 }
                                         }
-                                        else if(state_AB == 1)
-                                        {// 添加到B节点
-                                                lc_B = left_CPU_B.at(server_cnt) - m_VMs[t.second.second].m_CPU_num;
-                                                lr_B = left_RAM_B.at(server_cnt) - m_VMs[t.second.second].m_RAM;
-                                                lc_A = 10;
-                                                lr_A = 10;
-                                                if(lc_B < 0 || lr_B < 0)
-                                                {
-                                                        state_AB = 0;
-                                                        server_cnt ++;                                    if(server_cnt == servers_type_id.size())
-                                                        if(server_cnt == server_num)
-                                                        {
-                                                            server_cnt = 0;
-                                                            op.distribution_type = add;
-                                                            break;
-                                                        }
-                                                }
-                                                else
-                                                {
-                                                        left_CPU_B.at(server_cnt) = lc_B;
-                                                        left_RAM_B.at(server_cnt) = lr_B;
-                                                        op.distribution_type = norm;
-                                                        op.server_id = server_cnt;
-                                                        op.node_type = B;
-                                                }
-                                        }
-                                        else
-                                        {
-                                                std::cerr<<"state_AB is :"<<state_AB<<std::endl;
+                                        else {// 添加到B节点
+                                            lc_B = left_CPU_B.at(server_cnt) - m_VMs[t.second.second].m_CPU_num;
+                                            lr_B = left_RAM_B.at(server_cnt) - m_VMs[t.second.second].m_RAM;
+                                            lc_A = 10;
+                                            lr_A = 10;
+                                            if (lc_B < 0 || lr_B < 0) {
+                                                state_AB = 0;
+                                                server_cnt++;
+                                                if (server_cnt == servers_type_id.size())
+                                                    if (server_cnt == server_num) {
+                                                        server_cnt = 0;
+                                                        op.distribution_type = add;
+                                                        break;
+                                                    }
+                                            } else {
+                                                left_CPU_B.at(server_cnt) = lc_B;
+                                                left_RAM_B.at(server_cnt) = lr_B;
+                                                op.distribution_type = norm;
+                                                op.server_id = server_cnt;
+                                                op.node_type = B;
+                                            }
                                         }
                                 }
                         }

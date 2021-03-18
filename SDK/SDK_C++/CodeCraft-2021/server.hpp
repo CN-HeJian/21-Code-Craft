@@ -6,7 +6,7 @@
 #include "tools.hpp"
 #include <vector>
 #include <string>
-
+#include <algorithm>
 
 //test
 
@@ -83,6 +83,7 @@ public:
     int get_id(){return m_index;}
     int get_CPU(){return m_data.m_CPU_num;}
     int get_RAM(){return m_data.m_RAM;}
+    int get_left(){return m_CPU_left_A + m_RAM_left_A + m_CPU_left_B + m_RAM_left_B;}
     int get_daily_cost(){return m_data.m_daily_cost;}
     int get_price(){return m_data.m_price;}
     int get_type(){return m_data.m_type;}

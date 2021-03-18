@@ -73,13 +73,15 @@ bool manager::try_deploy_VM(int vm_id, int vm_typeId, int server_id, int type, b
         if (iter == m_purchase_servers.end())
         {
             std::cerr << "can not find the server !!!" << std::endl;
+            std::vector<int> i;
+            i.at(2) = 0;
             return false;
         }
         if (!VM.deploy(server_id,type))
         {
             return false;
         }
-        if (!m_purchase_servers[server_id].add_virtual_machine(vm_id,VM.get_data(), type))
+        if (!iter->second.add_virtual_machine(vm_id, VM.get_data(), type))
         {
             return false;
         }
@@ -116,6 +118,7 @@ bool manager::try_de_deploy_VM(int vm_id, bool is_try)
         {
             return false;
         }
+        m_try_deploy_VMs.erase(iter_vm);
     }
     else
     {
@@ -137,6 +140,9 @@ bool manager::try_de_deploy_VM(int vm_id, bool is_try)
         {
             return false;
         }
+        m_deploy_VMs.erase(iter_vm);
+        auto it = find(m_VMs_id.begin(), m_VMs_id.end(), vm_id);
+        m_VMs_id.erase(it);
     }
     return true;
 }
@@ -304,46 +310,53 @@ void manager::assign_by_try()
         add_try_servers.emplace_back(try_server_id);
     }
     // 交换操作
-    // for(auto vm_id:m_VMs_id)
-    // {// 遍历所有旧的虚拟机
-    //     // 在旧的服务器中的id
-    //     int last_server_id = m_deploy_VMs[vm_id].get_server_id();
-    //     int last_node_type = m_deploy_VMs[vm_id].get_server_type();
-    //     // 在try中虚拟机所属服务器id
-    //     auto iter = m_try_deploy_VMs.find(vm_id);
-    //     if(iter == m_try_deploy_VMs.end())
-    //     {// 没有找到说明被删除了
-    //         continue;
-    //     }
-    //     int try_server_id = m_try_deploy_VMs[vm_id].get_server_id();
-    //     int try_node_type = m_try_deploy_VMs[vm_id].get_server_type();
-    //     if(last_server_id == try_server_id)
-    //     {// 相同也可能是AB节点的迁移
-    //         if(last_node_type == try_node_type)
-    //         {
-    //              continue;
-    //         }
-    //         else
-    //         {// A B 之间的迁移
-    //            try_migrate_VM(vm_id,last_server_id,try_node_type);
-    //         }
-    //     }
-    //     else
-    //     {
-    //         auto iter = servers_map.find(try_server_id);
-    //         if(iter == servers_map.end())
-    //         {// 没有找到说明是在两个旧服务器上进行的迁移
-    //             try_migrate_VM(vm_id,try_server_id,try_node_type);
-    //         }
-    //         else
-    //         {
-    //             // 真正的id
-    //             int current_server_id = servers_map[try_server_id];
-    //             // 进行迁移操作
-    //             try_migrate_VM(vm_id,current_server_id,try_node_type);
-    //         }
-    //     }
-    // }
+     for(auto vm_id:m_VMs_id)
+     {// 遍历所有旧的虚拟机
+         if(vm_id == 828201890)
+             cerr<<"11";
+         // 在旧的服务器中的id
+         int last_server_id = m_deploy_VMs[vm_id].get_server_id();
+         int last_node_type = m_deploy_VMs[vm_id].get_server_type();
+         // 在try中虚拟机所属服务器id
+         auto iter = m_try_deploy_VMs.find(vm_id);
+         if(iter == m_try_deploy_VMs.end())
+         {// 没有找到说明被删除了
+             continue;
+         }
+
+         int try_server_id = iter->second.get_server_id();
+         if(try_server_id == -1)
+         {// 没有找到说明被删除了
+             continue;
+         }
+         int try_node_type = iter->second.get_server_type();
+         if(last_server_id == try_server_id)
+         {// 相同也可能是AB节点的迁移
+             if(last_node_type == try_node_type)
+             {
+                  continue;
+             }
+             else
+             {// A B 之间的迁移
+                //try_migrate_VM(vm_id,last_server_id,try_node_type);
+             }
+         }
+         else
+         {
+             auto iter = servers_map.find(try_server_id);
+             if(iter == servers_map.end())
+             {// 没有找到说明是在两个旧服务器上进行的迁移
+                 try_migrate_VM(vm_id,try_server_id,try_node_type);
+             }
+             else
+             {
+                 // 真正的id
+                 int current_server_id = servers_map[try_server_id];
+                 // 进行迁移操作
+                 try_migrate_VM(vm_id,current_server_id,try_node_type);
+             }
+         }
+     }
     // 按照命令执行部分
     auto daily_task = m_tasks.at(m_current_day).cmd;
     for(const auto& task:daily_task)
@@ -366,6 +379,8 @@ void manager::assign_by_try()
             {
                 server_id = servers_map[try_server_id];
             }
+            if(server_id == 130)
+                cerr<<"130 ";
             try_deploy_VM(task.second.first,task.second.second,server_id,node_type);
         }
         else
@@ -440,8 +455,119 @@ void manager::try_migrate()
         }
         VMs.emplace_back(temp);
     }
-    //m_migrate_op = m_migrate->try_migrate(servers,VMs);
+    //m_migrate_op = m_migrate->try_igrate(servers,VMs);
 }
+void manager::my_try_migrate()
+{
+    int max_migrate_num = (int)((float)m_VMs_id.size() * 0.005f);
+    while (max_migrate_num != 0)
+    {// try migrate
+        for(int i = 0;i < m_serverss_ids.size() - 1;i ++)
+        {// for all servers
+            auto server_id = m_serverss_ids.at(i);
+            auto next_id = (rand() % (m_serverss_ids.size() - 1-i))+i+1;
+            auto server2_id = m_serverss_ids.at(next_id);
+            // migrate between server && server2
+            int vm_id = 0,node_type = 0;// need to migrate
+            if(m_purchase_servers[server_id].get_left() > m_purchase_servers[server_id].get_left())
+            {
+                if(migrate_two_server(server_id,server2_id,vm_id,node_type))
+                {
+                    max_migrate_num --;
+                    if(max_migrate_num == 0)
+                    {
+                        break;
+                    }
+                }
+                if(vm_id == 1011582970)
+                    cerr<<"111";
+                // try migrate
+                if(vm_id != -1 && node_type != -1)
+                {
+                    try_migrate_VM(vm_id,server2_id,node_type,true);
+                }
+
+            }
+            else
+            {
+                if(migrate_two_server(server2_id,server_id,vm_id,node_type))
+                {
+                    max_migrate_num --;
+                    if(max_migrate_num == 0)
+                    {
+                        break;
+                    }
+                }
+                if(vm_id == 1011582970)
+                    cerr<<"1011582970";
+                // try migrate
+                if(vm_id != -1 && node_type != -1)
+                {
+                    try_migrate_VM(vm_id,server_id,node_type,true);
+                }
+            }
+        }
+    }
+}
+
+bool manager::migrate_two_server(int from_server,int to_server,int &vm_id,int &node_type)
+{
+    bool is_old =  false;
+    auto server1 = m_try_purchase_servers[from_server];
+    auto server2 = m_try_purchase_servers[to_server];
+    vm_id = -1;
+    node_type = -1;
+
+    int max = 0;
+    auto VMs = server1.get_VM_ids();
+    for(auto id:VMs)
+    {
+        auto vm = m_try_deploy_VMs[id];
+        if(vm.get_server_type() == A || vm.get_server_type() == B)
+        {// single
+            int tmp = 0;
+            int node = -1;
+            if(server2.get_CPU_left_A() > vm.get_CPU() &&
+                server2.get_RAM_left_A() > vm.get_RAM())
+            {
+                tmp = vm.get_CPU() + vm.get_RAM();
+                node = A;
+            }
+            else if(server2.get_CPU_left_B() > vm.get_CPU() &&
+                server2.get_RAM_left_B() > vm.get_RAM())
+            {
+                tmp = vm.get_CPU() + vm.get_RAM();
+                node = B;
+            }
+            if(tmp > max)
+            {
+                max = tmp;
+                vm_id = id;
+                node_type = node;
+            }
+        }
+        else
+        {// double
+            int tmp = 0;
+            if(server2.get_CPU_left_A() > vm.get_CPU()/2 &&
+               server2.get_RAM_left_A() > vm.get_RAM()/2 &&
+               server2.get_CPU_left_B() > vm.get_CPU()/2 &&
+               server2.get_RAM_left_B() > vm.get_RAM()/2)
+            {
+                tmp = vm.get_CPU() + vm.get_RAM();
+            }
+            if(tmp > max)
+            {
+                max = tmp;
+                vm_id = id;
+                node_type = AB;
+            }
+        }
+    }
+    is_old = m_try_deploy_VMs[vm_id].get_data().is_old;
+    return is_old;
+}
+
 // 分配操作
 void manager::try_distribution()
 {
@@ -568,89 +694,262 @@ void manager::try_fine_purchase()
         }
     }
 }
+float manager::cal_score(int node_type,int day,int need_CPU,int need_RAM,
+                         int CPU,int RAM,int left_CPU,int left_RAM,
+                         int left_CPU_B,int left_RAM_B)
+{
+    float score = 0;
+    int power_cost = 0;
+    int all_day = m_tasks.size();
+    float match_rate;
+    float balance_rate;
+    // cal score
+    if(node_type == 0)
+    {// double
+        if(need_CPU/2 > left_CPU || need_CPU/2 > left_CPU_B ||
+           need_RAM/2 > left_RAM || need_RAM/2 > left_RAM_B)
+        {// RAM or CPU is not enough
+            return 0;
+        }
+        if(CPU == (left_CPU + left_CPU_B) && RAM == (left_RAM + left_RAM_B))
+        {
+            power_cost =  day;
+        }
+        float rate_A = powf(2.f * (float)left_CPU / (float)CPU - 2.f * (float)left_RAM / (float)RAM,2);
+        float rate_B = powf(2.f * (float)left_CPU_B / (float)CPU - 2.f * (float)left_RAM_B / (float)RAM,2);
+        left_CPU -= need_CPU/2;
+        left_RAM -= need_RAM/2;
+        left_CPU_B -= need_CPU/2;
+        left_RAM_B -= need_RAM/2;
+        float after_rate_A = powf(2.f * (float)left_CPU / (float)CPU - 2.f * (float)left_RAM / (float)RAM,2);
+        float after_rate_B = powf(2.f * (float)left_CPU_B / (float)CPU - 2.f * (float)left_RAM_B / (float)RAM,2);
+        balance_rate = (rate_A + rate_B) - (after_rate_A + after_rate_B);
+    }
+    else
+    {// single
+        if(need_CPU > left_CPU || need_RAM > left_RAM)
+        {// RAM or CPU is not enough
+            return 0;
+        }
+        if(CPU == left_CPU*2 && RAM == left_RAM*2)
+        {
+            power_cost = day;
+        }
+        float rate_A = powf(2.f * (float)left_CPU / (float)CPU - 2.f * (float)left_RAM / (float)RAM,2);
+        left_CPU -= need_CPU;
+        left_RAM -= need_RAM;
+        float after_rate_A = powf(2.f * (float)left_CPU / (float)CPU - 2.f * (float)left_RAM / (float)RAM,2);
+        balance_rate = rate_A - after_rate_A;
+    }
+    balance_rate = balance_rate<0?0:balance_rate;
+    // match rate
+    match_rate = powf((((float)need_CPU/(float)need_RAM) - ((float)CPU/(float)RAM)),2);
+    score = 1.f / (0.001f * (float)power_cost + 1.f) + 1/(match_rate + 1) + 4 * balance_rate;
+
+    return score;
+}
+void manager::cal_MAX_CPU_RAM(int &MAX_CPU,int &MAX_RAM)
+{
+    int CPU = 0,RAM = 0;
+
+    for(const auto& task:m_tasks)
+    {
+        int del_CPU = 0;
+        int del_RAM = 0;
+        for(const auto& cmd:task.cmd)
+        {
+            int vm_type = cmd.second.second;
+            auto vm = m_VMs[vm_type];
+            if(cmd.first == "add")
+            {
+
+                CPU += vm.m_CPU_num;
+                RAM += vm.m_RAM;
+            }
+            else
+            {
+                del_CPU += vm.m_CPU_num;
+                del_RAM += vm.m_RAM;
+                CPU -= vm.m_CPU_num;
+                RAM -= vm.m_RAM;
+            }
+            if(MAX_CPU < CPU)
+            {
+                MAX_CPU = CPU;
+            }
+            if(MAX_RAM < RAM)
+            {
+                MAX_RAM = RAM;
+            }
+        }
+        std::cerr<<"del CPU: "<<del_CPU<<"del RAM: "<<del_RAM<<std::endl;
+    }
+}
 
 // 主要调用的函数，处理所有天的数据
 void manager::processing()
 {
     // 初始化的时候进行一些统计数据
-    //@TODO
+    int server_num  = -1;
+    int MAX_CPU = 0;
+    int MAX_RAM = 0;
+    cal_MAX_CPU_RAM(MAX_CPU,MAX_RAM);
+
     // 初始化一些变量
     //clock_start();
     m_coarse_init = new Integer_program(m_serverss_ids.size());
     m_distribution = new distribution(m_servers,m_VMs);
     m_migrate = new migrate();
-    int server_num  = -1;
+    m_coarse_init->set_all_servers(m_servers, 1.02 * MAX_CPU, 1.02 * MAX_RAM);
+    auto init = m_coarse_init->solve(true);
+    // 尝试购买
+    for (int i = 0; i < init.size(); i++)
+    {
+        for (int j = 0; j < init.at(i); j++)
+        {
+            try_purchase_server(++server_num, i, true);
+        }
+    }
     // 开始遍历所有天的操作
     for(int day = 0;day < get_days();day ++)
     {
-        try_fine_purchase();
-        /*
         // 初步计算需要多少
-        auto init = coarse_init();
-        // 尝试购买
-        for (int i = 0; i < init.size(); i++)
-        {
-            for (int j = 0; j < init.at(i); j++)
-            {
-                try_purchase_server(++server_num, i, true);
-            }
-        }
-//        if(day == 0)
+//        auto init = coarse_init();
+//        // 尝试购买
+//        for (int i = 0; i < init.size(); i++)
 //        {
-//            int max_server = 0;
-//            int max_price = 0;
-//            for(auto &s:m_servers)
+//            for (int j = 0; j < init.at(i); j++)
 //            {
-//                if(s.m_price > max_price)
-//                {
-//                    max_price = s.m_price;
-//                    max_server = s.m_type;
-//                }
-//            }
-//            for(int i = 0;i < 5000;i ++)
-//            {
-//                try_purchase_server(++server_num, max_server, true);
+//                try_purchase_server(++server_num, i, true);
 //            }
 //        }
         // 进行分配操作
-        try_distribution();
-        int task_num = 0;
-        // 尝试进行分配
-        for(const auto& op:m_distribution_op)
+        auto task = m_tasks.at(m_current_day);
+        for(const auto& cmd:task.cmd)
         {
-            if(op.distribution_type == add)
-            {// 添加服务器
-                try_purchase_server(op.server_id,op.server_type,true);
-                server_num ++;
-                // temp
-                auto c = m_tasks.at(day).cmd.at(task_num);
-                auto vm = m_VMs[c.second.second];
-                try_deploy_VM(c.second.first,c.second.second,op.server_id,vm.m_is_double_node?AB:A,false,true);
-                task_num ++;
-            }
-            else if(op.distribution_type == norm)
-            {// 正常部署或者删除虚拟机
-                auto c = m_tasks.at(day).cmd.at(task_num);
-                if(c.first == "add")
-                {// 部署虚拟机
-                    try_deploy_VM(c.second.first,c.second.second,op.server_id,op.node_type,false,true);
+            int vm_id = cmd.second.second;
+            if(cmd.first == "add")
+            {
+                int server_id = 0;
+                int node_type = 0;
+                float score = 0;
+                float max_score = 0;
+                for(auto& s:m_try_purchase_servers)
+                {// for all servers
+                    int node = -1;
+                    if(m_VMs[vm_id].m_is_double_node)
+                    {// double node
+                        score = cal_score(0,s.second.get_daily_cost(),
+                                          m_VMs[vm_id].m_CPU_num,m_VMs[vm_id].m_RAM,
+                                          s.second.get_CPU(),s.second.get_RAM(),
+                                          s.second.get_CPU_left_A(),s.second.get_RAM_left_A(),
+                                          s.second.get_CPU_left_B(),s.second.get_RAM_left_B());
+                        node = 2;
+                    }
+                    else
+                    {// single node
+                        float score_A = cal_score(1,s.second.get_daily_cost(),
+                                                  m_VMs[vm_id].m_CPU_num,m_VMs[vm_id].m_RAM
+                                                  ,s.second.get_CPU(),s.second.get_RAM(),
+                                                  s.second.get_CPU_left_A(),s.second.get_RAM_left_A());
+                        float score_B = cal_score(1,s.second.get_daily_cost(),
+                                                  m_VMs[vm_id].m_CPU_num,m_VMs[vm_id].m_RAM
+                                                  ,s.second.get_CPU(),s.second.get_RAM(),
+                                                  s.second.get_CPU_left_B(),s.second.get_RAM_left_B());
+                        if(score_A > score_B)
+                        {
+                            score = score_A;
+                            node = 0;
+                        }
+                        else
+                        {
+                            score = score_B;
+                            node = 1;
+                        }
+                    }
+                    if(max_score < score)
+                    {
+                        max_score = score;
+                        server_id = s.second.get_id();
+                        node_type = node;
+                    }
                 }
-                else
-                {// 删除虚拟机
-                    try_de_deploy_VM(c.second.first,true);
+                if(max_score == 0)
+                {
+                    int id = 0;
+                    for(const auto& s:m_servers)
+                    {
+                        if(m_VMs[cmd.second.second].m_is_double_node)
+                        {
+                            int lc = s.m_CPU_num - m_VMs[cmd.second.second].m_CPU_num*10;
+                            int lr = s.m_RAM - m_VMs[cmd.second.second].m_RAM*10;
+                            if(lc > 0 && lr > 0)
+                            {
+                                id = s.m_type;
+                            }
+                        }
+                        else
+                        {
+                            int lc = s.m_CPU_num/2 - m_VMs[cmd.second.second].m_CPU_num*10;
+                            int lr = s.m_RAM/2 - m_VMs[cmd.second.second].m_RAM*10;
+                            if(lc > 0 && lr > 0)
+                            {
+                                id = s.m_type;
+                            }
+                        }
+                    }
+                    try_purchase_server(++server_num,id, true);
+                    server_id = server_num;
+                    std::cerr<<"buy"<<std::endl;
                 }
-                 task_num ++;
+                try_deploy_VM(cmd.second.first,cmd.second.second,server_id,node_type,false,true);
             }
-            else if(op.distribution_type == erase)
-            {// 删除服务器
-                try_delet_server(op.server_id);
+            else
+            {
+                if(cmd.second.first == 899597852)
+                {
+                    cerr<<"this";
+                }
+                try_de_deploy_VM(cmd.second.first,true);
             }
         }
-       try_delet_unused(init);*/
+//        try_distribution();
+//        int task_num = 0;
+//        // 尝试进行分配
+//        for(const auto& op:m_distribution_op)
+//        {
+//            if(op.distribution_type == add)
+//            {// 添加服务器
+//                try_purchase_server(op.server_id,op.server_type,true);
+//                server_num ++;
+//                // temp
+//                auto c = m_tasks.at(day).cmd.at(task_num);
+//                auto vm = m_VMs[c.second.second];
+//                try_deploy_VM(c.second.first,c.second.second,op.server_id,vm.m_is_double_node?AB:A,false,true);
+//                task_num ++;
+//            }
+//            else if(op.distribution_type == norm)
+//            {// 正常部署或者删除虚拟机
+//                auto c = m_tasks.at(day).cmd.at(task_num);
+//                if(c.first == "add")
+//                {// 部署虚拟机
+//                    try_deploy_VM(c.second.first,c.second.second,op.server_id,op.node_type,false,true);
+//                }
+//                else
+//                {// 删除虚拟机
+//                    try_de_deploy_VM(c.second.first,true);
+//                }
+//                 task_num ++;
+//            }
+//            else if(op.distribution_type == erase)
+//            {// 删除服务器
+//                try_delet_server(op.server_id);
+//            }
+//        }
         //std::cerr<<"cost cost time in ms:"<<clock_end()<<std::endl;
         //clock_start();
         // 迁移操作
-        //try_migrate();
+        my_try_migrate();
         // 尝试进行迁移
         // for(auto op:m_migrate_op)
         // {
@@ -668,7 +967,19 @@ void manager::processing()
         //std::cerr<<"finish day"<<m_current_day<<std::endl;
 
 #ifdef test
-        std::cerr<<"cost:"<<m_purchase_cost + m_power_cost<<std::endl;
+        float rate = 0;
+        int num = 0;
+        for(int & m_serverss_id : m_serverss_ids)
+        {
+            if(m_purchase_servers[m_serverss_id].is_power_on())
+            {
+                rate += m_purchase_servers[m_serverss_id].get_occupancy_factor_A();
+                rate += m_purchase_servers[m_serverss_id].get_occupancy_factor_B();
+                num ++;
+            }
+        }
+        rate /= (2*num);
+        std::cerr<<"day: "<<m_current_day<<"rate: "<<rate<<"cost:"<<m_purchase_cost + m_power_cost<<std::endl;
         statistic_busy_rate(m_current_day);
         sum_cost.push_back(m_purchase_cost+m_power_cost);
         hard_cost.push_back(m_purchase_cost);

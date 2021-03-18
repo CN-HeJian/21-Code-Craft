@@ -82,6 +82,8 @@ public:
     void try_distribution();
     void try_delet_unused(std::vector<int> new_server_ids);
     void try_migrate();
+    void my_try_migrate();
+    bool migrate_two_server(int from_server,int to_server,int &vm_id,int &node_type);
     void assign_by_try();// 通过尝试的结果，按照实际的流程来赋值
     // 读取数据
 #ifdef test
@@ -140,6 +142,11 @@ private:
     std::vector<server_data> m_servers;
     std::vector<virtual_machine_data> m_VMs;
     std::vector<task> m_tasks;
+    //
+    void cal_MAX_CPU_RAM(int &CPU,int &RAM);
+    float cal_score(int node_type,int day,int need_CPU,int need_RAM,
+                    int CPU,int RAM,int left_CPU,int left_RAM,
+                    int left_CPU_B=0,int left_RAM_B=0);
     // 映射关系 
     std::unordered_map<std::string,int> m_server_map;
     std::unordered_map<std::string,int> m_VM_map;

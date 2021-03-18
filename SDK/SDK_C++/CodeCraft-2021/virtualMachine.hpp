@@ -58,7 +58,7 @@ public:
     int get_RAM(){return m_data.m_RAM;}
     int get_node_num(){return m_data.m_is_double_node;}
     int get_server_id(){return m_server_id;}
-    int get_server_type(){return m_node_type;}
+    int get_server_type(){return m_data.m_type;}
     int get_type(){return m_data.m_type;}
     int get_VM_id(){return m_data.m_id;}
     virtual_machine_data get_data(){return m_data;}
@@ -89,7 +89,7 @@ private:
     int m_index;// 创建id m_index == m_data.m_type
     int m_node_type = -1;// 放在服务器节点上的方式
     virtual_machine_data m_data;
-    int m_server_id;
+    int m_server_id = -1;
 };
 
 #endif // __VIRTUAL_MACHINE_H
