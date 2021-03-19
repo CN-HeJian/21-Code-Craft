@@ -49,8 +49,6 @@ bool server::add_virtual_machine(int id, virtual_machine_data VM, int type)
     else
     {
         VM.m_type = type;
-        if(id == 709504559)
-            std::cerr<<"777";
         m_VM.insert(std::pair<int, virtual_machine_data>(id, VM));
         m_VM_ids.emplace_back(id);
 

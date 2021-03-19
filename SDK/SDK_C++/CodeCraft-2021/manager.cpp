@@ -172,6 +172,8 @@ bool manager::try_migrate_VM(int vm_id, int server_to, int type, bool is_try)
         {
             return false;
         }
+        // record
+        m_mig_ops.emplace_back(mig_op(vm_id, vm_type, server_to, type));
     }
     else
     {
@@ -221,6 +223,7 @@ float manager::try_cal_cost(bool is_try)
 void manager::finish_oneday()
 {
     m_operators.finish_oneday();
+    m_mig_ops.clear();
     m_current_day++;
 }
 void manager::re_begin()
@@ -310,52 +313,22 @@ void manager::assign_by_try()
         add_try_servers.emplace_back(try_server_id);
     }
     // 交换操作
-     for(auto vm_id:m_VMs_id)
+     for(auto op:m_mig_ops)
      {// 遍历所有旧的虚拟机
-         if(vm_id == 828201890)
-             cerr<<"11";
-         // 在旧的服务器中的id
-         int last_server_id = m_deploy_VMs[vm_id].get_server_id();
-         int last_node_type = m_deploy_VMs[vm_id].get_server_type();
-         // 在try中虚拟机所属服务器id
-         auto iter = m_try_deploy_VMs.find(vm_id);
-         if(iter == m_try_deploy_VMs.end())
-         {// 没有找到说明被删除了
-             continue;
-         }
 
-         int try_server_id = iter->second.get_server_id();
-         if(try_server_id == -1)
-         {// 没有找到说明被删除了
-             continue;
-         }
-         int try_node_type = iter->second.get_server_type();
-         if(last_server_id == try_server_id)
-         {// 相同也可能是AB节点的迁移
-             if(last_node_type == try_node_type)
-             {
-                  continue;
-             }
-             else
-             {// A B 之间的迁移
-                //try_migrate_VM(vm_id,last_server_id,try_node_type);
-             }
+         auto iter = servers_map.find(op.m_server_to);
+         if(iter == servers_map.end())
+         {// 没有找到说明是在两个旧服务器上进行的迁移
+             try_migrate_VM(op.m_vm_id,op.m_server_to,op.m_type);
          }
          else
          {
-             auto iter = servers_map.find(try_server_id);
-             if(iter == servers_map.end())
-             {// 没有找到说明是在两个旧服务器上进行的迁移
-                 try_migrate_VM(vm_id,try_server_id,try_node_type);
-             }
-             else
-             {
-                 // 真正的id
-                 int current_server_id = servers_map[try_server_id];
-                 // 进行迁移操作
-                 try_migrate_VM(vm_id,current_server_id,try_node_type);
-             }
+             // 真正的id
+             int current_server_id = servers_map[op.m_server_to];
+             // 进行迁移操作
+             try_migrate_VM(op.m_vm_id,current_server_id,op.m_type);
          }
+
      }
     // 按照命令执行部分
     auto daily_task = m_tasks.at(m_current_day).cmd;
@@ -379,8 +352,6 @@ void manager::assign_by_try()
             {
                 server_id = servers_map[try_server_id];
             }
-            if(server_id == 130)
-                cerr<<"130 ";
             try_deploy_VM(task.second.first,task.second.second,server_id,node_type);
         }
         else
@@ -459,6 +430,8 @@ void manager::try_migrate()
 }
 void manager::my_try_migrate()
 {
+    int max_iter = 1000;
+    int last_num = 0;
     int max_migrate_num = (int)((float)m_VMs_id.size() * 0.005f);
     while (max_migrate_num != 0)
     {// try migrate
@@ -479,8 +452,6 @@ void manager::my_try_migrate()
                         break;
                     }
                 }
-                if(vm_id == 1011582970)
-                    cerr<<"111";
                 // try migrate
                 if(vm_id != -1 && node_type != -1)
                 {
@@ -498,15 +469,20 @@ void manager::my_try_migrate()
                         break;
                     }
                 }
-                if(vm_id == 1011582970)
-                    cerr<<"1011582970";
                 // try migrate
                 if(vm_id != -1 && node_type != -1)
                 {
                     try_migrate_VM(vm_id,server_id,node_type,true);
                 }
             }
+            max_iter --;
         }
+        if(last_num == max_migrate_num || max_iter < 0)
+        {
+            break;
+        }
+        last_num = max_migrate_num;
+
     }
 }
 
@@ -782,7 +758,7 @@ void manager::cal_MAX_CPU_RAM(int &MAX_CPU,int &MAX_RAM)
                 MAX_RAM = RAM;
             }
         }
-        std::cerr<<"del CPU: "<<del_CPU<<"del RAM: "<<del_RAM<<std::endl;
+        //std::cerr<<"del CPU: "<<del_CPU<<"del RAM: "<<del_RAM<<std::endl;
     }
 }
 
@@ -824,6 +800,7 @@ void manager::processing()
 //            }
 //        }
         // 进行分配操作
+        //my_try_migrate();
         auto task = m_tasks.at(m_current_day);
         for(const auto& cmd:task.cmd)
         {
@@ -900,16 +877,12 @@ void manager::processing()
                     }
                     try_purchase_server(++server_num,id, true);
                     server_id = server_num;
-                    std::cerr<<"buy"<<std::endl;
+                    //std::cerr<<"buy"<<std::endl;
                 }
                 try_deploy_VM(cmd.second.first,cmd.second.second,server_id,node_type,false,true);
             }
             else
             {
-                if(cmd.second.first == 899597852)
-                {
-                    cerr<<"this";
-                }
                 try_de_deploy_VM(cmd.second.first,true);
             }
         }
@@ -949,7 +922,7 @@ void manager::processing()
         //std::cerr<<"cost cost time in ms:"<<clock_end()<<std::endl;
         //clock_start();
         // 迁移操作
-        my_try_migrate();
+
         // 尝试进行迁移
         // for(auto op:m_migrate_op)
         // {
@@ -1061,8 +1034,19 @@ void manager::result()
             std::cout << "(" << name << ", " << op.m_purchases[name].num << ")" << std::endl;
         }
         // 当前迁移服务器
-        std::cout << "(migration, " << 0 << ")" << std::endl;
-
+//        std::cout << "(migration, " << 0 << ")" << std::endl;
+        std::cout << "(migration, " << op.m_migrates.size() << ")" << std::endl;
+        for (auto m : op.m_migrates)
+        {
+            if (m.is_double)
+            { // 双节点
+                std::cout << "(" << m.server_from_id << ", " << m.server_to_id << ")" << std::endl;
+            }
+            else
+            { // 单节点
+                std::cout << "(" << m.server_from_id << ", " << m.server_to_id << ", " << m.node << ")" << std::endl;
+            }
+        }
         // 当前部署
         for (const auto& d : op.m_deploys)
         {

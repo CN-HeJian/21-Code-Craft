@@ -138,6 +138,19 @@ private:
     std::unordered_map<int,virtual_machine> m_try_deploy_VMs;
     // 所有天的操作数据 
     operations m_operators;
+    struct mig_op {
+        int m_vm_id;
+        int m_vm_type;
+        int m_server_to;
+        int m_type;
+        mig_op(int vm_id,int vm_type,int server_to,int type)
+        {
+            m_vm_id = vm_id;
+            m_server_to = server_to;
+            m_type = type;
+        }
+    };
+    std::vector<mig_op> m_mig_ops;
     // 保存所有虚拟机和服务器的实例
     std::vector<server_data> m_servers;
     std::vector<virtual_machine_data> m_VMs;
