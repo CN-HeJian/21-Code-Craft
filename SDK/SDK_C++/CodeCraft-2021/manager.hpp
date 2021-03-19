@@ -120,6 +120,7 @@ private:
     // 映射关系 
     std::unordered_map<std::string,int> m_server_map;
     std::unordered_map<std::string,int> m_VM_map;
+    std::unordered_map<int, int> vmId_2_vmTypeId;
 public:
     //每天每台服务器的各个节点的CPU以及RAM的占用率
     std::vector<vector<vector<float>>>  used_rate;

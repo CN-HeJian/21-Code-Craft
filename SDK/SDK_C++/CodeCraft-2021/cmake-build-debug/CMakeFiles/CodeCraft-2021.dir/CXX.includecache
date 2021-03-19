@@ -6,13 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/CodeCraft-2021.cpp
-iostream
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/iostream
-manager.hpp
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/manager.hpp
-
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/Integer_program.hpp
+/home/jian/Desktop/3_18/CodeCraft-2021/Integer_program.hpp
 iostream
 -
 algorithm
@@ -26,9 +20,9 @@ cmath
 vector
 -
 server.hpp
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/server.hpp
+/home/jian/Desktop/3_18/CodeCraft-2021/server.hpp
 
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/distribution.hpp
+/home/jian/Desktop/3_18/CodeCraft-2021/distribution.hpp
 vector
 -
 algorithm
@@ -36,37 +30,37 @@ algorithm
 unordered_set
 -
 server.hpp
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/server.hpp
+/home/jian/Desktop/3_18/CodeCraft-2021/server.hpp
 virtualMachine.hpp
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/virtualMachine.hpp
+/home/jian/Desktop/3_18/CodeCraft-2021/virtualMachine.hpp
 tools.hpp
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.hpp
+/home/jian/Desktop/3_18/CodeCraft-2021/tools.hpp
 
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/manager.cpp
+/home/jian/Desktop/3_18/CodeCraft-2021/manager.cpp
 manager.hpp
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/manager.hpp
+/home/jian/Desktop/3_18/CodeCraft-2021/manager.hpp
 iostream
 -
 fstream
 -
 
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/manager.hpp
+/home/jian/Desktop/3_18/CodeCraft-2021/manager.hpp
 vector
 -
 unordered_map
 -
 migrate.hpp
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/migrate.hpp
+/home/jian/Desktop/3_18/CodeCraft-2021/migrate.hpp
 server.hpp
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/server.hpp
+/home/jian/Desktop/3_18/CodeCraft-2021/server.hpp
 virtualMachine.hpp
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/virtualMachine.hpp
+/home/jian/Desktop/3_18/CodeCraft-2021/virtualMachine.hpp
 operation.hpp
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/operation.hpp
+/home/jian/Desktop/3_18/CodeCraft-2021/operation.hpp
 iostream
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/iostream
+/home/jian/Desktop/3_18/CodeCraft-2021/iostream
 tools.hpp
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.hpp
+/home/jian/Desktop/3_18/CodeCraft-2021/tools.hpp
 string
 -
 stdio.h
@@ -84,27 +78,35 @@ fcntl.h
 sys/mman.h
 -
 Integer_program.hpp
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/Integer_program.hpp
+/home/jian/Desktop/3_18/CodeCraft-2021/Integer_program.hpp
 distribution.hpp
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/distribution.hpp
+/home/jian/Desktop/3_18/CodeCraft-2021/distribution.hpp
 
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/migrate.cpp
+/home/jian/Desktop/3_18/CodeCraft-2021/migrate.cpp
 migrate.hpp
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/migrate.hpp
+/home/jian/Desktop/3_18/CodeCraft-2021/migrate.hpp
 string.h
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/string.h
+/home/jian/Desktop/3_18/CodeCraft-2021/string.h
+stdio.h
+-
+stdlib.h
+-
+time.h
+-
 
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/migrate.hpp
+/home/jian/Desktop/3_18/CodeCraft-2021/migrate.hpp
 vector
 -
+unordered_map
+-
 tools.hpp
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.hpp
+/home/jian/Desktop/3_18/CodeCraft-2021/tools.hpp
 server.hpp
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/server.hpp
+/home/jian/Desktop/3_18/CodeCraft-2021/server.hpp
 manager.hpp
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/manager.hpp
+/home/jian/Desktop/3_18/CodeCraft-2021/manager.hpp
 
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/operation.hpp
+/home/jian/Desktop/3_18/CodeCraft-2021/operation.hpp
 vector
 -
 string
@@ -112,21 +114,21 @@ string
 unordered_map
 -
 
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/server.hpp
+/home/jian/Desktop/3_18/CodeCraft-2021/server.hpp
 map
 -
 unordered_map
 -
 virtualMachine.hpp
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/virtualMachine.hpp
+/home/jian/Desktop/3_18/CodeCraft-2021/virtualMachine.hpp
 tools.hpp
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.hpp
+/home/jian/Desktop/3_18/CodeCraft-2021/tools.hpp
 vector
 -
 string
 -
 
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.hpp
+/home/jian/Desktop/3_18/CodeCraft-2021/tools.hpp
 chrono
 -
 string
@@ -134,11 +136,11 @@ string
 vector
 -
 
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/virtualMachine.hpp
+/home/jian/Desktop/3_18/CodeCraft-2021/virtualMachine.hpp
 iostream
 -
 tools.hpp
-/home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/tools.hpp
+/home/jian/Desktop/3_18/CodeCraft-2021/tools.hpp
 vector
 -
 

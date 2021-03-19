@@ -2,6 +2,7 @@
 #define __MIGRATE_A_H 
 // 迁移类，实现迁移操作 
 #include <vector>
+#include <unordered_map>
 #include "tools.hpp"
 #include "server.hpp"
 #include "manager.hpp"
@@ -26,7 +27,7 @@ struct node{
 };
 
 struct change_twoVm{
-    int jude_point;  //评价指标
+    float jude_point;  //评价指标
     //一个在原来中的位置
     int one_sever_id;
     int one_vm_id;
@@ -43,10 +44,12 @@ public:
     ~migrate();
     // 操作接口，尝试对虚拟机进行迁移 
     std::vector<migrate_operation> try_migrate(
+            std::unordered_map<int,virtual_machine> &m_deployed_vm,
+            std::unordered_map<int,int> &vmId_2_id,
             std::vector<int>& servers_type_id,
             std::vector<std::vector<int>>& VMs_type_id,
-            const vector<int>& service_is_new,
-            vector<vector<int>> vm_is_new,
+            const vector<bool>& service_is_new,
+            vector<vector<bool>> vm_is_new,
             std::vector<int>& remain_CPU_A,
             std::vector<int>& remain_RAM_A,
             std::vector<int>& remain_CPU_B,
@@ -76,7 +79,9 @@ private:
     //随机生成数
     int rand_one(int min, int max);
     //评判交换策略
-    float judge_operate(std::vector<int>& servers_type_id,
+    float judge_operate(std::unordered_map<int,virtual_machine> &m_deplyed_vm,
+                        std::unordered_map<int,int> &vmId_2_id,
+                        std::vector<int>& servers_type_id,
                         std::vector<std::vector<int>>& VMs_type_id,
                         std::vector<int>& remain_CPU_A,
                         std::vector<int>& remain_RAM_A,
@@ -86,7 +91,9 @@ private:
                         int &oneVM,
                         int &anotherVM);
     //判断能否够用
-    bool migrate::canMigrate(std::vector<int>& servers_type_id,
+    bool canMigrate( std::unordered_map<int,virtual_machine> &m_deplyed_vm,
+                             std::unordered_map<int,int> &vmId_2_id,
+                             std::vector<int>& servers_type_id,
                              std::vector<std::vector<int>>& VMs_type_id,
                              std::vector<int>& remain_CPU_A,
                              std::vector<int>& remain_RAM_A,
@@ -95,6 +102,18 @@ private:
                              vector<pair<int,int>> &recordSelectedPos,
                              int &oneVM,
                              int &anotherVM);
+    //判断能否进行交换
+    char canChange( std::unordered_map<int,virtual_machine> &m_deplyed_vm,
+                     std::unordered_map<int,int> &vmId_2_id,
+                     std::vector<int>& servers_type_id,
+                     std::vector<std::vector<int>>& VMs_type_id,
+                     std::vector<int>& remain_CPU_A,
+                     std::vector<int>& remain_RAM_A,
+                     std::vector<int>& remain_CPU_B,
+                     std::vector<int>& remain_RAM_B,
+                     vector<pair<int,int>> &recordSelectedPos,
+                     int &oneVM,
+                     int &anotherVM);
     std::vector<server_data> m_servers;// 目前是按照读入顺序
     std::vector<virtual_machine_data> m_VMs;// 目前按照读入顺序排序
 };

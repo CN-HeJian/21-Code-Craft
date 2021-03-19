@@ -10,13 +10,11 @@ int main()
 	// TODO:read standard input
 	//string inputTxtName = "/home/lyc/21-Code-Craft/training-data/training-1.txt";
     //string inputTxtName = "/home/jian/Downloads/demo/21-Code-Craft/training-data/training-1.txt";
-    string inputTxtName = "/home/icf/Desktop/3_16/21-Code-Craft/training-data/training-1.txt";
+    //string inputTxtName = "/home/icf/Desktop/3_16/21-Code-Craft/training-data/training-1.txt";
+    //string inputTxtName = "/home/xinxinfly/Desktop/data/data1.txt";
+    string inputTxtName = "/home/jian/Desktop/3_18/data/data1.txt";
 	manager m;
-	#ifdef test
-		m.readTxt(inputTxtName);
-	#else
-		m.readTxtbyStream();
-	#endif
+	m.readTxtbyStream();
 	// TODO:process
 	m.processing();
 	// TODO:write standard output

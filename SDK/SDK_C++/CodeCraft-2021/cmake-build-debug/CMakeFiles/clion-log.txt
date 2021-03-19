@@ -1,18 +1,41 @@
-/home/icf/Desktop/clion-2020.3.2/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021
--- The C compiler identification is GNU 7.5.0
--- The CXX compiler identification is GNU 7.5.0
--- Check for working C compiler: /usr/bin/cc
--- Check for working C compiler: /usr/bin/cc - works
--- Detecting C compiler ABI info
--- Detecting C compiler ABI info - done
--- Detecting C compile features
--- Detecting C compile features - done
--- Check for working CXX compiler: /usr/bin/c++
--- Check for working CXX compiler: /usr/bin/c++ - works
--- Detecting CXX compiler ABI info
--- Detecting CXX compiler ABI info - done
--- Detecting CXX compile features
--- Detecting CXX compile features - done
--- Configuring done
--- Generating done
--- Build files have been written to: /home/icf/Desktop/3_16/21-Code-Craft/SDK/SDK_C++/CodeCraft-2021/cmake-build-debug
+"D:\CLion 2020.3.2\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" C:\Users\he\Desktop\3——19\3_18\CodeCraft-2021
+-- The C compiler identification is GNU 5.4.0
+-- The CXX compiler identification is GNU 5.4.0
+-- Check for working C compiler: D:/mingw64/bin/gcc.exe
+-- Check for working C compiler: D:/mingw64/bin/gcc.exe - broken
+CMake Error at D:/CLion 2020.3.2/bin/cmake/win/share/cmake-3.17/Modules/CMakeTestCCompiler.cmake:60 (message):
+  The C compiler
+
+    "D:/mingw64/bin/gcc.exe"
+
+  is not able to compile a simple test program.
+
+  It fails with the following output:
+
+    Change Dir: C:/Users/he/Desktop/3鈥斺��19/3_18/CodeCraft-2021/cmake-build-debug/CMakeFiles/CMakeTmp
+    
+    Run Build Command(s):D:/mingw64/bin/mingw32-make.exe cmTC_71073/fast && D:/mingw64/bin/mingw32-make.exe  -f CMakeFiles\cmTC_71073.dir\build.make CMakeFiles/cmTC_71073.dir/build
+    mingw32-make.exe[1]: Entering directory 'C:/Users/he/Desktop/3鈥斺��19/3_18/CodeCraft-2021/cmake-build-debug/CMakeFiles/CMakeTmp'
+    Building C object CMakeFiles/cmTC_71073.dir/testCCompiler.c.obj
+    D:\mingw64\bin\gcc.exe    -o CMakeFiles\cmTC_71073.dir\testCCompiler.c.obj   -c C:\Users\he\Desktop\3閳ユ柡鈧�?9\3_18\CodeCraft-2021\cmake-build-debug\CMakeFiles\CMakeTmp\testCCompiler.c
+    gcc.exe: error: C:\Users\he\Desktop\3閳ユ柡鈧�?9\3_18\CodeCraft-2021\cmake-build-debug\CMakeFiles\CMakeTmp\testCCompiler.c: Invalid argument
+    gcc.exe: fatal error: no input files
+    compilation terminated.
+    CMakeFiles\cmTC_71073.dir\build.make:84: recipe for target 'CMakeFiles/cmTC_71073.dir/testCCompiler.c.obj' failed
+    mingw32-make.exe[1]: *** [CMakeFiles/cmTC_71073.dir/testCCompiler.c.obj] Error 1
+    mingw32-make.exe[1]: Leaving directory 'C:/Users/he/Desktop/3鈥斺��19/3_18/CodeCraft-2021/cmake-build-debug/CMakeFiles/CMakeTmp'
+    Makefile:140: recipe for target 'cmTC_71073/fast' failed
+    mingw32-make.exe: *** [cmTC_71073/fast] Error 2
+    
+    
+
+  
+
+  CMake will not be able to correctly generate this project.
+Call Stack (most recent call first):
+  CMakeLists.txt:5 (project)
+
+
+-- Configuring incomplete, errors occurred!
+See also "C:/Users/he/Desktop/3鈥斺��19/3_18/CodeCraft-2021/cmake-build-debug/CMakeFiles/CMakeOutput.log".
+See also "C:/Users/he/Desktop/3鈥斺��19/3_18/CodeCraft-2021/cmake-build-debug/CMakeFiles/CMakeError.log".

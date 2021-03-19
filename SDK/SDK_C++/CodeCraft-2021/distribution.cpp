@@ -482,7 +482,7 @@ std::vector<distribution_operation> distribution::try_distribution(
     //update flag
     lastday_server_num = servers_type_id.size();
     //test
-    cout<<"----"<<serverCnt<<endl;
+    //cout<<"----"<<serverCnt<<endl;
 
 
     // 4 整理返回数据信息，将数组中顺序按照购买->分配顺序返回

@@ -396,6 +396,7 @@ void manager::assign_by_try()
 // 迁移操作
 void manager::try_migrate()
 {
+    /*
     std::vector<std::pair<int,server_data>> servers;
     std::vector<std::vector<std::pair<int,virtual_machine_data>>> VMs;
 
@@ -415,6 +416,36 @@ void manager::try_migrate()
         VMs.emplace_back(temp);
     }
     //m_migrate_op = m_migrate->try_migrate(servers,VMs);
+     */
+    std::vector<int> servers_type_id;
+    std::vector<std::vector<int>> VMs_type_id;
+    std::vector<int> left_CPU_A;
+    std::vector<int> left_RAM_A;
+    std::vector<int> left_CPU_B;
+    std::vector<int> left_RAM_B;
+    vector<bool>  service_is_new;
+    vector<vector<bool>> vm_is_new;
+    for(int server_id : m_try_serverss_ids)
+    {
+        servers_type_id.emplace_back(m_try_purchase_servers[server_id].get_type());
+        VMs_type_id.emplace_back(m_try_purchase_servers[server_id].get_VM_ids());
+        left_CPU_A.emplace_back(m_try_purchase_servers[server_id].get_CPU_left_A());
+        left_RAM_A.emplace_back(m_try_purchase_servers[server_id].get_RAM_left_A());
+        left_CPU_B.emplace_back(m_try_purchase_servers[server_id].get_CPU_left_B());
+        left_RAM_B.emplace_back(m_try_purchase_servers[server_id].get_RAM_left_B());
+        service_is_new.emplace_back(!m_try_purchase_servers[server_id].get_data().is_old);
+        auto vm_id = m_try_purchase_servers[server_id].get_VM_ids();
+        vector<bool> tmp;
+        tmp.reserve(vm_id.size());
+        for(int id:vm_id)
+        {
+            tmp.emplace_back(!m_try_deploy_VMs[id].get_data().is_old);
+        }
+        vm_is_new.emplace_back(tmp);
+    }
+    m_migrate_op = m_migrate->try_migrate(
+            m_deploy_VMs,vmId_2_vmTypeId,servers_type_id,
+                                          VMs_type_id, service_is_new,vm_is_new, left_CPU_A, left_RAM_A, left_CPU_B, left_RAM_B);
 }
 // 分配操作
 void manager::try_distribution()
@@ -496,7 +527,7 @@ void manager::processing()
 
     m_coarse_init = new Integer_program(m_serverss_ids.size());
     m_distribution = new distribution(m_servers, m_VMs);
-    m_migrate = new migrate();
+    m_migrate = new migrate(m_servers, m_VMs);
     int server_num = -1;
     // 开始遍历所有天的操作
     for (int day = 0; day < get_days(); day++)
@@ -522,6 +553,7 @@ void manager::processing()
             {// 添加服务器
                 try_purchase_server(op.server_id,op.server_type,true);
                 server_num ++;
+                //
             }
             else if(op.distribution_type == norm)
             {// 正常部署或者删除虚拟机
@@ -544,7 +576,7 @@ void manager::processing()
         //std::cerr<<"cost cost time in ms:"<<clock_end()<<std::endl;
         //clock_start();
         // 迁移操作
-        //try_migrate();
+        try_migrate();
         // 尝试进行迁移
         // for(auto op:m_migrate_op)
         // {
@@ -672,252 +704,13 @@ void manager::result()
     }
 }
 
-#ifdef test
-
-void manager::readTxt(const string &inputFile)
-{
-    int fd = open(inputFile.c_str(), O_RDONLY);
-    if (fd == -1)
-        std::cerr << "fail to open files" << std::endl;
-
-    struct stat sb;
-    fstat(fd, &sb);
-    char *buffer = (char *)mmap(NULL, sb.st_size, PROT_READ, MAP_PRIVATE, fd, 0); // 返回的是指向映射区域首地址的指针
-    if (buffer == nullptr || buffer == (void *)-1)
-    {
-        close(fd);
-        exit(-1);
-    }
-    close(fd);
-
-    int choice = 1; //1：读服务器 2：读虚拟机 3：读操作数
-    int val = 0;
-    while (*buffer)
-    {
-        // 开始进行数据读取的分析
-        if (*buffer >= '0' && *buffer <= '9')
-        {
-            val = val * 10 + (*buffer - '0');
-        }
-
-        else if (*buffer == '\n')
-        {
-            if (choice == 1)
-            {
-                choice++;
-                m_servers.reserve(val);
-                m_server_map.reserve(val);
-                int server_nums = val; // 服务器总数
-                val = 0;
-                //开始输入接下来的server_nums行
-                int id = 0;
-                for (int row = 0; row < server_nums; row++)
-                {
-                    int coreNum = 0, memory = 0, firstCost = 0, onCost = 0;
-                    string type;
-                    buffer++; // 进入新的一行
-                    string temp;
-                    while (*buffer != '\n')
-                    {
-                        temp.push_back(*buffer);
-                        buffer++;
-                    }
-                    // 分割字符串temp，temp的样式：(host0Y6DP, 300, 830, 141730, 176)
-                    int len = temp.size();
-                    string t;
-                    int elemNum = 0;
-                    for (int n = 1; n < len; n++)
-                    {
-
-                        if (temp[n] == ',' || temp[n] == ')')
-                        {
-                            if (elemNum == 0)
-                            {
-                                //server[row].type = t;
-                                type = t;
-                                t.clear();
-                            }
-                            else if (elemNum == 1)
-                            {
-                                //server[row].coreNum = stoi(t);
-                                coreNum = stoi(t);
-                                t.clear();
-                            }
-                            else if (elemNum == 2)
-                            {
-                                //server[row].
-                                memory = stoi(t);
-                                t.clear();
-                            }
-                            else if (elemNum == 3)
-                            {
-                                //server[row].
-                                firstCost = stoi(t);
-                                t.clear();
-                            }
-                            else
-                            {
-                                //server[row].
-                                onCost = stoi(t);
-                                t.clear();
-                            }
-                            elemNum++;
-                            continue;
-                        }
-                        t.push_back(temp[n]);
-                    }
-                    m_servers.emplace_back(server_data(id, coreNum, memory, firstCost, onCost, type));
-                    m_server_map.insert(make_pair(type, id));
-                    id++;
-                }
-            }
-            else if (choice == 2)
-            {
-                choice++;
-                int vm_nums = val; // 虚拟机类型数目
-                m_VMs.reserve(vm_nums);
-                m_VM_map.reserve(vm_nums);
-                val = 0;
-                //开始输入接下来的vm_nums行
-                int id = 0;
-                for (int row = 0; row < vm_nums; row++)
-                {
-                    buffer++; // 进入新的一行
-                    string temp;
-                    while (*buffer != '\n')
-                    {
-                        temp.push_back(*buffer);
-                        buffer++;
-                    }
-                    // 分割字符串temp，temp的样式：(vm38TGB, 124, 2, 1)
-                    int len = temp.size();
-                    string t;
-                    int elemNum = 0;
-                    int needcoreNum = 0, needMemory = 0, isdoubleNode = 0;
-                    string type;
-                    for (int n = 1; n < len; n++)
-                    {
-                        if (temp[n] == ',' || temp[n] == ')')
-                        {
-                            if (elemNum == 0)
-                            {
-                                //vm[row].type = t;
-                                type = t;
-                                t.clear();
-                            }
-                            else if (elemNum == 1)
-                            {
-                                //vm[row].
-                                needcoreNum = stoi(t);
-                                t.clear();
-                            }
-                            else if (elemNum == 2)
-                            {
-                                //vm[row].
-                                needMemory = stoi(t);
-                                t.clear();
-                            }
-                            else
-                            {
-                                //vm[row].
-                                isdoubleNode = stoi(t);
-                                t.clear();
-                            }
-                            elemNum++;
-                            continue;
-                        }
-                        t.push_back(temp[n]);
-                    }
-                    m_VMs.emplace_back(virtual_machine_data(id, needcoreNum, needMemory, isdoubleNode));
-                    m_VM_map.insert(make_pair(type, id));
-                    id++;
-                }
-            }
-            else if (choice == 3)
-            {
-                int days = val; // 总的运行天数:1～days
-                val = 0;
-                choice++;
-                int count = 0; //操作数的索引下标
-                //开始输入接下来的days天的操作
-                m_tasks.reserve(days);
-                m_operators.set_days(days);
-                for (int day = 0; day < days; day++)
-                {
-                    task T;
-                    // 读取每一天的操作数
-                    buffer++;    // 进入下一行
-                    string temp; // 存放一行
-                    while (*buffer != '\n')
-                    {
-                        temp.push_back(*buffer);
-                        buffer++;
-                    }
-                    int operations = stoi(temp);
-                    temp.clear();
-
-                    //operation_nums_perday[day] = operations; // 每一天的操作数存入数组中
-                    T.cmd.reserve(operations);
-                    // 读取当天所有操作的具体指令
-                    string type;
-                    int index, vm_id;
-                    for (int i = 0; i < operations; i++)
-                    {
-                        buffer++; // 进入当天操作指令的第一行
-                        string t;
-                        while (*buffer != '\n')
-                        {
-                            t.push_back(*buffer);
-                            buffer++;
-                        }
-                        // 分割字符串t,t的样式：(add, vmVDAZV, 381492167)或(del, 264022204)
-                        int len = t.size();
-                        string t_t;
-                        int elemNum = 0;
-                        for (int n = 1; n < len; n++)
-                        {
-                            if (t[n] == ',' || t[n] == ')')
-                            {
-                                if (elemNum == 0)
-                                {
-                                    //operation[count].type = t_t;
-                                    type = t_t;
-                                    t_t.clear();
-                                }
-                                else if (elemNum == 1 && type == "add")
-                                {
-                                    t_t.erase(0, 1); //删除头部空格
-                                    string vm_type = t_t;
-                                    vm_id = m_VM_map[vm_type];
-                                    t_t.clear();
-                                }
-                                else
-                                {
-                                    index = stoi(t_t);
-                                    t_t.clear();
-                                }
-                                elemNum++;
-                                continue;
-                            }
-                            t_t.push_back(t[n]);
-                        }
-                        T.cmd.emplace_back(make_pair(type, make_pair(index, vm_id)));
-                        count++;
-                    }
-                    m_tasks.emplace_back(T);
-                }
-            }
-        }
-        buffer++;
-    }
-    munmap(buffer, sb.st_size); // 解除内存映射
-}
-#endif
-
 void manager::readTxtbyStream()
 {
-    // std::string test = "/home/lyc/21-Code-Craft/training-data/training-1.txt";
-    // std::freopen(test.c_str(), "rb", stdin);// 文件重定向
+#ifdef test
+    string file = "/home/jian/Desktop/3_18/data/data1.txt";
+    //std::string test = "/home/xinxinfly/Desktop/data/data1.txt";
+    std::freopen(file.c_str(), "rb", stdin);// 文件重定向
+#endif
     // 标准输入流读取服务器相关信息
     int serverNum = 0;
     cin >> serverNum;
@@ -979,6 +772,7 @@ void manager::readTxtbyStream()
                 temp_vmType = req_VmType.substr(0, req_VmType.size() - 1);
                 vmId = stoi(reqId.substr(0, reqId.size() - 1));
                 vm_index = m_VM_map[temp_vmType];
+                vmId_2_vmTypeId[vmId] = vm_index;
                 T.cmd.emplace_back(make_pair(opType, make_pair(vmId, vm_index)));
             }
             else
