@@ -66,10 +66,11 @@ vector<migrate_operation> migrate::try_migrate(
     }
     //最大迁移次数
     int max_migrateCnt = old_vmNum*0.005;
-#ifdefine test
+#ifdef  test
     cout<<"serverNum "<<serverNum<<" old_vmNum "<<old_vmNum<<endl;
 #endif
     //当虚拟机数量大于200时才可以迁移
+    vector<change_twoVm> record_jude;
     if (old_vmNum>200){
         //为记录排序之后的标号
         vector<int> record_server_pos(servers_type_id.size(), 0);
@@ -93,23 +94,23 @@ vector<migrate_operation> migrate::try_migrate(
         {
             return imbalance_rate[a] < imbalance_rate[b];
         });
-    #ifdefine test
+    #ifdef test
         //输出排序后的利用效率,denbug选项
         for (auto c:record_server_pos) {
             cerr << imbalance_rate[c] << " " << endl;
         }
     #endif
         //临界利用效率，也就是利用率大于临界值的服务器暂时不动，去一半的服务器进行迁移
-        float limit_used_rate = imbalance_rate[imbalance_rate.size() - 1] >> 1;
+        float limit_used_rate = imbalance_rate[imbalance_rate.size() - 1]/2;
         //选择过程，将利用效率较低的服务器加入
-        vector<int> sorted_elected_server
+        vector<int> sorted_elected_server;
         for (int i = 0; i < imbalance_rate.size(); ++i) {
-            if (imbalance[record_server_pos[i]] < limit_used_rate) {
+            if (imbalance_rate[record_server_pos[i]] < limit_used_rate) {
                 sorted_elected_server.push_back(record_server_pos[i]);
             }
         }
         //确定选中的服务器中中利用率高的,1---ram利用高，2-----cpu利用高，3-----利用均衡
-        vetor<int> which_use_high(sorted_elected_server.size(), 3);
+        vector<int> which_use_high(sorted_elected_server.size(), 3);
         for (int i = 0; i < sorted_elected_server.size(); ++i) {
             int server_inx = sorted_elected_server[i];//第几个服务器的编号，sorted_elected_server中存的就是给的服务器的编号
             int origin_cpu = m_servers[servers_type_id[server_inx]].m_CPU_num;
@@ -120,9 +121,6 @@ vector<migrate_operation> migrate::try_migrate(
                 which_use_high[server_inx] = 1; //ram占用高
             } else {
                 which_use_high[server_inx] = 2; //cpu占用高
-            }else{
-                //如果进入这儿，考虑是不是计算出错
-                cout << "sever used balance" << endl;//which_use_high
             }
         }
         //Whichwhich_use_high就是排序之后的每个服务器所有的属性,然后进一步排序,sorted_elected_server前面的是ram占用高的server，后面是cpu占用高的server
@@ -133,17 +131,17 @@ vector<migrate_operation> migrate::try_migrate(
         vector<pair<int,int>> max_ram_vm_pos;//记录每一个高占用ram的服务器中，最大ram的虚拟机的位置
         vector<int> hight_cpu_used;//可以转移到的位置,记录可以迁移到到的高cpu占用的服务器的位置
         for(int i=0;i<sorted_elected_server.size();++i) {
-            if(whichType[sorted_elected_server[i]]==1){
+            if(which_use_high[sorted_elected_server[i]]==1){
                 int maxram = -1;
                 int maxram_vmid=-1;
                 for(int vm_id=0;vm_id<VMs_type_id[i].size();++vm_id){
-                    int curren_ram = m_VMs[vmId_2_id[VMs_type_id[i][vm_id]]].m_RAM;
+                    int curren_ram = m_VMs[vmid_t_type[VMs_type_id[i][vm_id]]].m_RAM;
                     if(curren_ram>maxram){ //这儿的选择可能会导致选择了一个ram最大虚拟机，其他的都塞不进去
                         maxram_vmid = vm_id;
                     }
                 }
                 max_ram_vm_pos.push_back(make_pair(i,maxram_vmid));
-            }else if(whichType[sorted_elected_server[i]]==2){
+            }else if(which_use_high[sorted_elected_server[i]]==2){
                 hight_cpu_used.push_back(sorted_elected_server[i]);
             }else{
                 cerr<<"debug: cpuUsed == ramUssed"<<endl;
@@ -160,18 +158,17 @@ vector<migrate_operation> migrate::try_migrate(
             }
         }
     }else {
-        record_jude= {};
+        record_jude = {};
     }
     //或许不存在可以迁移的服务器，塞的很满，迁移不动
     int changeCnt = 0;//调试用，用于记录可以交换的次数
-    int max_migrateCnt = old_vmNum*0.005;//最大迁移次数
     vector<migrate_operation>  res;
     for(int i=0;i<record_jude.size();++i){
         change_twoVm temp = record_jude[i];
         int vm_server_id = temp.one_sever_id;
         int vm_vms_id = temp.one_vm_id;
         int togo_server_id = temp.another_server_id;
-        char flag = canMigrate(m_deploy_VMs,vmid_t_type, servers_type_id, VMs_type_id, remain_CPU_A, remain_RAM_A, remain_CPU_B, remain_RAM_B, vm_server_id, vm_vms_id,togo_server_id);//判断能否
+        char flag = canChange(m_deploy_VMs,vmid_t_type, servers_type_id, VMs_type_id, remain_CPU_A, remain_RAM_A, remain_CPU_B, remain_RAM_B, vm_server_id, vm_vms_id,togo_server_id);//判断能否
         if(flag != 'D'){
             //不能超过最大迁移次数
             migrate_operation temp_mg_op;
@@ -179,18 +176,18 @@ vector<migrate_operation> migrate::try_migrate(
                 changeCnt++;//迁移次数++
                 if(flag=='A'){//单节点，选择放在A节点上
                     temp_mg_op.is_new = false;
-                    temp_mg_op.vm_id = vmId_2_id[VMs_type_id[vm_server_id][vm_vms_id]];
-                    temp_mg_op.to_server_idv = servers_type_id[togo_server_id];
+                    temp_mg_op.vm_id = vmid_t_type[VMs_type_id[vm_server_id][vm_vms_id]];
+                    temp_mg_op.to_server_id = servers_type_id[togo_server_id];
                     temp_mg_op.node_type = 0;
                 }else if(flag=='B'){//单节点，选择放在B节点上
                     temp_mg_op.is_new = false;
-                    temp_mg_op.vm_id = vmId_2_id[VMs_type_id[vm_server_id][vm_vms_id]];
-                    temp_mg_op.to_server_idv = servers_type_id[togo_server_id];
+                    temp_mg_op.vm_id = vmid_t_type[VMs_type_id[vm_server_id][vm_vms_id]];
+                    temp_mg_op.to_server_id = servers_type_id[togo_server_id];
                     temp_mg_op.node_type = 0;
                 }else if(flag=='C'){//双节点服务器，AB节点同时放置
                     temp_mg_op.is_new = false;
-                    temp_mg_op.vm_id = vmId_2_id[VMs_type_id[vm_server_id][vm_vms_id]];
-                    temp_mg_op.to_server_idv = servers_type_id[togo_server_id];
+                    temp_mg_op.vm_id = vmid_t_type[VMs_type_id[vm_server_id][vm_vms_id]];
+                    temp_mg_op.to_server_id = servers_type_id[togo_server_id];
                     temp_mg_op.node_type = 0;
                 }
             }else{
@@ -201,7 +198,7 @@ vector<migrate_operation> migrate::try_migrate(
         }
     }
     #ifdef test
-        cout<<"debug: canchangeCnt " <<canchangeCnt<<endl;
+        cout<<"debug: canchangeCnt " <<changeCnt<<endl;
     #endif
     return res;
 }
@@ -294,7 +291,7 @@ char migrate::canChange(
             //目的地容量减少
             remain_CPU_A[togo_serverid] -= needcpu;
             remain_RAM_A[togo_serverid] -= needram;
-            return A;//放置在A节点
+            return 'A';//放置在A节点
         }else if((needcpu<remaincpu_b) &&(needram<remainram_b)){
             //原来服务器减去
             remain_CPU_B[vm_server_id] += needcpu;
@@ -302,7 +299,7 @@ char migrate::canChange(
             //目的地容量减少
             remain_CPU_B[togo_serverid] -= needcpu;
             remain_RAM_B[togo_serverid] -= needram;
-            return B;//放置在B节点
+            return 'B';//放置在B节点
         }
     }else if(vm_type ==2){
         if(half_needcpu<remaincpu_a && half_needcpu<remaincpu_b && half_needram<remainram_a &&half_needram<remainram_b){
@@ -316,10 +313,10 @@ char migrate::canChange(
             remain_RAM_A[togo_serverid] -= half_needram;
             remain_CPU_B[togo_serverid] -= half_needcpu;
             remain_RAM_B[togo_serverid] -= half_needram;
-            return C;//放置双节点
+            return 'C';//放置双节点
         }
     } else{
         cerr<<"wrong: wrong type"<<endl;
     }
-    return D;//不能转移
+    return 'D';//不能转移
 }

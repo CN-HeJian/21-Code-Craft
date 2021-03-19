@@ -90,30 +90,19 @@ private:
                         vector<pair<int,int>> &recordSelectedPos,
                         int &oneVM,
                         int &anotherVM);
-    //判断能否够用
-    bool canMigrate( std::unordered_map<int,virtual_machine> &m_deplyed_vm,
-                             std::unordered_map<int,int> &vmId_2_id,
-                             std::vector<int>& servers_type_id,
-                             std::vector<std::vector<int>>& VMs_type_id,
-                             std::vector<int>& remain_CPU_A,
-                             std::vector<int>& remain_RAM_A,
-                             std::vector<int>& remain_CPU_B,
-                             std::vector<int>& remain_RAM_B,
-                             vector<pair<int,int>> &recordSelectedPos,
-                             int &oneVM,
-                             int &anotherVM);
     //判断能否进行交换
-    char canChange( std::unordered_map<int,virtual_machine> &m_deplyed_vm,
-                     std::unordered_map<int,int> &vmId_2_id,
-                     std::vector<int>& servers_type_id,
-                     std::vector<std::vector<int>>& VMs_type_id,
-                     std::vector<int>& remain_CPU_A,
-                     std::vector<int>& remain_RAM_A,
-                     std::vector<int>& remain_CPU_B,
-                     std::vector<int>& remain_RAM_B,
-                     vector<pair<int,int>> &recordSelectedPos,
-                     int &oneVM,
-                     int &anotherVM);
+    char migrate::canChange(
+                    std::unordered_map<int,virtual_machine> &m_deplyed_vm,
+                    std::unordered_map<int,int> &vmId_2_id,
+                    std::vector<int>& servers_type_id,
+                    std::vector<std::vector<int>>& VMs_type_id,
+                    std::vector<int>& remain_CPU_A,
+                    std::vector<int>& remain_RAM_A,
+                    std::vector<int>& remain_CPU_B,
+                    std::vector<int>& remain_RAM_B,
+                    int vm_server_id,
+                    int vm_vms_id,
+                    int togo_serverid);
     std::vector<server_data> m_servers;// 目前是按照读入顺序
     std::vector<virtual_machine_data> m_VMs;// 目前按照读入顺序排序
 };
