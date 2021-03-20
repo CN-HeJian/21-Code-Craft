@@ -3,7 +3,6 @@
 // 迁移类，实现迁移操作 
 #include <vector>
 #include <unordered_map>
-#include "tools.hpp"
 #include "server.hpp"
 #include "manager.hpp"
 
@@ -91,7 +90,7 @@ private:
                         int &oneVM,
                         int &anotherVM);
     //判断能否进行交换
-    char migrate::canChange(
+    char canChange(
                     std::unordered_map<int,virtual_machine> &m_deplyed_vm,
                     std::unordered_map<int,int> &vmId_2_id,
                     std::vector<int>& servers_type_id,

@@ -4,30 +4,39 @@
 #include <unordered_map>
 #include "migrate.hpp"
 #include "server.hpp"
-#include "virtualMachine.hpp"
 #include "operation.hpp"
 #include "iostream"
-#include "tools.hpp"
 #include <string>
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifdef test
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/mman.h>
-
-#endif
-
-
-
-#include "Integer_program.hpp"
 #include "distribution.hpp"
 class migrate;
 struct migrate_operation;
 
+struct distribution_data
+{
+    int server_id;
+    int node_type;
+    bool is_distribution = false;
+    distribution_data()
+    {
+        server_id = 0;
+        node_type = 0;
+    }
+    distribution_data(const distribution_data & d)
+    {
+        server_id = d.server_id;
+        node_type = d.node_type;
+        is_distribution = d.is_distribution;
+    }
+    distribution_data &operator =(const distribution_data& d) //重载=
+    {
+        server_id = d.server_id;
+        node_type = d.node_type;
+        is_distribution = d.is_distribution;
+    }
+};
 
 class manager
 {
@@ -57,6 +66,7 @@ public:
     // 处理所有天的任务
     void processing();
     void try_distribution();
+    void try_delet_unused(std::vector<int> new_server_ids);
     void try_migrate();
     void assign_by_try();// 通过尝试的结果，按照实际的流程来赋值
 
@@ -113,6 +123,19 @@ private:
     std::unordered_map<int,virtual_machine> m_try_deploy_VMs;
     // 所有天的操作数据 
     operations m_operators;
+    struct mig_op {
+        int m_vm_id;
+        int m_vm_type;
+        int m_server_to;
+        int m_type;
+        mig_op(int vm_id,int vm_type,int server_to,int type)
+        {
+            m_vm_id = vm_id;
+            m_server_to = server_to;
+            m_type = type;
+        }
+    };
+    std::vector<mig_op> m_mig_ops;
     // 保存所有虚拟机和服务器的实例
     std::vector<server_data> m_servers;
     std::vector<virtual_machine_data> m_VMs;

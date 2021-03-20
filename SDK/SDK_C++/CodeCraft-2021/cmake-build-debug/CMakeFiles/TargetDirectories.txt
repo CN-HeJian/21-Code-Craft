@@ -1,3 +1,0 @@
-/home/jian/Desktop/3_18/CodeCraft-2021/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/jian/Desktop/3_18/CodeCraft-2021/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/jian/Desktop/3_18/CodeCraft-2021/cmake-build-debug/CMakeFiles/CodeCraft-2021.dir
