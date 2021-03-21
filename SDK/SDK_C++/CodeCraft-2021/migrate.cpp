@@ -228,9 +228,9 @@ vector<migrate_operation> migrate::try_migrate(
         vector<int> wait_to_migrate;//利用率低的服务器
         vector<int> receive_vm;//选择接受的服务器
         for (int i = 0; i < used_rate.size(); ++i) {
-            if (used_rate[record_server_pos[i]] < 0.5 && used_rate[record_server_pos[i]]>1e-20) {
+            if (used_rate[record_server_pos[i]] < 0.7 && used_rate[record_server_pos[i]]>1e-20) {
                 wait_to_migrate.push_back(record_server_pos[i]);
-            } else if (used_rate[record_server_pos[i]] > 0.52 && used_rate[record_server_pos[i]] < 0.95) {
+            } else if (used_rate[record_server_pos[i]] > 0.72 && used_rate[record_server_pos[i]] < 0.95) {
                 receive_vm.push_back(record_server_pos[i]);
             }
         }
@@ -407,3 +407,4 @@ char migrate::canChange(
     }
     return 'D';//不能转移
 }
+

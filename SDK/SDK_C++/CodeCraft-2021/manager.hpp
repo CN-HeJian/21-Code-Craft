@@ -69,7 +69,7 @@ public:
     void try_delet_unused(std::vector<int> new_server_ids);
     void try_migrate();
     void assign_by_try();// 通过尝试的结果，按照实际的流程来赋值
-
+    void reset_server();
 
     // 读取数据
 #ifdef test
@@ -153,6 +153,9 @@ public:
     vector<float> sum_cost;
     vector<float> hard_cost;
     vector<float> ele_cost;
+private:
+    std::vector<server_data>  m_sorted_cpu_ram_server;//对服务器cpu以及ram排序，将尝试购买的服务器替换掉，再进一步优化
+    int ser_cnt=0;
 };
 
 #endif // __MANAGER_H

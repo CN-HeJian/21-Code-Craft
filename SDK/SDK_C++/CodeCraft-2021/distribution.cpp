@@ -217,6 +217,276 @@ void distribution::sort_Server_Index()
     });
 }
 
+std::vector<distribution_operation> distribution::try_distribution2(
+        std::vector<int>& servers_type_id,
+        const task& task_today,
+        std::vector<int>& remain_CPU_A,
+        std::vector<int>& remain_RAM_A,
+        std::vector<int>& remain_CPU_B,
+        std::vector<int>& remain_RAM_B,
+        std::vector<std::pair<int, int>>& delete_server_id,
+        std::unordered_map<int, int>& vmId_2_vmTypeId
+)
+{
+    int server_cnt = 0;
+    int state_AB = 0;// A = 0 , B = 1
+    int del_count = 0;
+    int server_num = servers_type_id.size();
+    std::vector<distribution_operation> result;
+    int cnt = 0;
+    std::vector<float> init_score_a,init_score_b;
+    // 所有服务器的初始得分
+    for(int i = 0;i < servers_type_id.size();i ++)
+    {
+        // 计算占用率
+        float rate_cpu_a = (float)remain_CPU_A[i] * 2 / (float)m_servers[servers_type_id[i]].m_CPU_num;
+        float rate_cpu_b = (float)remain_CPU_B[i] * 2 / (float)m_servers[servers_type_id[i]].m_CPU_num;
+        float rate_ram_a = (float)remain_RAM_A[i] * 2 / (float)m_servers[servers_type_id[i]].m_RAM;
+        float rate_ram_b = (float)remain_RAM_B[i] * 2 / (float)m_servers[servers_type_id[i]].m_RAM;
+        // 计算得分
+        init_score_a.emplace_back((1 - fabs(rate_cpu_a - rate_ram_a)) / (1 + rate_cpu_a + rate_ram_a));
+        init_score_b.emplace_back((1 - fabs(rate_cpu_b - rate_ram_b)) / (1 + rate_cpu_b + rate_ram_b));
+    }
+    for(const auto& t:task_today.cmd)
+    {
+        distribution_operation op;
+        if(t.first == "add")
+        {// 如果是添加
+            if(m_VMs[t.second.second].m_is_double_node)
+            {// 双节点添加
+                std::vector<float> scores;
+                std::vector<float> scores_a;
+                std::vector<float> scores_b;
+                bool get_it = false;
+                int lc_A,lc_B,lr_A,lr_B;
+                for(int i = 0;i < servers_type_id.size();i ++)
+                {// 遍历所有的服务器
+                    lc_A = remain_CPU_A.at(i) - m_VMs[t.second.second].m_CPU_num/2;
+                    lc_B = remain_CPU_B.at(i) - m_VMs[t.second.second].m_CPU_num/2;
+                    lr_A = remain_RAM_A.at(i) - m_VMs[t.second.second].m_RAM/2;
+                    lr_B = remain_RAM_B.at(i) - m_VMs[t.second.second].m_RAM/2;
+                    // 确保当前服务器放得下
+                    if(lc_A >= 0 && lc_B >= 0 && lr_A >= 0 && lr_B >= 0)
+                    {
+                        // 计算占用率
+                        float rate_cpu_a = (float)lc_A * 2 / (float)m_servers[servers_type_id[i]].m_CPU_num;
+                        float rate_cpu_b = (float)lc_B * 2 / (float)m_servers[servers_type_id[i]].m_CPU_num;
+                        float rate_ram_a = (float)lr_A * 2 / (float)m_servers[servers_type_id[i]].m_RAM;
+                        float rate_ram_b = (float)lr_B * 2 / (float)m_servers[servers_type_id[i]].m_RAM;
+                        // 计算得分
+                        float score_a = (1 - fabs(rate_cpu_a - rate_ram_a)) / (1 + rate_cpu_a + rate_ram_a);
+                        float score_b = (1 - fabs(rate_cpu_b - rate_ram_b)) / (1 + rate_cpu_b + rate_ram_b);
+                        scores_a.emplace_back(score_a);
+                        scores_b.emplace_back(score_b);
+                        scores.emplace_back(score_a + score_b - init_score_a.at(i) - init_score_b.at(i));
+                        get_it = true;
+                    }
+                    else
+                    {
+                        scores.emplace_back(-4);// 没有找到就是零分
+                        scores_a.emplace_back(-2);
+                        scores_b.emplace_back(-2);
+                    }
+                }
+                if(get_it)
+                {
+                    // 目前最佳的服务器
+                    auto max_iter = std::max_element(scores.begin(),scores.end());
+                    int fit_server = max_iter - scores.begin();
+                    // 更新剩余服务器的数据
+                    remain_CPU_A.at(fit_server) -= m_VMs[t.second.second].m_CPU_num/2;
+                    remain_CPU_B.at(fit_server) -= m_VMs[t.second.second].m_CPU_num/2;
+                    remain_RAM_A.at(fit_server) -= m_VMs[t.second.second].m_RAM/2;
+                    remain_RAM_B.at(fit_server) -= m_VMs[t.second.second].m_RAM/2;
+                    // 更新初始值
+                    init_score_a[fit_server] = scores_a[fit_server];
+                    init_score_b[fit_server] = scores_b[fit_server];
+                    op.distribution_type = norm;
+                    op.server_id = fit_server;
+                    op.node_type = AB;
+                }
+                else
+                {
+                    op.distribution_type = add;
+                }
+            }
+            else
+            {// 单节点添加
+                std::vector<float> score_a;
+                std::vector<float> score_b;
+                bool get_it = false;
+                int lc_A,lc_B,lr_A,lr_B;
+                for(int i = 0;i < servers_type_id.size();i ++)
+                {// 遍历所有的服务器
+                    lc_A = remain_CPU_A.at(i) - m_VMs[t.second.second].m_CPU_num;
+                    lc_B = remain_CPU_B.at(i) - m_VMs[t.second.second].m_CPU_num;
+                    lr_A = remain_RAM_A.at(i) - m_VMs[t.second.second].m_RAM;
+                    lr_B = remain_RAM_B.at(i) - m_VMs[t.second.second].m_RAM;
+                    // 确保当前服务器放得下
+                    if(lc_A >= 0 && lc_B >= 0 && lr_A >= 0 && lr_B >= 0)
+                    {
+                        // 计算占用率
+                        float rate_cpu_a = (float)lc_A * 2 / (float)m_servers[servers_type_id[i]].m_CPU_num;
+                        float rate_cpu_b = (float)lc_B * 2 / (float)m_servers[servers_type_id[i]].m_CPU_num;
+                        float rate_ram_a = (float)lr_A * 2 / (float)m_servers[servers_type_id[i]].m_RAM;
+                        float rate_ram_b = (float)lr_B * 2 / (float)m_servers[servers_type_id[i]].m_RAM;
+                        // 计算得分
+                        score_a.emplace_back(-init_score_a[i] + (1 - fabs(rate_cpu_a - rate_ram_a)) / (1 + rate_cpu_a + rate_ram_a));
+                        score_b.emplace_back(-init_score_b[i] + (1 - fabs(rate_cpu_b - rate_ram_b)) / (1 + rate_cpu_b + rate_ram_b));
+                        get_it = true;
+                    }
+                    else if(lc_A >= 0 && lr_A >= 0)
+                    {
+                        // 计算占用率
+                        float rate_cpu_a = (float)lc_A * 2 / (float)m_servers[servers_type_id[i]].m_CPU_num;
+                        float rate_ram_a = (float)lr_A * 2 / (float)m_servers[servers_type_id[i]].m_RAM;
+                        score_a.emplace_back(-init_score_a[i] + (1 - fabs(rate_cpu_a - rate_ram_a)) / (1 + rate_cpu_a + rate_ram_a));
+                        score_b.emplace_back(-4);
+                        get_it = true;
+                    }
+                    else if(lc_B >= 0 && lr_B >= 0)
+                    {
+                        // 计算占用率
+                        float rate_cpu_b = (float)lc_B * 2 / (float)m_servers[servers_type_id[i]].m_CPU_num;
+                        float rate_ram_b = (float)lr_B * 2 / (float)m_servers[servers_type_id[i]].m_RAM;
+                        score_b.emplace_back(-init_score_b[i] + (1 - fabs(rate_cpu_b - rate_ram_b)) / (1 + rate_cpu_b + rate_ram_b));
+                        score_a.emplace_back(-4);
+                        get_it = true;
+                    }
+                    else
+                    {
+                        score_a.emplace_back(-4);
+                        score_b.emplace_back(-4);
+                    }
+                }
+                if(get_it)
+                {
+                    int node_type;
+                    int fit_server;
+                    // 目前最佳的服务器
+                    auto max_iter_a = std::max_element(score_a.begin(),score_a.end());
+                    auto max_iter_b = std::max_element(score_b.begin(),score_b.end());
+                    if(*max_iter_a > *max_iter_b)
+                    {
+                        node_type = A;
+                        fit_server = max_iter_a - score_a.begin();
+                        remain_CPU_A.at(fit_server) -= m_VMs[t.second.second].m_CPU_num;
+                        remain_RAM_A.at(fit_server) -= m_VMs[t.second.second].m_RAM;
+                        init_score_a[fit_server] += score_a[fit_server];
+                    }
+                    else
+                    {
+                        node_type = B;
+                        fit_server = max_iter_b - score_b.begin();
+                        remain_CPU_B.at(fit_server) -= m_VMs[t.second.second].m_CPU_num;
+                        remain_RAM_B.at(fit_server) -= m_VMs[t.second.second].m_RAM;
+                        if(remain_CPU_B.at(fit_server) < 0)
+                        {
+                            int b = *max_iter_b;
+                        }
+                        init_score_b[fit_server] += score_b[fit_server];
+                    }
+                    // 更新初始值
+                    op.distribution_type = norm;
+                    op.server_id = fit_server;
+                    op.node_type = node_type;
+                }
+                else
+                {
+                    op.distribution_type = add;
+                }
+            }
+        }
+        else
+        {//@TODO 删除操作
+            op.distribution_type = norm;
+            int vm_typeid = vmId_2_vmTypeId[task_today.cmd[cnt].second.first];
+            auto del_msg= delete_server_id[del_count];
+            del_count++;
+            virtual_machine_data vm_data = m_VMs[vm_typeid];
+            if(del_msg.second == AB)
+            {// 双节点
+                remain_CPU_A[del_msg.first] += (vm_data.m_CPU_num>>1);
+                remain_CPU_B[del_msg.first] += (vm_data.m_CPU_num>>1);
+                remain_RAM_A[del_msg.first] += (vm_data.m_RAM>>1);
+                remain_RAM_B[del_msg.first] += (vm_data.m_RAM>>1);
+            }
+            else if(del_msg.second == A)
+            {// 单节点，之前的虚拟机放置在A节点上
+                remain_CPU_A[del_msg.first] += vm_data.m_CPU_num;
+                remain_RAM_A[del_msg.first] += vm_data.m_RAM;
+            }
+            else
+            {// 单节点，之前的虚拟机放置在B节点上
+                remain_CPU_B[del_msg.first] += vm_data.m_CPU_num;
+                remain_RAM_B[del_msg.first] += vm_data.m_RAM;
+            }
+        }
+        //@TODO 需要添加服务器
+        if(op.distribution_type != norm)
+        {
+            op.distribution_type = add;
+            for(const auto& s:m_servers)
+            {
+                if(m_VMs[t.second.second].m_is_double_node)
+                {
+                    int lc = s.m_CPU_num - m_VMs[t.second.second].m_CPU_num;
+                    int lr = s.m_RAM - m_VMs[t.second.second].m_RAM;
+                    if(lc > 0 && lr > 0)
+                    {
+                        op.server_id = server_num;
+                        op.server_type = s.m_type;
+                        server_num ++;
+                        servers_type_id.emplace_back(s.m_type);
+                        remain_CPU_A.emplace_back(lc/2);
+                        remain_RAM_A.emplace_back(lr/2);
+                        remain_CPU_B.emplace_back(lc/2);
+                        remain_RAM_B.emplace_back(lr/2);
+                        // 计算占用率
+                        float rate_cpu_a = (float)lc / (float)s.m_CPU_num;
+                        float rate_cpu_b = (float)lc / (float)s.m_CPU_num;
+                        float rate_ram_a = (float)lr * 2 / (float)s.m_RAM;
+                        float rate_ram_b = (float)lr * 2 / (float)s.m_RAM;
+                        // 计算得分
+                        init_score_a.emplace_back((1 - fabs(rate_cpu_a - rate_ram_a)) / (1 + rate_cpu_a + rate_ram_a));
+                        init_score_b.emplace_back((1 - fabs(rate_cpu_b - rate_ram_b)) / (1 + rate_cpu_b + rate_ram_b));
+                        break;
+                    }
+                }
+                else
+                {
+                    int lc = s.m_CPU_num/2 - m_VMs[t.second.second].m_CPU_num;
+                    int lr = s.m_RAM/2 - m_VMs[t.second.second].m_RAM;
+                    if(lc > 0 && lr > 0)
+                    {
+                        op.server_id = server_num;
+                        op.server_type = s.m_type;
+                        server_num ++;
+                        servers_type_id.emplace_back(s.m_type);
+                        remain_CPU_A.emplace_back(lc);
+                        remain_RAM_A.emplace_back(lr);
+                        remain_CPU_B.emplace_back(m_VMs[t.second.second].m_CPU_num);
+                        remain_RAM_B.emplace_back(m_VMs[t.second.second].m_RAM);
+                        float rate_cpu_a = (float)lc / (float)s.m_CPU_num;
+                        float rate_cpu_b = (float)lc / (float)s.m_CPU_num;
+                        float rate_ram_a = (float)lr * 2 / (float)s.m_RAM;
+                        float rate_ram_b = (float)lr * 2 / (float)s.m_RAM;
+                        // 计算得分
+                        init_score_a.emplace_back((1 - fabs(rate_cpu_a - rate_ram_a)) / (1 + rate_cpu_a + rate_ram_a));
+                        init_score_b.emplace_back((1 - fabs(rate_cpu_b - rate_ram_b)) / (1 + rate_cpu_b + rate_ram_b));
+                        break;
+                    }
+                }
+            }
+        }
+        // 添加到结果中
+        result.emplace_back(op);
+        cnt ++;
+    }
+    return result;
+}
+
+
 std::vector<distribution_operation> distribution::try_distribution(
         std::vector<int>& servers_type_id,  //所有的服务器对应的型号
         const task& task_today,

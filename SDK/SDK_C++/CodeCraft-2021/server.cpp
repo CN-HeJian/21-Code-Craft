@@ -42,8 +42,8 @@ bool server::add_virtual_machine(int id, virtual_machine_data VM, int type)
         require_CPU_B - m_CPU_left_B > 0)
     {
         std::cerr<<"CPU or RAM is not enough !!!"<<std::endl;
-        //std::vector<int> i;
-        //i.at(1) = 0;
+        std::vector<int> i;
+        i.at(1) = 0;
         return false;
     }
     else
@@ -61,8 +61,12 @@ bool server::add_virtual_machine(int id, virtual_machine_data VM, int type)
         float ram_rate_B = 1.f - 2.f * (float)m_RAM_left_B / (float)m_data.m_RAM;
         float cpu_rate_A = 1.f - 2.f * (float)m_CPU_left_A / (float)m_data.m_CPU_num;
         float cpu_rate_B = 1.f - 2.f * (float)m_CPU_left_B / (float)m_data.m_CPU_num;
-        m_data.occupancy_factor_A = ram_rate_A>cpu_rate_A?ram_rate_A:cpu_rate_A;
-        m_data.occupancy_factor_B = ram_rate_B>cpu_rate_B?ram_rate_B:cpu_rate_B;
+        //取比较大的
+        //m_data.occupancy_factor_A = ram_rate_A>cpu_rate_A?ram_rate_A:cpu_rate_A;
+        //m_data.occupancy_factor_B = ram_rate_B>cpu_rate_B?ram_rate_B:cpu_rate_B;
+        //取较小的
+        m_data.occupancy_factor_A = ram_rate_A<cpu_rate_A?ram_rate_A:cpu_rate_A;
+        m_data.occupancy_factor_B = ram_rate_B<cpu_rate_B?ram_rate_B:cpu_rate_B;
         return true;
     }
 }
@@ -102,8 +106,12 @@ bool server::remove_virtual_machine(int id)
         float ram_rate_B = 1.f - 2.f * (float)m_RAM_left_B / (float)m_data.m_RAM;
         float cpu_rate_A = 1.f - 2.f * (float)m_CPU_left_A / (float)m_data.m_CPU_num;
         float cpu_rate_B = 1.f - 2.f * (float)m_CPU_left_B / (float)m_data.m_CPU_num;
-        m_data.occupancy_factor_A = ram_rate_A>cpu_rate_A?ram_rate_A:cpu_rate_A;
-        m_data.occupancy_factor_B = ram_rate_B>cpu_rate_B?ram_rate_B:cpu_rate_B;
+        //取较大的
+        //m_data.occupancy_factor_A = ram_rate_A>cpu_rate_A?ram_rate_A:cpu_rate_A;
+        //m_data.occupancy_factor_B = ram_rate_B>cpu_rate_B?ram_rate_B:cpu_rate_B;
+        //取较小的
+        m_data.occupancy_factor_A = ram_rate_A<cpu_rate_A?ram_rate_A:cpu_rate_A;
+        m_data.occupancy_factor_B = ram_rate_B<cpu_rate_B?ram_rate_B:cpu_rate_B;
         return true;
     }
     else
@@ -122,4 +130,34 @@ void server::set_old()
     {
         m_VM[vm].is_old = true;
     }
+}
+
+using namespace  std;
+void server::reset_type(server_data temp) {
+    if(temp.m_type == m_data.m_type){
+        cerr<<"same server"<<endl;
+        return ;
+    }
+    int used_cpu_a = m_data.m_CPU_num/2-m_CPU_left_A;
+    int used_cpu_b = m_data.m_CPU_num/2-m_CPU_left_B;
+    int used_ram_a = m_data.m_RAM/2-m_RAM_left_A;
+    int used_ram_b = m_data.m_RAM/2-m_RAM_left_B;
+    m_RAM_left_A = temp.m_RAM/2-used_ram_a;
+    m_CPU_left_A = temp.m_CPU_num/2-used_cpu_a;
+    m_RAM_left_B = temp.m_RAM/2-used_ram_b;
+    m_CPU_left_B = temp.m_CPU_num/2-used_cpu_b;
+
+    float ram_rate_A = 1.f - 2.f * (float)m_RAM_left_A / (float)m_data.m_RAM;
+    float ram_rate_B = 1.f - 2.f * (float)m_RAM_left_B / (float)m_data.m_RAM;
+    float cpu_rate_A = 1.f - 2.f * (float)m_CPU_left_A / (float)m_data.m_CPU_num;
+    float cpu_rate_B = 1.f - 2.f * (float)m_CPU_left_B / (float)m_data.m_CPU_num;
+    m_data.occupancy_factor_A = ram_rate_A<cpu_rate_A?ram_rate_A:cpu_rate_A;
+    m_data.occupancy_factor_B = ram_rate_B<cpu_rate_B?ram_rate_B:cpu_rate_B;
+
+    m_data.m_CPU_num = temp.m_CPU_num;
+    m_data.m_daily_cost = temp.m_daily_cost;
+    m_data.m_type = temp.m_type;
+    m_data.m_price = temp.m_price;
+    m_data.m_RAM = temp.m_RAM;
+    m_data.m_name = temp.m_name;
 }

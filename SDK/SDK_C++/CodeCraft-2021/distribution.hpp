@@ -100,6 +100,16 @@ public:
         std::vector<std::pair<int, int>>& delete_server_id,
         std::unordered_map<int, int>& vmId_2_vmTypeId
     );
+    std::vector<distribution_operation> try_distribution2(
+            std::vector<int>& servers_type_id,
+            const task& task_today,
+            std::vector<int>& remain_CPU_A,
+            std::vector<int>& remain_RAM_A,
+            std::vector<int>& remain_CPU_B,
+            std::vector<int>& remain_RAM_B,
+            std::vector<std::pair<int, int>>& delete_server_id,
+            std::unordered_map<int, int>& vmId_2_vmTypeId
+    );
 std::vector<distribution_operation> try_violence_distribution(
         std::vector<int> servers_type_id,
         std::vector<std::vector<int> > VMs_type_id,

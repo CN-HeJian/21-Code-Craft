@@ -46,6 +46,7 @@ public:
         m_id = d.m_id;
         m_type = d.m_type;
         is_old = d.is_old;
+        return *this;
     }
     int m_id{};// 虚拟机的型号
     int m_CPU_num{};// CPU 总数
@@ -140,7 +141,22 @@ public:
         m_name = d.m_name;
         occupancy_factor_A = d.occupancy_factor_A;// A节点占用率
         occupancy_factor_B = d.occupancy_factor_B;// B节点占用率
+        is_old = d.is_old;
     }
+    server_data &operator =(const server_data& d) //重载=
+    {
+        m_CPU_num = d.m_CPU_num;
+        m_daily_cost = d.m_daily_cost;
+        m_type = d.m_type;
+        m_price = d.m_price;
+        m_RAM = d.m_RAM;
+        m_name = d.m_name;
+        occupancy_factor_A = d.occupancy_factor_A;// A节点占用率
+        occupancy_factor_B = d.occupancy_factor_B;// B节点占用率
+        is_old = d.is_old;
+        return *this;
+    }
+
 };
 
 
@@ -190,19 +206,26 @@ public:
     int get_RAM_left_A(){return m_RAM_left_A;}
     int get_CPU_left_B(){return m_CPU_left_B;}
     int get_RAM_left_B(){return m_RAM_left_B;}
+    int get_cost(){return m_data.m_price + m_power_on_day * m_data.m_daily_cost;}
+    int get_power_on_day(){return m_power_on_day;}
     int get_VM_num(){return m_VM.size();}
     float get_occupancy_factor_A(){return m_data.occupancy_factor_A;}
     float get_occupancy_factor_B(){return m_data.occupancy_factor_B;}
     std::vector<int> get_VM_ids(){return m_VM_ids;}
     std::unordered_map<int,virtual_machine_data> get_VM(){return m_VM;}
+
     // 提供一些操作
     void set_old();
     bool is_power_on();// 判断是否当前开机
     bool add_virtual_machine(int id,virtual_machine_data VM,int type);// 添加一个虚拟机 
-    bool remove_virtual_machine(int id);// 删除一个虚拟机 
+    bool remove_virtual_machine(int id);// 删除一个虚拟机
+    void reset_type(server_data temp);//换掉服务器需要用到
+    void update_one_day(){m_power_on_day ++;}
 private:
-    /* data */   
+    /* data */
+    int m_power_on_day = 0;
     int m_index;// 购买id
+
     server_data m_data;// 服务器的型号数据
     int m_CPU_left_A;// A节点当前服务器剩余的CPU数目
     int m_RAM_left_A;// A节点当前服务器剩余的RAM数目

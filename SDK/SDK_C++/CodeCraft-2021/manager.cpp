@@ -2,12 +2,11 @@
 #include <iostream>
 using namespace std;
 
-
-
 manager::manager() : m_purchase_cost(0)
-
 {
+
 }
+
 // 买一个id对应的服务器
 // 设置服务器 id
 // 服务器类型
@@ -221,6 +220,7 @@ float manager::try_cal_cost(bool is_try)
             if (m_purchase_servers[id].is_power_on())
             {
                 m_power_cost += m_purchase_servers[id].get_daily_cost();
+                m_purchase_servers[id].update_one_day();
             }
         }
     }
@@ -476,7 +476,7 @@ void manager::try_distribution()
             }
         }
     }
-    m_distribution_op = m_distribution->try_distribution(servers_type_id,m_tasks.at(m_current_day),left_CPU_A,left_RAM_A,
+    m_distribution_op = m_distribution->try_distribution2(servers_type_id,m_tasks.at(m_current_day),left_CPU_A,left_RAM_A,
                                                          left_CPU_B, left_RAM_B, delete_server_id, vmId_2_vmTypeId);
 }
 
@@ -549,14 +549,12 @@ void manager::processing()
                 try_purchase_server(++server_num, i, true);
             }
         }
-
         try_migrate();
         // 尝试进行迁移
         for(auto op:m_migrate_op)
         {
             try_migrate_VM(op.vm_id,op.to_server_id,op.node_type,true);
         }
-
         // 进行分配操作
         try_distribution();
         int task_num = 0;
@@ -566,13 +564,15 @@ void manager::processing()
         {
             if(op.distribution_type == add)
             {// 添加服务器
+                //ser_cnt++;
+                //std::cerr<<"add server !!"<<ser_cnt<<endl;
                 try_purchase_server(op.server_id,op.server_type,true);
                 server_num ++;
                 // temp
-//                auto c = m_tasks.at(day).cmd.at(task_num);
-//                auto vm = m_VMs[c.second.second];
-//                try_deploy_VM(c.second.first,c.second.second,op.server_id,vm.m_is_double_node?AB:A,false,true);
-//                task_num ++;
+                auto c = m_tasks.at(day).cmd.at(task_num);
+                auto vm = m_VMs[c.second.second];
+                try_deploy_VM(c.second.first,c.second.second,op.server_id,vm.m_is_double_node?AB:A,false,true);
+                task_num ++;
             }
             else if(op.distribution_type == norm)
             {// 正常部署或者删除虚拟机
@@ -597,6 +597,7 @@ void manager::processing()
         // 迁移操作
 
         try_delet_unused(init);
+        //reset_server();
         //clock_start();
         // 计算当天的电费
 		try_cal_cost(true);// 更新尝试结果的电费
@@ -621,8 +622,8 @@ void manager::processing()
         }
         rate /= (2*num);
        // if(day == 799 || day == 999) {
-            std::cerr << "day: " << m_current_day << "rate: " << rate << "cost:" << m_purchase_cost + m_power_cost
-                      << std::endl;
+            //std::cerr << "day: " << m_current_day << "rate: " << rate << "cost:" << m_purchase_cost + m_power_cost
+              //        << std::endl;
        // }
         statistic_busy_rate(m_current_day);
         sum_cost.push_back(m_purchase_cost+m_power_cost);
@@ -630,6 +631,23 @@ void manager::processing()
         ele_cost.push_back(m_power_cost);
 #endif
     }
+//    for(int i=0;i<m_serverss_ids.size();++i){
+//        auto sv = m_purchase_servers[m_serverss_ids[i]];
+//        int sum_cost = sv.get_cost();
+//        int power_on_day = sv.get_power_on_day();
+//        for(int i =0;i< m_servers.size();++i)
+//        {
+//            int have_cpu = m_servers[i].m_CPU_num;
+//            int have_ram = m_servers[i].m_RAM;
+//            int needcpu = sv.get_CPU();
+//            int needram = sv.get_RAM();
+//            int current_cost = m_servers[i].m_price+m_servers[i].m_daily_cost*power_on_day;
+//            if(have_cpu>needcpu && have_ram>needram && current_cost<sum_cost){
+//                cout<<"find one"<<endl;
+//            }
+//        }
+//    }
+
 #ifdef test
     writetotxt();
 #endif
@@ -725,7 +743,7 @@ void manager::result()
         {
             int map_id = m_operators.m_server_id_map[d.server_id];
             if (d.is_double)
-            { // 双节点
+            { // i双节点
                 std::cout << "(" << map_id << ")" << std::endl;
             }
             else
@@ -743,7 +761,7 @@ void manager::result()
 void manager::readTxtbyStream()
 {
 #ifdef test
-    string file = "/home/jian/Desktop/3_19_1/21-Code-Craft/training-data/training-1.txt";
+    string file = "/home/jian/Desktop/3_19_1/21-Code-Craft/training-data/training-2.txt";
     //std::string test = "/home/xinxinfly/Desktop/data/data1.txt";
     std::freopen(file.c_str(), "rb", stdin);// 文件重定向
 #endif
@@ -824,7 +842,48 @@ void manager::readTxtbyStream()
         }
         m_tasks.emplace_back(T);
     }
+    //std::vector<server_data> m_servers
+    m_sorted_cpu_ram_server = m_servers;
+    sort(m_sorted_cpu_ram_server.begin(),m_sorted_cpu_ram_server.end(),[](server_data a,server_data b){
+        return a.m_CPU_num<b.m_CPU_num  || a.m_CPU_num==b.m_CPU_num && (a.m_RAM<b.m_RAM);
+    });
+    //cout<<"finish"<<endl;
 }
+
+void manager::reset_server()
+{
+    vector<pair<int,int>> record_change_server;
+    for(int server_id=0;server_id<m_serverss_ids.size();++server_id)
+    {
+        server each_server = m_try_purchase_servers[m_serverss_ids[server_id]];
+        //如果购买的服务器是旧的话，考虑将购买的服务器进行替换
+        if(!each_server.get_data().is_old)
+        {
+            //已经装了的cpu的数量
+            int needcpu = each_server.get_CPU()-min(each_server.get_CPU_left_B(),each_server.get_CPU_left_A())*2;
+            int needram = each_server.get_RAM()-min(each_server.get_RAM_left_B(),each_server.get_RAM_left_A())*2;
+            int current_cost = each_server.get_price();
+            //遍历排序后的服务器
+            for(int i =0;i<m_sorted_cpu_ram_server.size();++i)
+            {
+                int have_cpu = m_sorted_cpu_ram_server[i].m_CPU_num;
+                int have_ram = m_sorted_cpu_ram_server[i].m_RAM;
+                int have_cost = m_sorted_cpu_ram_server[i].m_price;
+                if(have_cpu>needcpu && have_ram>needram && have_cost<current_cost)
+                {
+                    cout<<"find one server"<<endl;
+                    record_change_server.emplace_back(make_pair(server_id,i));
+                    break;
+                }
+            }
+        }
+    }
+    for(int i =0;i<record_change_server.size();++i)
+    {
+        m_try_purchase_servers[record_change_server[i].first].reset_type(m_sorted_cpu_ram_server[record_change_server[i].second]);
+    }
+}
+
 // 输出调试问题
 void manager::output()
 {
