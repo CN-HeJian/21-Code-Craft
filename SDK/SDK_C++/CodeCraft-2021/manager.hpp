@@ -3,28 +3,15 @@
 #include <vector>
 #include <unordered_map>
 #include "migrate.hpp"
-#include "server.hpp"
-#include "virtualMachine.hpp"
-#include "operation.hpp"
 #include "iostream"
-#include "tools.hpp"
 #include <string>
 #include <stdio.h>
 #include <stdlib.h>
-#include <queue>
 
-#ifdef test
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/mman.h>
-#endif
-
-#include "Integer_program.hpp"
 #include "distribution.hpp"
 class migrate;
 struct migrate_operation;
+class operations;
 
 struct distribution_data
 {
@@ -47,9 +34,10 @@ struct distribution_data
         server_id = d.server_id;
         node_type = d.node_type;
         is_distribution = d.is_distribution;
+        return *this;
     }
 };
-
+#define divide_num 1
 class manager
 {
 public:
@@ -77,33 +65,29 @@ public:
     float try_cal_cost(bool is_try = false);
     // 处理所有天的任务
     void processing();
-    void try_fine_purchase();
-    std::vector<distribution_data> try_fine_distribution(std::queue<int> task_ids);
-    void try_distribution();
+    void try_distribution(task set_task);
     void try_delet_unused(std::vector<int> new_server_ids);
     void try_migrate();
-    void my_try_migrate();
-    bool migrate_two_server(int from_server,int to_server,int &vm_id,int &node_type);
     void assign_by_try();// 通过尝试的结果，按照实际的流程来赋值
+    void reset_server();
     // 读取数据
 #ifdef test
     void readTxt(const std::string &inputFile);// 测试读取txt文件使用
 #endif
     void readTxtbyStream();
+
     void output();
     // cout 
     void finish_oneday();
     void re_begin();
     void result();
-    bool vertify_result();
     // 没有考虑迁移的情况下 
     // 在当前状态下对下一天的任务进行尝试,返回尝试后的成本
     float try_oneday(std::vector<int> distribution,std::vector<int> node_type);
     float assign_oneday(int day,std::vector<int> distribution,std::vector<int> node_type);
     float assign_current_day(std::vector<int> distribution,std::vector<int> node_type){return assign_oneday(m_current_day,distribution,node_type);}
     // 初始时快速计算当前大概需要买多少服务器
-    std::vector<int> coarse_init();
-    std::vector<int> fine_init(std::queue<int> task_ids);
+    std::vector<int> coarse_init(task set_task);
     //统计每天每个服务器每个节点CPU、RAM的占用率
     void statistic_busy_rate(int m_current_day);
     //将计算结果输出为txt文件
@@ -137,7 +121,7 @@ private:
     // 尝试部署的虚拟机 
     std::unordered_map<int,virtual_machine> m_try_deploy_VMs;
     // 所有天的操作数据 
-    operations m_operators;
+    operations *m_operators;
     struct mig_op {
         int m_vm_id;
         int m_vm_type;
@@ -155,14 +139,10 @@ private:
     std::vector<server_data> m_servers;
     std::vector<virtual_machine_data> m_VMs;
     std::vector<task> m_tasks;
-    //
-    void cal_MAX_CPU_RAM(int &CPU,int &RAM);
-    float cal_score(int node_type,int day,int need_CPU,int need_RAM,
-                    int CPU,int RAM,int left_CPU,int left_RAM,
-                    int left_CPU_B=0,int left_RAM_B=0);
     // 映射关系 
     std::unordered_map<std::string,int> m_server_map;
     std::unordered_map<std::string,int> m_VM_map;
+    std::unordered_map<int, int> vmId_2_vmTypeId;
 public:
     //每天每台服务器的各个节点的CPU以及RAM的占用率
     std::vector<vector<vector<float>>>  used_rate;
@@ -172,6 +152,75 @@ public:
     vector<float> sum_cost;
     vector<float> hard_cost;
     vector<float> ele_cost;
+private:
+    std::vector<server_data>  m_sorted_cpu_ram_server;//对服务器cpu以及ram排序，将尝试购买的服务器替换掉，再进一步优化
+    int ser_cnt=0;
 };
 
+
+////////////////////////////////////////////
+// 部署虚拟机操作
+struct deploy_log
+{
+    int server_id;
+    bool is_double;
+    std::string node;
+};
+
+// 迁移虚拟机
+struct migrate_log
+{
+    int server_from_id;
+    int server_to_id;
+    bool is_double;
+    std::string node;
+};
+enum state{
+    PURCHASE = 0,
+    DEPLOY = 1,
+    DELETE = 2,
+    MIGRATE = 3
+};
+struct purchase{
+    int num;
+    std::vector<int> server_id;
+};
+// 一天的所有操作
+struct opetation
+{
+    std::unordered_map<std::string,purchase> m_purchases;
+    std::vector<deploy_log> m_deploys;// 包括删除和部署
+    std::vector<migrate_log> m_migrates;
+    // 记录当前一天的操作状态
+    // 避免误操作，不按顺序来
+    int state = PURCHASE;
+};
+// 记录每一天的操作
+class operations
+{
+public:
+    operations(int day);
+    operations():m_current_day(0){}
+    // 获取数据
+    int days(){return m_total_days;}
+    opetation get_operator(int day){return m_operations.at(day);}
+    std::vector<std::string> get_servers_name(int day){return server_names.at(day);}
+    void set_days(int day);
+
+    // 购买type类型的服务器
+    void purchase_server(std::string type,int server_id);
+    // 迁移虚拟机
+    void migrate_VM(int server_from_id,int server_to_id,bool is_double,std::string node);
+    // 部署虚拟机
+    void deploy_VM(int server_id,bool is_double,std::string node);
+    void finish_oneday();
+    void re_begin();
+    std::unordered_map<int,int> m_server_id_map;
+private:
+    int m_total_days = -1;
+    int m_current_day = -1;
+    std::vector<opetation> m_operations;
+    std::vector<std::vector<std::string>> server_names;
+    int m_server_id = 0;
+};
 #endif // __MANAGER_H
